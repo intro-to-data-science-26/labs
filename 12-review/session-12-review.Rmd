@@ -1,0 +1,481 @@
+---
+title: "Hackathon and Review"
+author: "Killian Conyngham and Carol Sobral"
+date: "(Fall 2025) Introduction to Data Science"
+output: 
+    rmdformats::robobook:
+    toc: TRUE
+    df_print: paged
+    number_sections: FALSE
+    highlight: tango
+    toc_depth: 3
+    toc_float: true
+    self_contained: false
+---
+
+```{=html}
+<style>
+.h1,h2,h3 {
+color:#2f1a61;
+}
+
+.subtitle, section.normal {
+color:#291854;
+}
+
+.title {
+color:#cc0065;
+}
+
+.nav-pills>li>a{
+color: #2f1a61;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+color: #fff;
+background-color: #2f1a61;
+}
+
+.nav-tabs>li>a{
+color: #2f1a61;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+color: #fff;
+background-color: #2f1a61;
+}
+
+table {
+  margin-left: 0;
+}
+
+</style>
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+This session is designed to help you prepare for the hackathon. We'll start with Q&A about the tasks, then review the some of the skills you might need.
+
+------------------------------------------------------------------------
+
+# Part 1: Hackathon Q&A
+
+
+------------------------------------------------------------------------
+
+# Part 2: Skills Review
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+------------------------------------------------------------------------
+
+## Data wrangling with dplyr
+
+The dplyr verbs you'll use constantly:
+
+```r
+# select: choose columns
+penguins |> select(species, bill_length_mm, body_mass_g)
+
+# filter: choose rows based on conditions
+penguins |> filter(species == "Adelie", year == 2007)
+
+# mutate: create or modify columns
+penguins |> mutate(body_mass_kg = body_mass_g / 1000)
+
+# group_by + summarize: aggregate data
+penguins |> 
+  group_by(species) |> 
+  summarize(
+    mean_mass = mean(body_mass_g, na.rm = TRUE),
+    n = n()
+  )
+
+# arrange: sort rows
+penguins |> arrange(desc(body_mass_g))
+```
+
+Other useful functions:
+
+```r
+# count: shortcut for group_by + summarize(n = n())
+penguins |> count(species, island)
+
+# case_when: vectorized if-else for creating categories
+penguins |> 
+  mutate(
+    size = case_when(
+      body_mass_g < 3500 ~ "small",
+      body_mass_g < 5000 ~ "medium",
+      TRUE ~ "large"
+    )
+  )
+
+# across: apply a function to multiple columns
+penguins |> 
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+
+```
+
+
+Reshaping: pivot_longer -- turn many columns into key-value pairs. pivot_wider -- spread key-value pairs into multiple columns.
+
+```{r}
+# pivot_longer
+penguins_long <- penguins |>
+  select(species, starts_with("bill_")) |>
+  mutate(id = row_number()) |>
+  pivot_longer(
+    cols = starts_with("bill_"),
+    names_to = "measure",
+    values_to = "value"
+  )
+head(penguins_long)
+
+
+# pivot_wider
+penguins_long |>
+  pivot_wider(
+    names_from = measure,
+    values_from = value
+  ) |> 
+  head()
+```
+
+
+------------------------------------------------------------------------
+
+## Writing functions
+
+Recall the basic structure of a function:
+
+```r
+function_name <- function(arguments) {
+  # body: what the function does
+  # last expression is returned (or use return())
+}
+```
+
+A simple example:
+
+```{r}
+calculate_stats <- function(x) {
+  c(
+    mean = mean(x, na.rm = TRUE),
+    sd = sd(x, na.rm = TRUE),
+    n = length(x)
+  )
+}
+
+calculate_stats(penguins$bill_length_mm)
+```
+
+
+### Input validation
+
+Good functions check their inputs and fail with helpful messages:
+
+```
+my_function <- function(data, var_name) {
+  
+  # Check data type
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data frame")
+  }
+  
+  # Check if column exists
+  if (!var_name %in% names(data)) {
+    stop(paste("Column", var_name, "not found in data"))
+  }
+  
+  # Check if variable is the right type
+  
+  # ... rest of function
+}
+```
+
+### Passing column names to functions
+
+Two main approaches in the tidyverse:
+
+**Approach 1: Column name as string + `.data[[]]`**
+
+```{r}
+group_mean <- function(data, group_col, value_col) {
+  data |> 
+    group_by(.data[[group_col]]) |> 
+    summarize(mean_value = mean(.data[[value_col]], na.rm = TRUE))
+}
+
+group_mean(penguins, "species", "bill_length_mm")
+```
+
+**Approach 2: Bare column name + `{{ }}`** (tidy evaluation)
+
+```{r}
+group_mean2 <- function(data, group_col, value_col) {
+  data |> 
+    group_by({{ group_col }}) |> 
+    summarize(mean_value = mean({{ value_col }}, na.rm = TRUE))
+}
+
+group_mean2(penguins, species, bill_length_mm)
+```
+
+------------------------------------------------------------------------
+
+
+## Iteration with purrr
+
+The `map()` family applies a function to each element of a list or vector:
+
+- `map()` returns a list
+- `map_dbl()` returns a numeric vector
+- `map_chr()` returns a character vector
+- `map_dfr()` returns a data frame (row-binding results)
+
+Three ways to pass functions to `map()`:
+
+```r
+# 1. Named function
+map(penguins |> select(where(is.numeric)), mean, na.rm = TRUE)
+
+# 2. Anonymous function
+map(penguins |> select(where(is.numeric)), \(x) mean(x, na.rm = TRUE))
+
+# 3. Formula shorthand (older style)
+map(penguins |> select(where(is.numeric)), ~ mean(.x, na.rm = TRUE))
+```
+
+Example: applying a custom function across multiple variables. 
+
+```{r}
+# Define the function first
+get_stats <- function(var) {
+  data.frame(
+    variable = var,
+    mean = mean(penguins[[var]], na.rm = TRUE),
+    sd = sd(penguins[[var]], na.rm = TRUE)
+  )
+}
+
+# Then map it
+numeric_vars <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm")
+map_dfr(numeric_vars, get_stats)
+```
+
+------------------------------------------------------------------------
+
+## Data visualization with ggplot2
+
+The basic structure of a ggplot:
+
+```r
+ggplot(data, aes(x = ..., y = ..., color = ..., fill = ...)) +
+  geom_...() +
+  scale_...() +
+  labs(title = ..., x = ..., y = ..., caption = ...) +
+  theme_...() +
+  theme(...)
+```
+### Common plot types
+
+```{r}
+library(gridExtra)
+
+# histogram
+p1 <- ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(binwidth = 2) +
+  labs(
+  title = "Histogram",
+  subtitle = "Use for the distribution of a numeric variable",
+  x = "Bill length (mm)",
+  y = "Count"
+  ) +
+  theme_minimal(base_size = 10)
+
+
+# boxplot
+p2 <- ggplot(penguins, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(
+  title = "Boxplot",
+  subtitle = "Use to compare distributions across categories",
+  x = "Species",
+  y = "Body mass (g)"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(legend.position = "none")
+
+# scatterplot
+p3 <- ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(alpha = 0.7) +
+  labs(
+  title = "Scatterplot",
+  subtitle = "Use for relationships between two numeric variables",
+  x = "Flipper length (mm)",
+  y = "Body mass (g)"
+  ) +
+  theme_minimal(base_size = 10)
+
+# another scatterplot
+p4 <- ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point(alpha = 0.7) +
+  labs(
+  title = "Scatterplot by Group",
+  subtitle = "Use when comparing numeric relationships across \ngroups",
+  x = "Flipper length (mm)",
+  y = "Body mass (g)",
+  color = "Species"
+  ) +
+  theme_minimal(base_size = 10)
+
+
+grid.arrange(p1, p2, p3, p4, ncol = 2)
+```
+
+
+### Faceting
+
+Another way to show groups is to split your plot into panels. An example:
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, fill = species)) +
+  geom_histogram(binwidth = 2, color = "white") +
+  labs(
+    title = "Faceted Histogram",
+    subtitle = "Use to compare the distribution of a numeric variable across groups",
+    x = "Bill length (mm)",
+    y = "Count"
+  ) +
+  facet_wrap(~ species, ncol = 1) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+### Making plots standalone
+
+A good plot should be understandable without reading surrounding text. Be mindful of labels, titles, legends, and captions.
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    title = "Penguin Body Mass vs. Flipper Length",
+    subtitle = "Data from Palmer Station, Antarctica (2007-2009)",
+    x = "Flipper length (mm)",
+    y = "Body mass (g)",
+    color = "Species",
+    caption = "Source: palmerpenguins  package"
+  ) +
+  theme_minimal()
+```
+
+
+## Tables
+
+Sometimes you need a table to show the information clearly. 
+
+```{r}
+library(gt)
+
+# summarize data
+penguin_summary <- penguins |>
+  group_by(species) |>
+  summarize(
+    mean_mass_g = round(mean(body_mass_g, na.rm = TRUE)),
+    mean_flipper_mm = round(mean(flipper_length_mm, na.rm = TRUE)),
+    n = n()
+  )
+
+# table
+penguin_summary |> 
+  gt() |> 
+  tab_header(
+    title = "Summary of Penguins",
+  ) |> 
+  cols_label(
+    species = "Species",
+    mean_mass_g = "Mean Mass (g)",
+    mean_flipper_mm = "Mean Flipper Length (mm)",
+    n = "Count"
+  ) |> 
+  tab_style(
+    style = cell_fill(color = ),
+    locations = cells_body(rows = species == "Adelie")
+  )
+```
+
+
+
+------------------------------------------------------------------------
+
+## Modeling with broom and modelsummary
+
+### Running models
+
+```{r}
+model <- lm(body_mass_g ~ flipper_length_mm + species, data = penguins)
+summary(model)
+```
+
+### Tidying with broom
+
+```{r}
+library(broom)
+
+# coefficients as a tidy data frame
+tidy(model)
+
+# model fit statistics
+glance(model)
+
+# add fitted values and residuals to data
+augment(model) |> head()
+```
+
+### Presenting with modelsummary
+
+```{r}
+library(modelsummary)
+
+# fit multiple models
+m1 <- lm(body_mass_g ~ flipper_length_mm, data = penguins)
+m2 <- lm(body_mass_g ~ flipper_length_mm + species, data = penguins)
+m3 <- lm(body_mass_g ~ flipper_length_mm * species, data = penguins)
+
+models <- list(
+  "Flipper only" = m1,
+  "+ Species" = m2,
+  "Interaction" = m3
+)
+
+# regression table
+modelsummary(
+  models,
+  gof_omit = "AIC|BIC|Log.Lik|RMSE",
+  output = "gt"
+) |> 
+  tab_options(table.align = "center")
+```
+
+
+
+```{r}
+# coefficients plot
+modelplot(models, coef_omit = "Intercept") +
+  theme_minimal() +
+  labs(title = "Coefficients")
+```
+
+
+
+------------------------------------------------------------------------
+
+This script was drafted by [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral).

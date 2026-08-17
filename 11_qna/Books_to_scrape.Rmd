@@ -1,0 +1,112 @@
+---
+title: "Books_to_scrape"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rvest)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(purrr)
+```
+
+## Web Scraping Example: Books to Scrape
+
+```{r}
+# Reading the page
+url <- "http://books.toscrape.com/"
+webpage <- read_html(url)
+
+# Book titles
+titles <- webpage %>%
+  rvest::html_elements(xpath = "//article[@class='product_pod']/h3/a") %>%
+  rvest::html_attr("title")
+
+# Book prices
+prices <- webpage %>%
+  rvest::html_elements(xpath = "//article[@class='product_pod']/div[@class='product_price']/p[@class='price_color']") %>%
+  rvest::html_text2()
+
+# Book ratings
+ratings <- webpage %>%
+  rvest::html_elements(xpath = "//article[@class='product_pod']/p[contains(@class, 'star-rating')]") %>%
+  rvest::html_attr("class") %>%
+  str_replace("star-rating ", "") %>%
+  factor(levels = c("One", "Two", "Three", "Four", "Five"), labels = 1:5)
+
+# Stock
+book_links <- webpage %>%
+  rvest::html_elements(xpath = "//article[@class='product_pod']/h3/a") %>%
+  rvest::html_attr("href") %>%
+  paste0("http://books.toscrape.com/", .)
+
+get_stock <- function(link) {
+  book_page <- read_html(link)
+  stock_text <- book_page %>%
+    rvest::html_element(xpath = "//table[@class='table table-striped']/tr[th[text()='Availability']]/td") %>%
+    rvest::html_text2()
+  stock_number <- str_extract(stock_text, "\\d+")
+  return(as.integer(stock_number))
+}
+
+stock <- map_int(book_links, get_stock)
+
+df <- data.frame(
+  Title = titles,
+  Price = prices,
+  Rating = ratings,
+  Stock = stock
+)
+
+```
+
+## Solution for All Pages
+
+```{r}
+# Getting every page (1 to 50) and combining results
+
+all_books <- map_dfr(1:50, function(page_num) {
+  print(paste("Scraping page", page_num))
+  if (page_num == 1) {
+    page_url <- "http://books.toscrape.com/index.html"
+  } else {
+    page_url <- paste0("http://books.toscrape.com/catalogue/page-", page_num, ".html")
+  }
+  page <- read_html(page_url)
+  
+  titles <- page %>%
+    rvest::html_elements(xpath = "//article[@class='product_pod']/h3/a") %>%
+    rvest::html_attr("title")
+  
+  prices <- page %>%
+    rvest::html_elements(xpath = "//article[@class='product_pod']/div[@class='product_price']/p[@class='price_color']") %>%
+    rvest::html_text2()
+  
+  ratings <- page %>%
+    rvest::html_elements(xpath = "//article[@class='product_pod']/p[contains(@class, 'star-rating')]") %>%
+    rvest::html_attr("class") %>%
+    str_replace("star-rating ", "") %>%
+    factor(levels = c("One", "Two", "Three", "Four", "Five"), labels = 1:5)
+  
+  book_links <- page %>%
+    rvest::html_elements(xpath = "//article[@class='product_pod']/h3/a") %>%
+    rvest::html_attr("href")
+  if (page_num != 1) {
+    book_links <- paste0("http://books.toscrape.com/catalogue/", book_links)
+  } else {
+    book_links <- paste0("http://books.toscrape.com/", book_links)
+  }
+  
+  stock <- map_int(book_links, get_stock)
+  
+  data.frame(
+    Title = titles,
+    Price = prices,
+    Rating = ratings,
+    Stock = stock
+  )
+})
+```

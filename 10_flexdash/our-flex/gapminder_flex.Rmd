@@ -1,0 +1,35 @@
+---
+title: "Gapminder Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(leaflet)
+library(rnaturalearth)
+library(dplyr)
+library(sf)
+library(shiny)
+
+# Color palette
+pal <- colorNumeric("YlOrRd", domain = NULL)
+
+# Load African country boundaries
+africa <- ne_countries(continent = "Africa", returnclass = "sf")
+```
+
+
+
+### African Countries 
+```{r}
+# Plot 
+leaflet(africa) |>
+  addTiles() |>
+  addPolygons()
+```
+
+

@@ -1,0 +1,757 @@
+---
+title: "GitHub, Functions and Iteration"
+author: "Killian Conyngham and Carol Sobral"
+date: "(Fall 2025) Introduction to Data Science"
+output: 
+    rmdformats::robobook:
+    toc: TRUE
+    df_print: paged
+    number_sections: FALSE
+    highlight: tango
+    toc_depth: 3
+    toc_float: true
+    self_contained: false
+---
+
+```{=html}
+<style>
+.h1,h2,h3 {
+color:#2f1a61;
+}
+
+.subtitle, section.normal {
+color:#291854;
+}
+
+.title {
+color:#cc0065;
+}
+
+.nav-pills>li>a{
+color: #2f1a61;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+color: #fff;
+background-color: #2f1a61;
+}
+
+.nav-tabs>li>a{
+color: #2f1a61;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+color: #fff;
+background-color: #2f1a61;
+}
+
+</style>
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+
+Today, we will start by setting up a basic workflow with GitHub. This workflow will make it easier to keep track of your work and collaborate with others. From there, we will learn about functional programming in R. This is one of the most important parts of coding with R (and I cannot stress enough how important it is). Built-in functions and packages can only get you so far. There will be times when it is both easier and more efficient to create your own.
+
+This lab will teach you how to:
+
+-   setup a basic workflow with R Studio and GitHub
+-   write your own functions
+-   iterate functions over multiple inputs
+-   vectorise your functions using the purrr package
+
+
+------------------------------------------------------------------------
+
+
+# 1   . Git and GitHub (Condensed Version)
+
+This is the condensed version of the version control extra session, which can be found in full [here](https://github.com/intro-to-data-science-25/labs/tree/main/session-00-version-control). We will create your first repo on GitHub and see how we can use it to keep a record of all the changes that were ever made to your code. This is an essential component of collaborative coding efforts, but can also be immensely beneficial for your own solo projects.
+
+The structure of this session is as follows:
+
+1.   Create a new repo on GitHub and initialize it
+1.   Clone this repo to your local machine
+1.   Make some changes to a file
+1.   Stage these local changes
+1.   Commit them to our Git history with a helpful message
+1.   Pull from the GitHub repo just in case anyone else made changes too (not expected here, but good practice).
+1.   Push our changes to the GitHub repo.
+
+Before we get into the nitty-gritty of this week's session, I would like to suggest you all [download GitHub Desktop](https://desktop.github.com/). It is a GUI that lets you interact with GitHub and might be an additional option if your do not want to rely on RStudio or the Command Line alone. 
+
+There are a number of different GUIs that you can try out and play around with. Some are better than others. An example of another free GUI like GitHub Desktop is [GitKraken](https://www.gitkraken.com/).
+
+------------------------------------------------------------------------
+
+
+## Suggested Workflow `r emo::ji("surfer")`
+
+
+This is the recommended workflow that you should employ when you work with Git. You can see it as a sort of recipe that you should follow under most circumstances. At each stage you can find the instructions for working through both the Command Line and through RStudio. **Be aware** however that these are **separate** processes that should not be mixed. Either you use the shell for version control or you use RStudio or you use GitHub Desktop.
+
+### 1. Create a new repo on GitHub
+
+-   Go to [your github page](https://github.com) and make sure you are logged in.
+
+-   Click green "New repository" button. Or, if you are on your own profile page, click on "Repositories", then click the green "New" button.
+
+-   How to fill this in:
+
+    -   Repository name: my_first_repo (or whatever you want).
+    -   Description: "figuring out how this works" (or whatever, but some text is good for the README).
+    -   Select Public.
+    -   YES Initialize this repository with a README.
+    -   For everything else, just accept the default.
+
+Great, now that you have created a new repo on GitHub, it is important to note that you **should always** create a repo **prior** to starting your work in RStudio.
+
+
+### 2. Clone it to your local machine {.tabset}
+
+Whatever way you plan on cloning this repo, you first need to copy the URL identifying it. Luckily there is another green button "Code" that allows you to do just that. Copy the HTTPS link for now. It will look something like this <https://github.com/your-git-username/my_first_repo.git>.
+
+
+#### Using GitHub Desktop
+
+Here is a short gif on how to clone a repo with GitHub Desktop:
+
+```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
+knitr::include_graphics("./pics/github_desktop_cloning.gif")
+```
+
+#### Using Rstudio
+
+In RStudio, go to:
+
+File \> New Project \> Version Control \> Git.
+
+In the "repository URL"-box paste the URL of your new GitHub repository.
+
+Do not just create some random directory for the local copy. Instead think about how you organize your files and folders and make it coherent.
+
+I always suggest that with any new R-project you "Open in new session".
+
+Finally, click the "Create Project" to create a new directory. What you get are three things in one:
+
+-   a directory or "folder" on your computer
+-   a Git repository, linked to a remote GitHub repository
+-   an RStudio Project
+
+In the absence of other constraints, I suggest that all of your R projects have exactly this set-up.
+
+
+#### Using the Command Line
+
+Open the Terminal on your laptop.
+
+Be sure to check what directory you're in. `$ pwd` displays the working directory. `$ cd` is the command to change directory.
+
+Clone a repo into your chosen directory.
+
+```{bash, eval=F}
+cd ~/teaching/2024-ids
+git clone https://github.com/your-git-username/my_first_repo.git
+
+```
+
+Check whether it worked:
+
+```{bash, eval=F}
+cd ~/teaching/2024-ids/my_first_repo
+git log
+git status
+```
+
+###  {.unlisted .unnumbered}
+
+
+### 3. Make changes to a file {#code}
+
+To showcase how useful Git can be, we first need to add some files to our repo. For now there should only be the .gitignore and the README file. While we do this we might as well review some of the stuff we encountered last week.
+
+-   So let's create a new R script and save it in the directory that we just cloned.
+
+-   First load/install necessary packages (the tidyverse suffices here)
+
+```{r, eval=F}
+
+# Set-up your script ------------------------------------------------------
+
+# install.packages(c("tidyverse", "gapminder", "pacman")) # uncomment if already installed
+pacman::p_load(tidyverse, gapminder)
+
+```
+
+-   Then load the data you want to work with into R.
+
+```{r, eval=F}
+
+# Load your Data into R ---------------------------------------------------
+
+data(gapminder)
+head(gapminder)
+
+```
+
+-   Finally, start cleaning your data.
+
+```{r, eval=F}
+
+# Clean your Data ---------------------------------------------------------
+
+gapminder_clean <- gapminder %>% 
+  dplyr::rename(life_exp = lifeExp, gdp_per_cap = gdpPercap) %>% 
+  dplyr::mutate(gdp = pop * gdp_per_cap)
+
+```
+
+
+
+###  {.unlisted .unnumbered}
+
+
+### 4. Stage your Changes and Commit {.tabset}
+
+Before we get on to the next step, it is a good idea to save this newly created script and give it a name. Now that your changes are saved locally we need to let Git know.
+
+
+#### Using GitHub Desktop
+
+Changed or added files are automatically staged in GitHub Desktop. The GUI also displays (where possible) the changes that were made
+
+You only really need to commit the changes with a nice little summary or message.
+
+```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
+knitr::include_graphics("./pics/github_desktop_stage_commit.gif")
+```
+
+
+#### Using RStudio
+
+In the Environment/History panel a new tab called "git" should have appeared.
+
+-   Click on it and it should display all the changed and new files in your directory.
+-   Now you can select which files you want to stage. Simply tick the box next to your chosen files.
+-   Hit the Commit Button and a new window should open up.
+-   In this window you can quickly add a helpful message to mark exactly what you did. (Do not neglect this, as Git won't allow you to commit without it. Plus, a clear message will help both you and your collaborators to understand your changes.)
+
+This method has the clear advantage of being extremely intuitive. However you are limited to selecting and staging individual files.
+
+
+#### Using the Command Line
+
+Stage ("add") a file or group of files. This allows you to stage specific individual files such as the README file for example.
+
+```{bash, eval=F}
+git add NAME-OF-FILE-OR-FOLDER
+```
+
+Alternatively, you could stage all files (whether updated or not):
+
+```{bash, eval=F}
+git add -A
+```
+
+Or you could stage updated files only (modified or deleted, but not new):
+
+```{bash, eval=F}
+git add -u
+```
+
+Finally, you can also only stage new files (not updated ones).
+
+```{bash, eval=F}
+git add .
+```
+
+Having done so, you are now ready to commit these changes!
+
+```{bash, eval=F}
+git commit -m "Helpful message"
+
+```
+
+As you can imagine, the command shell with its different options (and there are more beyond the staging phase), can be quicker and more flexible than your GUI interface, especially for experienced users.
+
+###  {.unlisted .unnumbered}
+
+
+### 5. Pulling and Pushing your commits {.tabset}
+
+This part of the version control workflow should be relatively easy. The most important thing to remember is that you should always **pull** before you **push**. The reason for this is that in collaborative projects someone else might have pushed changes to the same file you were working on. This can lead to conflicts that should be avoided, if possible.
+
+#### Using GitHub Desktop
+
+It is not really straightforward to pull before pushing with GitHub Desktop. Given that there is no prominent pull button, you need to actively remember to do so prior to pressing the blue push button.
+
+```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
+knitr::include_graphics("./pics/github_desktop_pull_and_push.gif")
+```
+
+
+#### Using RStudio
+
+In RStudio you should see a change in the **git** tab. It should now read: "Your branch is ahead of 'origin/main' by 1 commit"
+
+As long as this information is displayed, you know that you need to pull and push your commit.
+
+To do this simply click on the blue arrow pointing down to **pull** from your main repo, before clicking on the green arrow pointing upwards to **push** your commits.
+
+
+#### Using the Command Line
+
+There are only two commands you need to remember here and they are pretty intuitive:
+
+To pull from the main repo:
+
+```{bash, eval=F}
+git pull
+```
+
+And to push your commits:
+
+```{bash, eval=F}
+git push
+```
+
+
+------------------------------------------------------------------------
+
+
+
+## Practice Assignment Setup
+
+We'll be using GitHub for the assignments. Let's take a look at the [practice assignment](https://classroom.github.com/a/hcc-Z6C7) to get familiar with the workflow.
+
+
+
+
+# 2. Functions with `R`
+
+
+## Quick review: lists `r emo::ji("page_with_curl")`
+
+One of the more important objects in R for functional programming are lists. Since we only briefly touched upon them in Week 1, let's go over them again in more detail.
+
+Vectors can only hold a single data type.
+
+```{r}
+vec <- c(a = "hello", b = 1)
+```
+
+By comparison lists can hold many different data types at the same time.
+
+```{r}
+list <- list(a = "hello", b = 1, c = mean)
+```
+
+When you think about it, data.frames are also lists (or rather a list of columns).
+
+```{r}
+library(gapminder)
+head(gapminder) 
+```
+
+Lists are very useful when you start writing your own functions and iterating through them using the `purrr` family of functions.
+
+
+------------------------------------------------------------------------
+
+## Functions `r emo::ji("factory")`
+
+In any coding language a fundamental principle should be **DRY** (**D**on't **R**epeat **Y**ourself). A good rule of thumb: once you've copy-pasted code twice, it's time to write a function.
+
+Functions allow you to automate tasks in a more powerful and general way. Writing a function has three big advantages copy-and-pasting:
+
+1.  As requirements change, you only need to update code in one place, instead of in many.
+
+2.  You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+
+3. You can give functions descriptive names that make your code easier to understand.
+
+You can read more on functions in [this section](https://r4ds.had.co.nz/functions.html#functions) of Rfor Data Science.
+
+------------------------------------------------------------------------
+
+## Basic Syntax
+
+What kind of code calls for writing a function? Here's a typical example:
+
+```{r, results=FALSE}
+df <- data.frame(
+  a = rnorm(100, 5, 2),
+  b = rnorm(100, 100, 15),
+  c = rnorm(100, 2, 1),
+  d = rnorm(100, 36, 7)
+)
+
+df$a <- (df$a - mean(df$a, na.rm = TRUE)) / sd(df$a, na.rm = TRUE)
+df$b <- (df$b - mean(df$b, na.rm = TRUE)) / sd(df$a, na.rm = TRUE) # can you spot the mistake?
+df$c <- (df$c - mean(df$c, na.rm = TRUE)) / sd(df$c, na.rm = TRUE)
+df$d <- (df$d - mean(df$d, na.rm = TRUE)) / sd(df$d, na.rm = TRUE)
+```
+
+There are three key steps to creating a new function:
+
+1.  Pick a **name** for the function. We'll use `zscale` because this function re-scales (or "z-transforms") a vector to have a mean of 0 and a standard deviation of 1.
+
+2. List the **inputs**, or **arguments**, to the function inside the brackets. Here we have just one argument. If we had more, the call would look like this: `function(x, y, z)`.
+
+3.  Place the code you have developed in the **body** of the function. The body of the function is represented by a `{}` block that immediately follows the `function(...)` call.
+
+The overall structure of a function looks like this:
+
+```         
+function_name <- function(input_parameters) {
+  Do what you want to do in the body of the
+  function, just like you would write other code in R.
+}
+```
+
+In our example, we could simplify the z-transformation of four variables with this function:
+
+```{r}
+zscale <- function(x) {
+  (x - mean(x, na.rm = T) / sd(x, na.rm = T))
+}
+```
+
+
+Now instead of repeating that long formula four times (and risking copy-paste errors), we can simply use:
+
+```{r, results=FALSE}
+zscale(df$a)
+```
+
+> A word on **function names**. Generally, function names should be *verbs*, and arguments should be *nouns*. There are some exceptions: nouns are ok if the function computes a very well known noun (i.e. mean), or accessing some property of an object (i.e. coefficients). A good sign that a noun might be a better choice is if you're using a very broad verb like "get", "compute", "calculate", or "determine". Where possible, avoid overriding existing functions and variables. This might be a little tricky sometimes, as many good names are already taken by other packages. Nevertheless, avoiding the most common names from base R will avoid confusion.
+
+------------------------------------------------------------------------
+
+## Conditional functions `r emo::ji("shuffle_tracks_button")`
+
+In practice, you'll frequently need functions that work differently depending on the input or situation. Adding conditions to your custom functions is simple. Here's the basic syntax:
+
+``` r
+if (this) {
+  # do that
+  } else if (that) {
+  # do something else
+  } else if (that) {
+  # do something else
+  } else {
+  # do something else
+}
+```
+
+The conditions in the normal brackets are specified using the logical operators of R (`!=`, `==`, `<`, `>`, etc.) or a function that returns a logical value. In many ways these conditions follow the same approach we applied to `dplyr::filter()` during last week's lab. The `{}` denominate the body of the function, just as with unconditional functions.
+
+You could, for example, only transform numeric variables and code the function to warn you if you tried to scale a character variable.
+
+```{r}
+zscale <- function(x){
+  if (is.numeric(x)) {
+    (x - mean(x, na.rm = T) / sd(x, na.rm = T))
+  } else {
+    return("Not a numeric input!")
+  }
+}
+
+zscale(df$a)
+```
+
+Now we can apply our function to any variable that we would like to transform. It will run even if we apply it to a character input, but warn us that the input does not fit the required input.
+
+```{r, results = F}
+df$a <- zscale(df$a)
+df$b <- zscale(df$b)
+df$c <- zscale(df$c)
+df$d <- zscale(df$d)
+
+# you can also use your function with a pipe!
+df$d |> zscale()
+```
+
+Note that there is still a lot of repetition in the example above. We can get rid of this repetition using what coders call iteration `r emo::ji("point_down")`. We will take a look at it in a second.
+
+------------------------------------------------------------------------
+
+First, let's do one last exercise with functions. We will work with `palmerpenguins` again. 
+
+```{r, eval=T}
+library(palmerpenguins)
+data(penguins)
+str(penguins)
+```
+
+------------------------------------------------------------------------
+
+:::alert-info
+**Exercise 1:**
+
+Can you write a function to calculate the mode for a variable in the data? Let's call it `get_mode`. 
+
+```{r}
+# break down the problem into multiple parts
+# you might want to 
+# a) count how many times each value appears in a vector
+# b) find which value(s) appear most frequently
+```
+:::
+
+---
+
+:::alert-info
+**Exercise 2:**
+
+What is the mode for the variable `flipper_length_mm`?
+
+```{r}
+
+```
+:::
+
+------------------------------------------------------------------------
+
+# 3. Iteration `r emo::ji("gear")`
+
+Iteration helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns or on different datasets.
+
+On the one hand, you have `for` loops and `while` loops, which are a great place to start because they make iteration very explicit. On the other hand, functional programming (FP) offers tools to extract out duplicated code, so each common `for` loop pattern gets its own function.
+
+Remember the code above - it violates the rule of thumb that you should not copy-paste code more than twice.
+
+```{r, results=FALSE}
+# repetitive code
+df$a <- zscale(df$a)
+df$b <- zscale(df$b)
+df$c <- zscale(df$c)
+df$d <- zscale(df$d)
+```
+
+------------------------------------------------------------------------
+
+## For-loops
+
+To solve problems like this one with a `for` loop, we need to think again about the following three components:
+
+1.  **Output:** When you write a loop, you need to decide where the results will go. If you are modifying an existing object, the output is that same object. If you are creating something new, define space for it first, such as an empty vector. Avoid growing the vector inside the loop, because R copies the data each time, which makes the loop much slower (O(n²) behavior). A better way is to store the results in a list during the loop and then combine them into a single vector afterwards. See more on this [here](https://r4ds.had.co.nz/iteration.html).
+
+2.  **Sequence:** we can think about a data frame as a list of columns, so we can iterate over each column with `seq_along(df)`.
+
+3.  **Body:** apply `zscale()` or any other function.
+
+The better solution will look like this:
+
+```{r, results = FALSE}
+# repetitive code
+df$a <- zscale(df$a)
+df$b <- zscale(df$b)
+df$c <- zscale(df$c)
+df$d <- zscale(df$d)
+
+# equivalent iteration
+for (i in seq_along(df)) {       # seq_along() similar to length()
+  df[[i]] <- zscale(df[[i]])     # [[]] because we are working on single elements
+}
+```
+
+
+Remember, this only works for `for` loops that manipulate existing inputs (i.e. columns in a dataframe). If you want to save the output of your function in a different way, you need to define the object where you wish to store the output **ahead** of the function. In this case, you will see a pre-defined vector and an empty list:
+
+```{r}
+###### Vector
+
+# creating an "empty" vector to put the values
+output_median <- vector("double", ncol(df))
+
+# running for loop
+for (i in seq_along(df)) {            
+  output_median[[i]] <- median(df[[i]])
+}
+
+# checking result
+output_median
+
+##### List 
+
+# creating an "empty" vector to put the values
+output_median_list <- list()
+
+# running for loop
+for (i in seq_along(df)) {            
+  output_median_list[[i]] <- median(df[[i]])
+}
+
+# checking result
+output_median_list
+
+```
+
+------------------------------------------------------------------------
+
+## While-loops
+
+You should also be aware that there is a conditional version of for-loops called while loops. Their uses are a little more niche and as such will not be covered in this lab. For those among you who are curious about them, you can find a pretty good tutorial [here](https://www.r-bloggers.com/2021/09/r-while-loop/).
+
+------------------------------------------------------------------------
+
+## The `purrr` package `r emo::ji("cat")`
+
+For-loops are not as important in R as they are in other languages because R is a functional programming language. This means that it's possible to wrap up for-loops in a function, and call that function instead of using the for-loop directly. `r emo::ji("bulb")`
+
+
+### Basic syntax `r emo::ji("pen")`
+
+The `purrr` package provides functions that eliminate the need for many common for loops. The apply family of functions in base R (`apply()`, `lapply()`, `tapply()`, etc.) solve a similar problem, but `purrr` is more consistent and thus is easier to learn. The most useful function will be `map(.x, .f)`, where:
+
+-   `.x`: is a vector, list, or data frame
+-   `.f`: is a function
+-   output: is a list
+
+```{r, echo = FALSE, out.width="49%", out.height="20%",fig.cap="Logic behind vectorised functions (also called functional programming).",fig.show='hold',fig.align='center'}
+knitr::include_graphics("pics/purrr_f_list.png")
+```
+
+
+Three ways to pass functions to `map()`:
+
+1.  pass directly to `map()`
+
+```{r, results=FALSE}
+
+purrr::map(df, mean, na.rm = TRUE) 
+
+```
+
+2.  use an anonymous function `\(x)`
+
+```{r, results=FALSE}
+
+purrr::map(df, \(x) {
+  mean(x, na.rm = TRUE) }
+)
+
+```
+
+3.  use `~`
+
+```{r, results=FALSE}
+
+purrr::map(.x = df, ~ mean(.x, na.rm = TRUE))
+
+```
+
+
+Let's look at this in practice. Imagine you want to calculate the mean of each column in your data frame:
+
+```{r, results=FALSE}
+# repetitive code
+mean(df$a)
+mean(df$b)
+mean(df$c)
+mean(df$d)
+
+
+# equivalent map function
+purrr::map(.x = df, ~ mean(.x, na.rm =T))
+
+# map function in tidyverse style
+df |> purrr::map(mean)
+
+```
+
+------------------------------------------------------------------------
+
+## The `purrr::map*()` family of functions `r emo::ji("family")`
+
+The pattern of looping over a vector, doing something to each element and saving the results is so common that the purrr package provides a family of functions to do it for you. Indeed, their use is so common that several wrapper functions were created to include the final transformation of the list output. There is one function for each type of output:
+
+-   `purrr::map()` returns a list.
+-   `purrr::map_lgl()` returns a logical vector
+-   `purrr::map_int()` returns an integer vector.
+-   `purrr::map_dbl()` returns a double vector.
+-   `purrr::map_chr()` returns a character vector.
+
+------------------------------------------------------------------------
+
+:::alert-info
+**Exercise 3:**
+
+Go back to the example above. Since all of the means are numeric, it makes more sense to store them in a vector rather than a list. Which function should we use and how?
+:::
+
+```{r}
+
+```
+
+
+
+------------------------------------------------------------------------
+
+## `purrr::map2` `r emo::ji("double_exclamation_mark")`
+
+You can also iterate over two inputs at the same time using `map2(.x, .y, .f)`
+
+```{r, echo = FALSE, out.width="49%", out.height="20%",fig.cap="Logic behind map2().",fig.show='hold',fig.align='center'}
+knitr::include_graphics("pics/purr_f2_input.png")
+
+```
+
+The function works exactly the same way as the `purrr::map*` functions for a single input. One caveat that applies only to `purrr::map2()` is that both inputs need to have the **same length**!
+
+------------------------------------------------------------------------
+
+
+:::alert-info
+**Exercise 4:**
+
+Write a function that returns both the mean and the standard deviation for the numeric variables in our `palmerpenguins` data.
+:::
+
+```{r}
+
+```
+
+
+
+------------------------------------------------------------------------
+
+:::alert-info
+**Exercise 5:**
+
+Iterate over the relevant columns.
+:::
+
+
+```{r}
+
+```
+
+
+------------------------------------------------------------------------
+
+## Non standard evaluation (optional)
+
+There is, of course, much more to learn about functions in R and for those of you who want to take it further, you can find more information [here](https://adv-r.hadley.nz/functions.html). For now, consider this as is the first exposure to functions (that can actually already get you pretty far). However, it is important that you apply `r emo::ji("nerd")` your new skills and practice further on your own.
+
+One such skill is the question of how to integrate tidyverse functions into your own functions. Most dplyr verbs use tidy evaluation in some way. Tidy evaluation is a special type of non-standard evaluation (meaning the way R interprets your written code) used throughout the tidyverse. There are two basic forms found in dplyr:
+
+-   **data masking** makes it so that you can use data variables as if they were variables in the environment (i.e. you write `my_variable` instead of `df$myvariable`).
+-   **tidy selection** allows you to switch choosing variables based on their position, name, or type (e.g. `starts_with("x")` or `is.numeric`).
+
+Data masking and tidy selection make interactive data exploration fast and fluid, but they add some new challenges when you attempt to use them indirectly such as in a for loop or a function. [This vignette](https://dplyr.tidyverse.org/articles/programming.html) shows you how to overcome those challenges.
+
+
+
+
+------------------------------------------------------------------------
+
+# <b style="color:#2f1a61">Acknowledgements</b> {.unnumbered}
+
+This tutorial is partly based on [*R for Data Science*](https://r4ds.hadley.nz/), section 5.2, [*Quantitative Politics with R*](http://qpolr.com/data.html/), chapter 3, the [Tidyverse Session](https://github.com/uo-ec607/lectures/tree/master/05-tidyverse) in the course Data Science for Economists by Grant McDermott, and [*Teaching the Tidyverse in 2023*](https://www.tidyverse.org/blog/2023/08/teach-tidyverse-23/).
+
+The section on functions and iteration is partly based on [*R for Data Science*](https://r4ds.hadley.nz/), section 5.2, [*Quantitative Politics with R*](https://github.com/erikgahner/qpolr), chapter 3; as well as the [Tidyverse Session](https://github.com/uo-ec607/lectures/tree/master/05-tidyverse) and on the excellent slides by [*Malcolm Barrett*](https://github.com/malcolmbarrett/happy_scientist) in the course Data Science for Economists by Grant McDermott. The data for the exercises was inspired by [R for Epidemiology](https://www.r4epi.com/).
+
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), and [Carol Sobral](https://github.com/cbsobral).

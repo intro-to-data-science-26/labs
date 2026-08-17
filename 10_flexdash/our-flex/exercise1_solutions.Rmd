@@ -1,0 +1,57 @@
+---
+title: "Gapminder Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(leaflet)
+library(rnaturalearth)
+library(gapminder) # EXERCISE 1
+library(dplyr)
+library(sf)
+library(shiny)
+
+# Color palette
+pal <- colorNumeric("YlOrRd", domain = NULL)
+
+# Load African country boundaries
+africa <- ne_countries(continent = "Africa", returnclass = "sf")
+```
+
+
+```{r}
+# Data prep 
+# EXERCISE 1: Filter gapminder data for Africa and 2007
+gapminder_africa <- gapminder |>
+  filter(continent == "Africa", year == 2007) 
+
+# EXERCISE 1: Join datasets
+africa_data <- africa |>
+  left_join(gapminder_africa, by = c("name" = "country"))
+```
+
+
+
+### African Countries 
+```{r}
+leaflet(africa_data) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(lifeExp), # EXERCISE 1: Plot with colors
+    fillOpacity = 0.7 # EXERCISE 1: Plot with colors
+  ) |>
+  addLegend( # EXERCISE 1: Legend
+    pal = pal,
+    values = ~lifeExp,
+    title = "Life Expectancy",
+    position = "bottomleft"
+  )
+```
+
+
+
+
