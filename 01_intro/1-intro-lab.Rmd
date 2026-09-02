@@ -200,6 +200,278 @@ We highly recommend working in Projects because they are easily integrated with 
 
 ---
 
+Today, we will start by setting up a basic workflow with GitHub. This workflow will make it easier to keep track of your work and collaborate with others. From there, we will learn about functional programming in R. This is one of the most important parts of coding with R (and I cannot stress enough how important it is). Built-in functions and packages can only get you so far. There will be times when it is both easier and more efficient to create your own.
+
+This lab will teach you how to:
+
+-   setup a basic workflow with R Studio and GitHub
+-   write your own functions
+-   iterate functions over multiple inputs
+-   vectorise your functions using the purrr package
+
+
+------------------------------------------------------------------------
+
+
+# 1   . Git and GitHub (Condensed Version)
+
+This is the condensed version of the version control extra session, which can be found in full [here](https://github.com/intro-to-data-science-25/labs/tree/main/session-00-version-control). We will create your first repo on GitHub and see how we can use it to keep a record of all the changes that were ever made to your code. This is an essential component of collaborative coding efforts, but can also be immensely beneficial for your own solo projects.
+
+The structure of this session is as follows:
+
+1.   Create a new repo on GitHub and initialize it
+1.   Clone this repo to your local machine
+1.   Make some changes to a file
+1.   Stage these local changes
+1.   Commit them to our Git history with a helpful message
+1.   Pull from the GitHub repo just in case anyone else made changes too (not expected here, but good practice).
+1.   Push our changes to the GitHub repo.
+
+Before we get into the nitty-gritty of this week's session, I would like to suggest you all [download GitHub Desktop](https://desktop.github.com/). It is a GUI that lets you interact with GitHub and might be an additional option if your do not want to rely on RStudio or the Command Line alone. 
+
+There are a number of different GUIs that you can try out and play around with. Some are better than others. An example of another free GUI like GitHub Desktop is [GitKraken](https://www.gitkraken.com/).
+
+------------------------------------------------------------------------
+
+
+## Suggested Workflow `r emo::ji("surfer")`
+
+
+This is the recommended workflow that you should employ when you work with Git. You can see it as a sort of recipe that you should follow under most circumstances. At each stage you can find the instructions for working through both the Command Line and through RStudio. **Be aware** however that these are **separate** processes that should not be mixed. Either you use the shell for version control or you use RStudio or you use GitHub Desktop.
+
+### 1. Create a new repo on GitHub
+
+-   Go to [your github page](https://github.com) and make sure you are logged in.
+
+-   Click green "New repository" button. Or, if you are on your own profile page, click on "Repositories", then click the green "New" button.
+
+-   How to fill this in:
+
+    -   Repository name: my_first_repo (or whatever you want).
+    -   Description: "figuring out how this works" (or whatever, but some text is good for the README).
+    -   Select Public.
+    -   YES Initialize this repository with a README.
+    -   For everything else, just accept the default.
+
+Great, now that you have created a new repo on GitHub, it is important to note that you **should always** create a repo **prior** to starting your work in RStudio.
+
+
+### 2. Clone it to your local machine {.tabset}
+
+Whatever way you plan on cloning this repo, you first need to copy the URL identifying it. Luckily there is another green button "Code" that allows you to do just that. Copy the HTTPS link for now. It will look something like this <https://github.com/your-git-username/my_first_repo.git>.
+
+
+#### Using GitHub Desktop
+
+Here is a short gif on how to clone a repo with GitHub Desktop:
+
+```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
+knitr::include_graphics("./pics/github_desktop_cloning.gif")
+```
+
+#### Using Rstudio
+
+In RStudio, go to:
+
+File \> New Project \> Version Control \> Git.
+
+In the "repository URL"-box paste the URL of your new GitHub repository.
+
+Do not just create some random directory for the local copy. Instead think about how you organize your files and folders and make it coherent.
+
+I always suggest that with any new R-project you "Open in new session".
+
+Finally, click the "Create Project" to create a new directory. What you get are three things in one:
+
+-   a directory or "folder" on your computer
+-   a Git repository, linked to a remote GitHub repository
+-   an RStudio Project
+
+In the absence of other constraints, I suggest that all of your R projects have exactly this set-up.
+
+
+#### Using the Command Line
+
+Open the Terminal on your laptop.
+
+Be sure to check what directory you're in. `$ pwd` displays the working directory. `$ cd` is the command to change directory.
+
+Clone a repo into your chosen directory.
+
+```{bash, eval=F}
+cd ~/teaching/2024-ids
+git clone https://github.com/your-git-username/my_first_repo.git
+
+```
+
+Check whether it worked:
+
+```{bash, eval=F}
+cd ~/teaching/2024-ids/my_first_repo
+git log
+git status
+```
+
+###  {.unlisted .unnumbered}
+
+
+### 3. Make changes to a file {#code}
+
+To showcase how useful Git can be, we first need to add some files to our repo. For now there should only be the .gitignore and the README file. While we do this we might as well review some of the stuff we encountered last week.
+
+-   So let's create a new R script and save it in the directory that we just cloned.
+
+-   First load/install necessary packages (the tidyverse suffices here)
+
+```{r, eval=F}
+
+# Set-up your script ------------------------------------------------------
+
+# install.packages(c("tidyverse", "gapminder", "pacman")) # uncomment if already installed
+pacman::p_load(tidyverse, gapminder)
+
+```
+
+-   Then load the data you want to work with into R.
+
+```{r, eval=F}
+
+# Load your Data into R ---------------------------------------------------
+
+data(gapminder)
+head(gapminder)
+
+```
+
+-   Finally, start cleaning your data.
+
+```{r, eval=F}
+
+# Clean your Data ---------------------------------------------------------
+
+gapminder_clean <- gapminder %>% 
+  dplyr::rename(life_exp = lifeExp, gdp_per_cap = gdpPercap) %>% 
+  dplyr::mutate(gdp = pop * gdp_per_cap)
+
+```
+
+
+
+###  {.unlisted .unnumbered}
+
+
+### 4. Stage your Changes and Commit {.tabset}
+
+Before we get on to the next step, it is a good idea to save this newly created script and give it a name. Now that your changes are saved locally we need to let Git know.
+
+
+#### Using GitHub Desktop
+
+Changed or added files are automatically staged in GitHub Desktop. The GUI also displays (where possible) the changes that were made
+
+You only really need to commit the changes with a nice little summary or message.
+
+```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
+knitr::include_graphics("./pics/github_desktop_stage_commit.gif")
+```
+
+
+#### Using RStudio
+
+In the Environment/History panel a new tab called "git" should have appeared.
+
+-   Click on it and it should display all the changed and new files in your directory.
+-   Now you can select which files you want to stage. Simply tick the box next to your chosen files.
+-   Hit the Commit Button and a new window should open up.
+-   In this window you can quickly add a helpful message to mark exactly what you did. (Do not neglect this, as Git won't allow you to commit without it. Plus, a clear message will help both you and your collaborators to understand your changes.)
+
+This method has the clear advantage of being extremely intuitive. However you are limited to selecting and staging individual files.
+
+
+#### Using the Command Line
+
+Stage ("add") a file or group of files. This allows you to stage specific individual files such as the README file for example.
+
+```{bash, eval=F}
+git add NAME-OF-FILE-OR-FOLDER
+```
+
+Alternatively, you could stage all files (whether updated or not):
+
+```{bash, eval=F}
+git add -A
+```
+
+Or you could stage updated files only (modified or deleted, but not new):
+
+```{bash, eval=F}
+git add -u
+```
+
+Finally, you can also only stage new files (not updated ones).
+
+```{bash, eval=F}
+git add .
+```
+
+Having done so, you are now ready to commit these changes!
+
+```{bash, eval=F}
+git commit -m "Helpful message"
+
+```
+
+As you can imagine, the command shell with its different options (and there are more beyond the staging phase), can be quicker and more flexible than your GUI interface, especially for experienced users.
+
+###  {.unlisted .unnumbered}
+
+
+### 5. Pulling and Pushing your commits {.tabset}
+
+This part of the version control workflow should be relatively easy. The most important thing to remember is that you should always **pull** before you **push**. The reason for this is that in collaborative projects someone else might have pushed changes to the same file you were working on. This can lead to conflicts that should be avoided, if possible.
+
+#### Using GitHub Desktop
+
+It is not really straightforward to pull before pushing with GitHub Desktop. Given that there is no prominent pull button, you need to actively remember to do so prior to pressing the blue push button.
+
+```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
+knitr::include_graphics("./pics/github_desktop_pull_and_push.gif")
+```
+
+
+#### Using RStudio
+
+In RStudio you should see a change in the **git** tab. It should now read: "Your branch is ahead of 'origin/main' by 1 commit"
+
+As long as this information is displayed, you know that you need to pull and push your commit.
+
+To do this simply click on the blue arrow pointing down to **pull** from your main repo, before clicking on the green arrow pointing upwards to **push** your commits.
+
+
+#### Using the Command Line
+
+There are only two commands you need to remember here and they are pretty intuitive:
+
+To pull from the main repo:
+
+```{bash, eval=F}
+git pull
+```
+
+And to push your commits:
+
+```{bash, eval=F}
+git push
+```
+
+
+------------------------------------------------------------------------
+
+
+
+## Practice Assignment Setup
+
+We'll be using GitHub for the assignments. Let's take a look at the [practice assignment](https://classroom.github.com/a/hcc-Z6C7) to get familiar with the workflow.
 
 # Data Frames 
 
