@@ -45,7 +45,7 @@ As there is a variety of experience levels in the room, we will try to go at a p
 This week's lab will be divided in three parts. 
 
 # TODO: check whether we do the third part?
-- First, we will recap R/tidyverse basics.
+- First, we will *recap* R/tidyverse basics.
 - Second, we will talk about version control with `git`/GitHub (and how to turn in your assignments!).
 - Third, we will discuss some best practices in R.
 
@@ -94,7 +94,7 @@ RStudio also has a useful help menu. In addition, you can get information on any
 
 In addition, there are a lot of free R comprehensive guides, such as Quick-R at http://www.statmethods.net or the R cookbook at http://www.cookbook-r.com.
 
-You are also surrounded by a wealth of knowledge in your classmates around you. Feel free to collaborate or ask your neighbours questions to help you!
+You are also surrounded by a wealth of knowledge in your classmates around you. Feel free to collaborate or ask your neighbors questions to help you!
 
 We recommend you **avoid using ChatGPT or any other AI tools for coding help in these labs!!** The point of these labs is to learn how to code yourself, so make sure you always try each task yourself first, and that you understand each line of code. If you have copilot enabled in your RStudio, please disable it for these labs.
 
@@ -108,7 +108,7 @@ To execute multiple lines of code at once, highlight the respective portion of t
 
 ## Objects in R`r emo::ji("package")`
 
-R stores information as an *object*. You can name objects whatever you like.
+R stores information as an *object*, we might also call that a *variable*. You can name objects (nearly) whatever you like. 
 
 A few things to remember though:
 
@@ -125,78 +125,44 @@ There are four main variable types you should be familiar with:
 * **Numerical**: Any number. An **integer** is a numerical variable *without* any decimals, while a **double** is a numerical variable *with* decimals.
 * **Character**: This is what Stata (and other programming languages such as Python) calls a string. We typically store any alphanumeric data that is not ordered as a character vector.
 * **Logical**: A collection of `TRUE` and `FALSE` values.
-* **Factor**: Think about it as an ordinal variable, i.e. an ordered categorical variable.
+* **Factor**: Think about it as an ordinal variable, i.e. an ordered categorical variable, such as the options of a likert-scale item in a survey.
 
 
 ### Data Structures in R
 
-Rhas many data structures, the most important ones for now are:
+R has many data structures, the most important ones for now are:
 
 * **Vectors**: The most basic data structure in R; a sequence of elements of the same type.
 * **Factors**: Special vectors used to store categorical data with fixed possible values (levels).
 * **Lists**: A collection that can hold elements of different types, including other data structures.  
 * **Matrices**: A two-dimensional structure where all elements must be of the same type.  
-* **Data frames**: A table-like structure where each column can be of a different type, often used for datasets.    
+* **Data frames**: A table-like structure where each column can be of a different type, often used for datasets. *This is the one we will work with the most*.
 
 ---
 
 ## R Packages `r emo::ji("folder")`
 
-For the most part, *R Packages* are collections of code and functions that leverage R programming to expand on the basic functionalities. There are a plethora of packages in *R* designed to facilitate the completion of tasks, built by the R community. In later parts of this course, you will also learn how to write packages yourself.
+For the most part, *R Packages* are collections of code and functions that leverage R programming to expand on the basic functionalities. There are a plethora of packages in *R* designed to facilitate the completion of tasks, built by the R community. You already know one important package (or rather a collection of packages): **the tidyverse**.
 
-Unlike other programming languages, in *R* you only need to install a package once. The following times you will only need to load the package. **As a good practice I recommend running the code to install packages only in your R console, not in the code editor.** You can install a package with the following syntax
+With *R* you usually only need to install a package once. The following times you will only need to load the package. You can install a package with the following syntax
 
 ```r
-install.packages("name_of_your_package") #note that the quotation marks are mandatory at this stage
+install.packages("name_of_your_package") # note that the quotation marks are mandatory at this stage
 ```
 
 Once the package has been installed, you just need to "call it" every time you want to use it in a file by running:
 
 ```r
-library("name_of_your_package") #either of this lines will require the package
-library(name_of_your_package) #library understands the code with, or without, quotation marks
+library("name_of_your_package") # either of this lines will require the package
+library(name_of_your_package) # library understands the code with, or without, quotation marks
 ```
 
 **It is extremely important that you do not have any lines installing packages in your assignments because the file will fail to knit**
 
 ---
 
-
-## Working directory
-
-The *working directory* is just a file path on your computer that sets the default location of any files you read into R, or save out of R. Normally, when you open *RStudio* it will have a default directory (a folder in your computer). You can check you directory by running `getwd()` in your console:
-
-```r
-#this is the default in my case
-getwd()
-#[1] "/Users/l.oswald"
-```
-
-**When your RStudio is closed and you open a file from your finder in MacOS or file explorer in Windows, the default working directory will be the folder where the file is hosted**
-
----
-
-### Setting your working directory
-
-You can set you directory manually from RStudio: use the menu to change your working directory under Session > Set Working Directory > Choose Directory.
-
-You can also use the `setwd()` function:
-
-```r
-setwd("/path/to/your/directory") #in macOS
-setwd("c:/path/to/your/directory") #in windows
-```
----
-
 ### R File types
 There are two main file types you will be working with in this course: `.R` files and `.Rmd` files. The former are simply scripts of R code, while the latter are R Markdown files that allow you to combine text and code in a single document. You can "knit" R markdown files to produce outputs in a variety of formats, including HTML, PDF, and Word. This whole lab is just a fancy `.Rmd` file!
-
----
-
-### Working with R Projects
-
-Another option that allows you to circumvent the folder structure mess to some degree are R Projects.
-We highly recommend working in Projects because they are easily integrated with Git and GitHub!
 
 ---
 
