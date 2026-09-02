@@ -2,7 +2,7 @@
 title: "Web Scraping"
 subtitle: "Collecting Data from the Web using R"
 author: "Killian Conyngham & Carol Sobral"
-date: "(Fall 2025) Introduction to Data Science"
+date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
     toc: TRUE

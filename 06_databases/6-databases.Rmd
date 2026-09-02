@@ -2,7 +2,7 @@
 title: "Databases"
 subtitle: "Functions, `dbplyr` and working with SQL in R"
 author: "Killian Conyngham & Carol Sobral"
-date: "(Fall 2025) Introduction to Data Science"
+date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
     toc: TRUE

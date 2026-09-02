@@ -2,7 +2,7 @@
 title: "Modelling"
 subtitle: "Reporting, summarising and communicating models in R"
 author: "Killian Conyngham & Carol Sobral"
-date: "(Fall 2025) Introduction to Data Science"
+date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
     toc: TRUE
