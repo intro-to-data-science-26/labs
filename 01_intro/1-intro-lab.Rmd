@@ -50,8 +50,8 @@ This week's lab will be divided in three parts.
 
 But first things first:
 
-**Have you all successfully installed Rand RStudio?**
-Otherwise, install Rand RStudio following our [setup guide](https://github.com/linusha/R-bootcamp-summer-2026/blob/main/IDS_Software_Setup.pdf) - or think about [updating](https://happygitwithr.com/install-r-rstudio.html) R, RStudio, and your installed packages. 
+**Have you all successfully installed R, RStudio and git?**
+Otherwise, install R, RStudio and git following our [setup guide](https://github.com/linusha/R-bootcamp-summer-2026/blob/main/IDS_Software_Setup.pdf) - or think about [updating](https://happygitwithr.com/install-r-rstudio.html) R, RStudio, and your installed packages. 
 
 **Have you all registered a free GitHub account?**
 Otherwise, register [here](https://github.com/).
