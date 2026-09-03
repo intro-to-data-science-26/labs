@@ -312,10 +312,22 @@ As you can imagine, the command shell with its different options (and there are 
 ###  {.unlisted .unnumbered}
 
 
-### 5. Pulling and Pushing your commits {.tabset}
+### 5. Pulling and Pushing your commits
 
 This part of the version control workflow should be relatively easy. The most important thing to remember is that you should always **pull** before you **push**. The reason for this is that in collaborative projects someone else might have pushed changes to the same file you were working on. This can lead to conflicts that should be avoided, if possible.
 
+### Authenticating to GitHub {.tabset}
+
+Even a public repository is **your** repository first and foremost. That means that not just anyone can push changes to it. Hence, you need to authenticate to GitHub that you are allowed to push to a repository with your username and something called a PAT (which is essentially a password, but not exactly). The easiest way to do this is by using the `usethis` package:
+
+```{r, eval=FALSE}
+# install.packages("usethis")
+library(usethis)
+usethis::create_github_token() # SAVE THIS TOKEN!
+gitcreds::gitcreds_set() # or enter your PAT each time you are prompted
+```
+
+You can read more on this [here](https://usethis.r-lib.org/articles/git-credentials.html).
 
 #### Using RStudio
 
@@ -341,19 +353,6 @@ And to push your commits:
 ```{bash, eval=F}
 git push
 ```
-
-### Authenticating to GitHub
-
-Even a public repository is **your** repository first and foremost. That means that not just anyone can push changes to it. Hence, you need to authenticate to GitHub that you are allowed to push to a repository with your username and something called a PAT (which is essentially a password, but not exactly). The easiest way to do this is by using the `usethis` package:
-
-```{r, eval=FALSE}
-# install.packages("usethis")
-library(usethis)
-usethis::create_github_token() # SAVE THIS TOKEN!
-gitcreds::gitcreds_set() # or enter your PAT each time you are prompted
-```
-
-You can read more on this [here](https://usethis.r-lib.org/articles/git-credentials.html).
 
 ------------------------------------------------------------------------
 

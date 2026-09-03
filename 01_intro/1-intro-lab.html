@@ -1961,14 +1961,28 @@ flexible than your GUI interface, especially for experienced users.</p>
 <div id="section-2" class="section level3 unlisted unnumbered">
 <h3 class="unlisted unnumbered"></h3>
 </div>
-<div id="pulling-and-pushing-your-commits" class="section level3 tabset">
-<h3 class="tabset">5. Pulling and Pushing your commits</h3>
+<div id="pulling-and-pushing-your-commits" class="section level3">
+<h3>5. Pulling and Pushing your commits</h3>
 <p>This part of the version control workflow should be relatively easy.
 The most important thing to remember is that you should always
 <strong>pull</strong> before you <strong>push</strong>. The reason for
 this is that in collaborative projects someone else might have pushed
 changes to the same file you were working on. This can lead to conflicts
 that should be avoided, if possible.</p>
+</div>
+<div id="authenticating-to-github" class="section level3 tabset">
+<h3 class="tabset">Authenticating to GitHub</h3>
+<p>Even a public repository is <strong>your</strong> repository first
+and foremost. That means that not just anyone can push changes to it.
+Hence, you need to authenticate to GitHub that you are allowed to push
+to a repository with your username and something called a PAT (which is
+essentially a password, but not exactly). The easiest way to do this is
+by using the <code>usethis</code> package:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># install.packages(&quot;usethis&quot;)</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">library</span>(usethis)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_github_token</span>() <span class="co"># SAVE THIS TOKEN!</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>gitcreds<span class="sc">::</span><span class="fu">gitcreds_set</span>() <span class="co"># or enter your PAT each time you are prompted</span></span></code></pre></div>
+<p>You can read more on this <a href="https://usethis.r-lib.org/articles/git-credentials.html">here</a>.</p>
 <div id="using-rstudio-2" class="section level4">
 <h4>Using RStudio</h4>
 <p>In RStudio you should see a change in the <strong>git</strong> tab.
@@ -1985,25 +1999,11 @@ arrow pointing upwards to <strong>push</strong> your commits.</p>
 <p>There are only two commands you need to remember here and they are
 pretty intuitive:</p>
 <p>To pull from the main repo:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">git</span> pull</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">git</span> pull</span></code></pre></div>
 <p>And to push your commits:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
-</div>
-</div>
-<div id="authenticating-to-github" class="section level3">
-<h3>Authenticating to GitHub</h3>
-<p>Even a public repository is <strong>your</strong> repository first
-and foremost. That means that not just anyone can push changes to it.
-Hence, you need to authenticate to GitHub that you are allowed to push
-to a repository with your username and something called a PAT (which is
-essentially a password, but not exactly). The easiest way to do this is
-by using the <code>usethis</code> package:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># install.packages(&quot;usethis&quot;)</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">library</span>(usethis)</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_github_token</span>() <span class="co"># SAVE THIS TOKEN!</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>gitcreds<span class="sc">::</span><span class="fu">gitcreds_set</span>() <span class="co"># or enter your PAT each time you are prompted</span></span></code></pre></div>
-<p>You can read more on this <a href="https://usethis.r-lib.org/articles/git-credentials.html">here</a>.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
 <hr />
+</div>
 </div>
 </div>
 <div id="practice-assignment-setup" class="section level2">
