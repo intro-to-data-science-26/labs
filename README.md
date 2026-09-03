@@ -22,6 +22,7 @@ The lab sessions to the course Introduction to Data Science by [Simon Munzert](h
 ## Office hours
 If you have a specific problem you just can't seem to resolve or are feeling behind, then feel free to stop by the office hours of your respective TA.
 You can book a slot for Carol's Office hours [here.](https://calendar.app.google/AKJqj7PtEkA1zbCNA)
+You can book a slot for Laia's Office hours [here.](https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink)
 You can book a slot for Killian's Office hours [here.](https://calendar.app.google/jL1adZtNHLKJQiq19)
 
 ## Acknowledgements
