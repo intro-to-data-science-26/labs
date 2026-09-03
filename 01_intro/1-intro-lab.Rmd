@@ -177,13 +177,15 @@ Why should you care about git?
 
 This is mainly a condensed version of the version control extra session, which can be found in full [here](https://raw.githack.com/intro-to-data-science-26/labs/main/00_version-control/0-git.html).
 
-We recommend you to learn git on the command line first and foremost. Being comfortable with "pure" git is the best way to actually understand the underlying concepts, which will allow you to use any tool on top later one. If the command line is absolutely not your cup of tea, the second recommendation is RStudio's git integration. There are also a myriad of different GUIs that you can try out and play around with on your own.
+We strongly believe there is value in learning git via the command line. Being comfortable with "pure" git is the best way to actually understand the underlying concepts, which will allow you to use any tool on top later one.
+
+However, we also appreciate that the learning curve for the command line is quite steep and our focus here are the R fundamentals. Hence, we will mainly rely on the git integration in RStudio for now - but if you are curious, we invite you to take a look at the command line instructions as well! There are also a myriad of alternative GUIs that you can try out and play around with on your own.
 
 ---
 
 ## Suggested Workflow `r emo::ji("surfer")`
 
-This is the recommended workflow that you should employ when you work with Git. You can see it as a sort of recipe that you should follow under most circumstances. At each stage you can find the instructions for working through both the Command Line and through RStudio.
+This is the recommended workflow that you should employ when you work with Git. You can see it as a sort of recipe that you should follow under most circumstances. At each stage you can find the instructions for working via both RStudio and the Command Line.
 
 ### 1. Create a new repo on GitHub
 
