@@ -44,7 +44,6 @@ As there is a variety of experience levels in the room, we will try to go at a p
 
 This week's lab will be divided in three parts. 
 
-# TODO: check whether we do the third part?
 - First, we will *recap* R/tidyverse basics.
 - Second, we will talk about version control with `git`/GitHub (and how to turn in your assignments!).
 - Third, we will discuss some best practices in R.
@@ -100,7 +99,7 @@ We recommend you **avoid using ChatGPT or any other AI tools for coding help in 
 
 ## Executing a line of code
 
-To execute a single line of code. In RStudio, with the curser in the line you want R to execute, 
+To execute a single line of code. In RStudio, with the cursor in the line you want R to execute, 
 
 Press `command + return` (on macOS) or `Crtl + Enter` (on Windows).
 
@@ -123,8 +122,8 @@ A few things to remember though:
 There are four main variable types you should be familiar with:
 
 * **Numerical**: Any number. An **integer** is a numerical variable *without* any decimals, while a **double** is a numerical variable *with* decimals.
-* **Character**: This is what Stata (and other programming languages such as Python) calls a string. We typically store any alphanumeric data that is not ordered as a character vector.
-* **Logical**: A collection of `TRUE` and `FALSE` values.
+* **Character**: This is what Stata (and other programming languages such as Python) calls a string. We typically store any alphanumeric data that is not ordered as a character *vector.*
+* **Logical**: Either `TRUE` or `FALSE`, commonly known as a boolean in other programming languages.
 * **Factor**: Think about it as an ordinal variable, i.e. an ordered categorical variable, such as the options of a likert-scale item in a survey.
 
 
@@ -162,48 +161,29 @@ library(name_of_your_package) # library understands the code with, or without, q
 ---
 
 ### R File types
+
 There are two main file types you will be working with in this course: `.R` files and `.Rmd` files. The former are simply scripts of R code, while the latter are R Markdown files that allow you to combine text and code in a single document. You can "knit" R markdown files to produce outputs in a variety of formats, including HTML, PDF, and Word. This whole lab is just a fancy `.Rmd` file!
 
 ---
 
-Today, we will start by setting up a basic workflow with GitHub. This workflow will make it easier to keep track of your work and collaborate with others. From there, we will learn about functional programming in R. This is one of the most important parts of coding with R (and I cannot stress enough how important it is). Built-in functions and packages can only get you so far. There will be times when it is both easier and more efficient to create your own.
+# Version Control with  Git and GitHub (Condensed Version)
 
-This lab will teach you how to:
+Why should you care about git?
 
--   setup a basic workflow with R Studio and GitHub
--   write your own functions
--   iterate functions over multiple inputs
--   vectorise your functions using the purrr package
+1. You need it to hand in your assignments ;)
+2. It allows you to easily collaborate on code- which you will need later in this semester and your future courses and work
+3. With git, you ideally get a reason for every change you or other people made to your code - future you will thank you!
+4. git allows you to easily revert to previous versions of your code, which is a lifesaver when you make a mistake or want to try out something new without losing your original code.
 
+This is mainly a condensed version of the version control extra session, which can be found in full [here](https://raw.githack.com/intro-to-data-science-26/labs/main/00_version-control/0-git.html).
 
-------------------------------------------------------------------------
+We recommend you to learn git on the command line first and foremost. Being comfortable with "pure" git is the best way to actually understand the underlying concepts, which will allow you to use any tool on top later one. If the command line is absolutely not your cup of tea, the second recommendation is RStudio's git integration. There are also a myriad of different GUIs that you can try out and play around with on your own.
 
-
-# 1   . Git and GitHub (Condensed Version)
-
-This is the condensed version of the version control extra session, which can be found in full [here](https://github.com/intro-to-data-science-25/labs/tree/main/session-00-version-control). We will create your first repo on GitHub and see how we can use it to keep a record of all the changes that were ever made to your code. This is an essential component of collaborative coding efforts, but can also be immensely beneficial for your own solo projects.
-
-The structure of this session is as follows:
-
-1.   Create a new repo on GitHub and initialize it
-1.   Clone this repo to your local machine
-1.   Make some changes to a file
-1.   Stage these local changes
-1.   Commit them to our Git history with a helpful message
-1.   Pull from the GitHub repo just in case anyone else made changes too (not expected here, but good practice).
-1.   Push our changes to the GitHub repo.
-
-Before we get into the nitty-gritty of this week's session, I would like to suggest you all [download GitHub Desktop](https://desktop.github.com/). It is a GUI that lets you interact with GitHub and might be an additional option if your do not want to rely on RStudio or the Command Line alone. 
-
-There are a number of different GUIs that you can try out and play around with. Some are better than others. An example of another free GUI like GitHub Desktop is [GitKraken](https://www.gitkraken.com/).
-
-------------------------------------------------------------------------
-
+---
 
 ## Suggested Workflow `r emo::ji("surfer")`
 
-
-This is the recommended workflow that you should employ when you work with Git. You can see it as a sort of recipe that you should follow under most circumstances. At each stage you can find the instructions for working through both the Command Line and through RStudio. **Be aware** however that these are **separate** processes that should not be mixed. Either you use the shell for version control or you use RStudio or you use GitHub Desktop.
+This is the recommended workflow that you should employ when you work with Git. You can see it as a sort of recipe that you should follow under most circumstances. At each stage you can find the instructions for working through both the Command Line and through RStudio.
 
 ### 1. Create a new repo on GitHub
 
@@ -226,15 +206,6 @@ Great, now that you have created a new repo on GitHub, it is important to note t
 
 Whatever way you plan on cloning this repo, you first need to copy the URL identifying it. Luckily there is another green button "Code" that allows you to do just that. Copy the HTTPS link for now. It will look something like this <https://github.com/your-git-username/my_first_repo.git>.
 
-
-#### Using GitHub Desktop
-
-Here is a short gif on how to clone a repo with GitHub Desktop:
-
-```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
-knitr::include_graphics("./pics/github_desktop_cloning.gif")
-```
-
 #### Using Rstudio
 
 In RStudio, go to:
@@ -253,7 +224,7 @@ Finally, click the "Create Project" to create a new directory. What you get are 
 -   a Git repository, linked to a remote GitHub repository
 -   an RStudio Project
 
-In the absence of other constraints, I suggest that all of your R projects have exactly this set-up.
+In the absence of other constraints, we suggest that all of your R projects have exactly this set-up.
 
 
 #### Using the Command Line
@@ -265,7 +236,7 @@ Be sure to check what directory you're in. `$ pwd` displays the working director
 Clone a repo into your chosen directory.
 
 ```{bash, eval=F}
-cd ~/teaching/2024-ids
+cd ~/teaching/2024-ids 
 git clone https://github.com/your-git-username/my_first_repo.git
 
 ```
@@ -283,64 +254,13 @@ git status
 
 ### 3. Make changes to a file {#code}
 
-To showcase how useful Git can be, we first need to add some files to our repo. For now there should only be the .gitignore and the README file. While we do this we might as well review some of the stuff we encountered last week.
-
--   So let's create a new R script and save it in the directory that we just cloned.
-
--   First load/install necessary packages (the tidyverse suffices here)
-
-```{r, eval=F}
-
-# Set-up your script ------------------------------------------------------
-
-# install.packages(c("tidyverse", "gapminder", "pacman")) # uncomment if already installed
-pacman::p_load(tidyverse, gapminder)
-
-```
-
--   Then load the data you want to work with into R.
-
-```{r, eval=F}
-
-# Load your Data into R ---------------------------------------------------
-
-data(gapminder)
-head(gapminder)
-
-```
-
--   Finally, start cleaning your data.
-
-```{r, eval=F}
-
-# Clean your Data ---------------------------------------------------------
-
-gapminder_clean <- gapminder %>% 
-  dplyr::rename(life_exp = lifeExp, gdp_per_cap = gdpPercap) %>% 
-  dplyr::mutate(gdp = pop * gdp_per_cap)
-
-```
-
-
 
 ###  {.unlisted .unnumbered}
 
 
 ### 4. Stage your Changes and Commit {.tabset}
 
-Before we get on to the next step, it is a good idea to save this newly created script and give it a name. Now that your changes are saved locally we need to let Git know.
-
-
-#### Using GitHub Desktop
-
-Changed or added files are automatically staged in GitHub Desktop. The GUI also displays (where possible) the changes that were made
-
-You only really need to commit the changes with a nice little summary or message.
-
-```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
-knitr::include_graphics("./pics/github_desktop_stage_commit.gif")
-```
-
+Now that you made some changes locally, we need to let Git know.
 
 #### Using RStudio
 
@@ -396,14 +316,6 @@ As you can imagine, the command shell with its different options (and there are 
 
 This part of the version control workflow should be relatively easy. The most important thing to remember is that you should always **pull** before you **push**. The reason for this is that in collaborative projects someone else might have pushed changes to the same file you were working on. This can lead to conflicts that should be avoided, if possible.
 
-#### Using GitHub Desktop
-
-It is not really straightforward to pull before pushing with GitHub Desktop. Given that there is no prominent pull button, you need to actively remember to do so prior to pressing the blue push button.
-
-```{r, echo=FALSE, out.width="85%", fig.cap="", fig.align="center"}
-knitr::include_graphics("./pics/github_desktop_pull_and_push.gif")
-```
-
 
 #### Using RStudio
 
@@ -430,37 +342,36 @@ And to push your commits:
 git push
 ```
 
+### Authenticating to GitHub
+
+Even a public repository is **your** repository first and foremost. That means that not just anyone can push changes to it. Hence, you need to authenticate to GitHub that you are allowed to push to a repository with your username and something called a PAT (which is essentially a password, but not exactly). The easiest way to do this is by using the `usethis` package:
+
+```{r, eval=FALSE}
+# install.packages("usethis")
+library(usethis)
+usethis::create_github_token() # SAVE THIS TOKEN!
+gitcreds::gitcreds_set() # or enter your PAT each time you are prompted
+```
+
+You can read more on this [here](https://usethis.r-lib.org/articles/git-credentials.html).
 
 ------------------------------------------------------------------------
 
-
-
 ## Practice Assignment Setup
 
-We'll be using GitHub for the assignments. Let's take a look at the [practice assignment](https://classroom.github.com/a/hcc-Z6C7) to get familiar with the workflow.
+We'll be using GitHub for the assignments. Let's take a look at the [practice assignment](https://classroom50.org/intro-to-data-science-26/ids/assignments/assignment-0/accept?k=h3rti3mds) to get familiar with the workflow.
 
-# Data Frames 
+# Revision of R... `r emo::ji("penguin")`
 
-Let's now go a bit deeper with data frames using data for penguin sizes recorded by Dr. Kristen Gorman and others at several islands in the Palmer Archipelago, Antarctica. Data are originally published in: Gorman KB, Williams TD, Fraser WR (2014) PLoS ONE 9(3): e90081. <doi:10.1371/journal.pone.0090081>
+We will use penguins data, that some of you are probably already familiar with. Handily, this data is contained in a package called `palmerpenguins`. To make the `palmerpenguins` package available for use, install it and then use the `library()` command to load it. While packages need to be installed only once, the `library()` command needs to be run every time you want to use a particular package.
 
-The 3 species of penguins in this data set are Adelie, Chinstrap and Gentoo. The data set contains 8 variables:
-
--   **species:** a factor denoting the penguin species (Adelie, Chinstrap, or Gentoo)
--   **island:** a factor denoting the island (in Palmer Archipelago, Antarctica) where observed
--   **bill_length_mm:** a number denoting length of the dorsal ridge of penguin bill (millimeters)
--   **bill_depth_mm:** a number denoting the depth of the penguin bill (millimeters)
--   **flipper_length_mm:** an integer denoting penguin flipper length (millimeters)
--   **body_mass_g:** an integer denoting penguin body mass (grams)
--   **sex:** a factor denoting penguin sex (MALE, FEMALE)
--   **year** an integer denoting the year of the record
-
-Handily, this data is contained in a package called `palmerpenguins`. To make the `palmerpenguins` package available for use, install it and then use the `library()` command to load it. While packages need to be installed only once, the `library()` command needs to be run every time you want to use a particular package.
 ```{r, warning = F}
 # install.packages("palmerpenguins") # Run this in console only
 library(palmerpenguins)
 ```
 
 ### Loading the data
+
 Once we have loaded the package we can load the data set by simply typing `data(penguins)`. The data will be stored in a data frame called `penguins`. (Note: Usually, you would load data from a file on your computer or from a URL as most datasets are not packaged.)
  
 ```{r}
@@ -474,26 +385,14 @@ print(penguins)
 ```
 
 
-Next we can use the `str()` function to explore the variable names and which data class they are stored in. Note: `int` stands for `integer` and is a special case of the class `numeric`.
-
-```{r}
-str(penguins)
-```
-
 :::alert-info
 **Exercise 1**
-
 Look at the output from the function above. How many observations (rows) and variables (columns) does the penguins dataset have? What different data types do you see?
 :::
 
 If we are only interested in what the variables are called, we can use the `names()` function.
-```{r}
-names(penguins)
-```
 
-We can alter the names of vectors by using the `names()` function and indexing. Because data frames are essentially just combinations of vectors, we can do the same for variable names inside data frames. Suppose we want to change the variable `year`.
 ```{r}
-names(penguins)[8] <- "rec_year"
 names(penguins)
 ```
 
@@ -561,12 +460,15 @@ penguins$species
 ```
 
 ### `table()` function
+
 The `table()` function can be used to tabularize one or more variables. For example, let's find out how many observations (i.e. individual penguins) we have per species.
+
 ```{r}
 table(penguins$species)
 ```
 
 Using logical operations, we can create more complex tabularizations. For example, below, we show how many penguins have above average body mass per species.
+
 ```{r}
 summary(penguins$body_mass_g)
 table(penguins$species, penguins$body_mass_g > mean(penguins$body_mass_g, na.rm = TRUE))
@@ -596,40 +498,6 @@ mean(vec, na.rm = T)
 sum(vec, na.rm = T)
 ```
 
-## Adding observations
-Let's add another observation to the data. Suppose we wanted to add a hypothetical observation for a new Adelie penguin. We can use the rbind() function to do so. rbind() stands for "row bind." Save the output in a new data frame!
-
-```{r}
-new_penguin <- data.frame(
-  species = "Adelie",
-  island = "Dream", 
-  bill_length_mm = 40.5,
-  bill_depth_mm = 18.2,
-  flipper_length_mm = 195,
-  body_mass_g = 3500,
-  sex = "male",
-  rec_year = 2020
-)
-
-penguins_new <- rbind(penguins, new_penguin)
-dim(penguins_new)  # Check that we added one row
-tail(penguins_new, 2)  # Look at the last two rows
-```
-
-# Working with R II
-
-## Saving data 
-Suppose we wanted to save a newly created data frame. We have multiple options to do so. If we wanted to save it as a native `.RData` format, we would run the following command. 
-```
-# Make sure you specified the right working directory!
-save(penguins_new, file = "penguins_new.RData")
-```
-
-Most of the time, however, we would want to save our data in formats that can be read by other programs as well. `.csv` is an obvious choice.
-```
-write.csv(penguins_new, file = "penguins_new.csv")
-```
-
 ## Dealing with errors in R
 
 Errors in R occur when code is used in a way that it is not intended. For example when you try to add two character strings, you will get the following error:
@@ -651,36 +519,13 @@ Since we will be utilizing widely used packages and functions in the course of t
 
 ---
 
-## The double colon operator ::
+# ...and the tidyverse `r emo::ji("sparkles")`
 
-You may have noted in the previous section that the functions were preceded by their package name and two colons, for example: `readr::read_rds()`. The double colon operator `::` helps us ensure that we select functions from a particular package. We utilize the operator to explicitly state where the function is coming. This may become even more important when you are doing data analysis as part of a team further in your careers. Though it is likely that this will not be a problem during the course, we can try to employ the following convention `package_name::function()` to ensure that we will not encounter errors in our knitting process:
-
-```r
-dplyr::select()
-```
----
-
-Let's look at what happens when we load `tidyverse`.
-
-```{r, message=TRUE}
+```{r}
 library(tidyverse)
-
-#── Attaching packages ──────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 #──
-#✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-#✓ tibble  3.0.3     ✓ dplyr   1.0.2
-#✓ tidyr   1.1.2     ✓ stringr 1.4.0
-#✓ readr   1.3.1     ✓ forcats 0.5.0
-#── Conflicts ─────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() #──
-#x dplyr::filter() masks stats::filter()
-#x dplyr::lag()    masks stats::lag()
 ```
 
-You may notice that *R* points out some conflicts where some functions are being masked. The default in this machine will become the `filter()` from the `dplyr` package during this session. If you were to run some code that is based on the `filter()` from the `stats` package, your code will probably result in errors.
-
----
-
-# Tidyverse
-Now, let us leave base R behind and make our lives much easier by introducing you to the tidyverse. `r emo::ji("sparkles")` We think for data cleaning, wrangling, and plotting, the tidyverse really is a no-brainer. A few good reasons for teaching the tidyverse are:
+Now, let us leave base R behind and make our lives much easier by introducing you to the tidyverse. We think for data cleaning, wrangling, and plotting, the tidyverse really is a no-brainer. A few good reasons for teaching the tidyverse are:
 
 -   Outstanding documentation and community support
 -   Consistent philosophy and syntax
@@ -695,10 +540,9 @@ Read more on this [here](http://varianceexplained.org/r/teach-tidyverse/) if you
 -   A combination of tidyverse and base R is often the best solution to a problem.
 -   Excellent base R data manipulation tutorial [here](https://github.com/matloff/fasteR).
 
-
 ## Tidyverse packages
 
-Why is it called the tidy*verse*? Well, as we saw above when we loaded the `tidyverse` package, it actually loaded a number of packages (which could also be loaded individually): **ggplot2**, **tibble**, **dplyr**, etc. We can also see information about the package versions and some [namespace conflicts](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.html#59).
+Why is it called the tidy*verse*? Well, as we saw above when we loaded the `tidyverse` package, it actually loaded a number of packages (which could also be loaded individually): **ggplot2**, **tibble**, **dplyr**, etc.
 
 The tidyverse actually comes with a lot more packages than those that are just loaded automatically.
 
@@ -890,9 +734,9 @@ We can leverage the pipe operator to sequence our code in a logical manner. Can 
 :::
 
 ```{r}
-only_2009 <- dplyr::filter(penguins, rec_year == 2009)
+only_2009 <- dplyr::filter(penguins, year == 2009)
 only_2009_chinstraps <- dplyr::filter(only_2009, species == "Chinstrap")
-only_2009_chinstraps_species_sex_year <- dplyr::select(only_2009_chinstraps, species, sex, rec_year)
+only_2009_chinstraps_species_sex_year <- dplyr::select(only_2009_chinstraps, species, sex, year)
 final_df <- only_2009_chinstraps_species_sex_year
 final_df #to print it in our console
 
@@ -949,7 +793,6 @@ penguins |>
 
 :::alert-info
 **Exercise 3**
-        
 Can you get the weight of the lightest penguin of each species? You can use `min()`. What happens when in addition to species you also group by year `group_by(species, year)`?
 :::
 
@@ -978,7 +821,6 @@ penguins |>
 
 :::alert-info
 **Exercise 4**
-
 Can you create a data frame arranged by body_mass_g of the penguins observed in the "Dream" island?
 :::
 
@@ -1071,7 +913,8 @@ When structuring your scripts, remember a few things
 
 ## Naming conventions
 
-Always use easy to interpret names and don’t use whitespaces in file or variable names! Some *good* examples:
+Always use easy to interpret names and don’t use whitespace in file or variable names! Adhere to one naming scheme and don't mix languages.
+Some *good* examples:
 
 * `survey_data_2024.R`
 * `student_ids <- c(101, 102, 103)`
@@ -1093,17 +936,15 @@ When you start copying and pasting code (creating a lot of redundancy), you migh
 Again, the key to learning R is: **practice**! We can only give you an overview over basic R functions, but to really learn R you will have to actively use it yourself, trouble shoot, ask questions, and google! It is very likely that someone else has had the exact same or just *similar enough* issue before and that the R community has answered it with 5+ different solutions years ago. `r emo::ji("wink")`
 
 
-## To-do!
-
-For those of you who have yet to create a Github account, do so [now](https://github.com/). We will be using Github extensively in this course so make sure you get familiar with version control and project management with Git and Github. Everyone has their own preferences, but to get started either GitHub Desktop or the RStudio Git interface are good options. While we won't have a full lab session on the topic we will cover it briefly next week, and we have included materials from a previous version of this course under session-00 which you should go through if you still feel unsure about it.
-
 See you next week! `r emo::ji("computer")`
 
 ---
 
 # <b style="color:#2f1a61">Acknowledgements</b> {-}
 
-This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral). It draws heavily on the materials for the Introduction to R workshop within the Data Science Seminar series at Hertie, created by [Therese Anders](http://therese.rbind.io/), Statistical Modeling and Causal Inference by Sebastian Ramirez-Ruiz and Lisa Oswald.
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), and [Linus Hagemann](https://linushagemann.de).
+
+It draws heavily on the materials for the Introduction to R workshop within the Data Science Seminar series at Hertie, created by [Therese Anders](http://therese.rbind.io/), Statistical Modeling and Causal Inference by Sebastian Ramirez-Ruiz and Lisa Oswald.
 
 Gorman KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental variability within a community of Antarctic penguins (genus Pygoscelis). PLoS ONE 9(3):e90081. https://doi.org/10.1371/journal.pone.0090081
 
