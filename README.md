@@ -2,6 +2,9 @@
 
 ## Lab Sessions
 
+> [!CAUTION]
+> Lab materials for future sessions might not be ready yet. We revise the materials on an ongoing basis.
+
 1. Introduction, R basics, and best practices \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-01-intro/1-intro-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-01-intro/1-intro-lab.Rmd)\]
 2. GitHub, functions, interation, and debugging \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/c87fe5d8c28c0cd588a47b90578fa796c913a337/session-02-functions/2-functions.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-02-functions/2-functions.Rmd)\]
 3. Iteration, automation, scheduling and debugging. \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/cd4e2b729045aeca1bfddb13829886bcbb3985dc/session-03-automation/3-automation-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-03-automation/3-automation-lab.Rmd)\]
@@ -23,8 +26,8 @@ The lab sessions to the course Introduction to Data Science by [Simon Munzert](h
 If you have a specific problem you just can't seem to resolve or are feeling behind, then feel free to stop by the office hours of your respective TA.
 
 You can book a slot with Carol [here].(https://calendar.app.google/Wr578CPH9rbbAs4z6)
-You can book a slot for Laia [here].(https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink)
-You can book a slot for Linus [here].(https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink)
+You can book a slot with Laia [here].(https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink)
+You can book a slot with Linus [here].(https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink)
 
 ## Acknowledgements
 
