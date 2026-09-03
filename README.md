@@ -25,9 +25,11 @@ The lab sessions to the course Introduction to Data Science by [Simon Munzert](h
 ## Office hours
 If you have a specific problem you just can't seem to resolve or are feeling behind, then feel free to stop by the office hours of your respective TA.
 
-You can book a slot with Carol [here].(https://calendar.app.google/Wr578CPH9rbbAs4z6)
-You can book a slot with Laia [here].(https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink)
-You can book a slot with Linus [here].(https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink)
+You can book a slot with Carol [here](https://calendar.app.google/Wr578CPH9rbbAs4z6).
+
+You can book a slot with Laia [here](https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink).
+
+You can book a slot with Linus [here](https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink).
 
 ## Acknowledgements
 
