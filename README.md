@@ -17,16 +17,18 @@
 
 ## Instructors
 
-The lab sessions to the course Introduction to Data Science by [Simon Munzert](https://simonmunzert.github.io/) at the [Hertie School, Berlin](https://www.hertie-school.org/en/), are taught by [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral).
+The lab sessions to the course Introduction to Data Science by [Simon Munzert](https://simonmunzert.github.io/) at the [Hertie School, Berlin](https://www.hertie-school.org/en/) are taught by [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hagemann](https://linushagemann.de).
 
 ## Office hours
 If you have a specific problem you just can't seem to resolve or are feeling behind, then feel free to stop by the office hours of your respective TA.
-You can book a slot for Carol's Office hours [here.](https://calendar.app.google/Wr578CPH9rbbAs4z6)
-You can book a slot for Killian's Office hours [here.](https://calendar.app.google/jL1adZtNHLKJQiq19)
+
+You can book a slot with Carol [here].(https://calendar.app.google/Wr578CPH9rbbAs4z6)
+You can book a slot for Laia [TODO].(https://calendar.app.google/jL1adZtNHLKJQiq19)
+You can book a slot for Linus [here].(https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink)
 
 ## Acknowledgements
 
-These materials were drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral). 
+These materials were drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), and [Linus Hagemann](https://linushagemann.de). 
 
 ## License
 
