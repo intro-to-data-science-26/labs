@@ -2,7 +2,10 @@
 
 ## Lab Sessions
 
-1. Introduction, R basics, and best practices \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-01-intro/1-intro-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-01-intro/1-intro-lab.Rmd)\]
+> [!CAUTION]
+> Lab materials for future sessions might not be ready yet. We revise the materials on an ongoing basis.
+
+1. (Week 37) Introduction, R basics, and best practices \[[**.html**](https://raw.githack.com/intro-to-data-science-26/labs/main/01_intro/1-intro-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/01_intro/1-intro-lab.Rmd)\]
 2. GitHub, functions, interation, and debugging \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/c87fe5d8c28c0cd588a47b90578fa796c913a337/session-02-functions/2-functions.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-02-functions/2-functions.Rmd)\]
 3. Iteration, automation, scheduling and debugging. \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/cd4e2b729045aeca1bfddb13829886bcbb3985dc/session-03-automation/3-automation-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-03-automation/3-automation-lab.Rmd)\]
 4. Webdata, Regex and Xpath \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-04-webdata/4-webdata.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-04-webdata/4-webdata.Rmd)\]
@@ -17,17 +20,20 @@
 
 ## Instructors
 
-The lab sessions to the course Introduction to Data Science by [Simon Munzert](https://simonmunzert.github.io/) at the [Hertie School, Berlin](https://www.hertie-school.org/en/), are taught by [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral).
+The lab sessions to the course Introduction to Data Science by [Simon Munzert](https://simonmunzert.github.io/) at the [Hertie School, Berlin](https://www.hertie-school.org/en/) are taught by [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hagemann](https://linushagemann.de).
 
 ## Office hours
 If you have a specific problem you just can't seem to resolve or are feeling behind, then feel free to stop by the office hours of your respective TA.
-You can book a slot for Carol's Office hours [here.](https://calendar.app.google/AKJqj7PtEkA1zbCNA)
-You can book a slot for Laia's Office hours [here.](https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink)
-You can book a slot for Killian's Office hours [here.](https://calendar.app.google/jL1adZtNHLKJQiq19)
+
+You can book a slot with Carol [here](https://calendar.app.google/Wr578CPH9rbbAs4z6).
+
+You can book a slot with Laia [here](https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink).
+
+You can book a slot with Linus [here](https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink).
 
 ## Acknowledgements
 
-These materials were drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral). 
+These materials were drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), and [Linus Hagemann](https://linushagemann.de). 
 
 ## License
 
