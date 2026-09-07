@@ -47,6 +47,7 @@ background-color: #2f1a61;
 
 </style>
 ```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
@@ -55,7 +56,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 # Functions with `R`
 
 
-## Quick review: lists `r emo::ji("page_with_curl")`
+## Quick review: lists 📄
 
 One of the more important objects in R for functional programming are lists. Since we only briefly touched upon them in Week 1, let's go over them again in more detail.
 
@@ -83,7 +84,7 @@ Lists are very useful when you start writing your own functions and iterating th
 
 ------------------------------------------------------------------------
 
-## Functions `r emo::ji("factory")`
+## Functions 
 
 In any coding language a fundamental principle should be **DRY** (**D**on't **R**epeat **Y**ourself). A good rule of thumb: once you've copy-pasted code twice, it's time to write a function.
 
@@ -153,7 +154,7 @@ zscale(df$a)
 
 ------------------------------------------------------------------------
 
-## Conditional functions `r emo::ji("shuffle_tracks_button")`
+## Conditional functions
 
 In practice, you'll frequently need functions that work differently depending on the input or situation. Adding conditions to your custom functions is simple. Here's the basic syntax:
 
@@ -197,7 +198,7 @@ df$d <- zscale(df$d)
 df$d |> zscale()
 ```
 
-Note that there is still a lot of repetition in the example above. We can get rid of this repetition using what coders call iteration `r emo::ji("point_down")`. We will take a look at it in a second.
+Note that there is still a lot of repetition in the example above. We can get rid of this repetition using what coders call **iteration.** We will take a look at it in a second.
 
 ------------------------------------------------------------------------
 
@@ -238,7 +239,7 @@ What is the mode for the variable `flipper_length_mm`?
 
 ------------------------------------------------------------------------
 
-# 3. Iteration `r emo::ji("gear")`
+# 3. Iteration 
 
 Iteration helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns or on different datasets.
 
@@ -321,12 +322,12 @@ You should also be aware that there is a conditional version of for-loops called
 
 ------------------------------------------------------------------------
 
-## The `purrr` package `r emo::ji("cat")`
+## The `purrr` package 
 
-For-loops are not as important in R as they are in other languages because R is a functional programming language. This means that it's possible to wrap up for-loops in a function, and call that function instead of using the for-loop directly. `r emo::ji("bulb")`
+For-loops are not as important in R as they are in other languages because R is a functional programming language. This means that it's possible to wrap up for-loops in a function, and call that function instead of using the for-loop directly. 
 
 
-### Basic syntax `r emo::ji("pen")`
+### Basic syntax
 
 The `purrr` package provides functions that eliminate the need for many common for loops. The apply family of functions in base R (`apply()`, `lapply()`, `tapply()`, etc.) solve a similar problem, but `purrr` is more consistent and thus is easier to learn. The most useful function will be `map(.x, .f)`, where:
 
@@ -388,7 +389,7 @@ df |> purrr::map(mean)
 
 ------------------------------------------------------------------------
 
-## The `purrr::map*()` family of functions `r emo::ji("family")`
+## The `purrr::map*()` family of functions 
 
 The pattern of looping over a vector, doing something to each element and saving the results is so common that the purrr package provides a family of functions to do it for you. Indeed, their use is so common that several wrapper functions were created to include the final transformation of the list output. There is one function for each type of output:
 
@@ -414,7 +415,7 @@ Go back to the example above. Since all of the means are numeric, it makes more 
 
 ------------------------------------------------------------------------
 
-## `purrr::map2` `r emo::ji("double_exclamation_mark")`
+## `purrr::map2` 
 
 You can also iterate over two inputs at the same time using `map2(.x, .y, .f)`
 
@@ -458,7 +459,7 @@ Iterate over the relevant columns.
 
 ## Non standard evaluation (optional)
 
-There is, of course, much more to learn about functions in R and for those of you who want to take it further, you can find more information [here](https://adv-r.hadley.nz/functions.html). For now, consider this as is the first exposure to functions (that can actually already get you pretty far). However, it is important that you apply `r emo::ji("nerd")` your new skills and practice further on your own.
+There is, of course, much more to learn about functions in R and for those of you who want to take it further, you can find more information [here](https://adv-r.hadley.nz/functions.html). For now, consider this as is the first exposure to functions (that can actually already get you pretty far). However, it is important that you apply your new skills and practice further on your own.
 
 One such skill is the question of how to integrate tidyverse functions into your own functions. Most dplyr verbs use tidy evaluation in some way. Tidy evaluation is a special type of non-standard evaluation (meaning the way R interprets your written code) used throughout the tidyverse. There are two basic forms found in dplyr:
 
