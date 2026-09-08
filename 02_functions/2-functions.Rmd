@@ -1,6 +1,6 @@
 ---
 title: "GitHub, Functions and Iteration"
-author: "Killian Conyngham and Carol Sobral"
+author: "Carol Sobral, Linus Hagemann and Laia Domenech Burin"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
@@ -50,6 +50,9 @@ background-color: #2f1a61;
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(purrr)
 ```
 
 
@@ -188,6 +191,12 @@ zscale(df$a)
 
 Now we can apply our function to any variable that we would like to transform. It will run even if we apply it to a character input, but warn us that the input does not fit the required input.
 
+```{r}
+zscale("hello")
+```
+
+Now, we can apply the transformation to the columns.
+
 ```{r, results = F}
 df$a <- zscale(df$a)
 df$b <- zscale(df$b)
@@ -216,14 +225,17 @@ str(penguins)
 **Exercise 1:**
 
 Can you write a function to calculate the mode for a variable in the data? Let's call it `get_mode`. 
+::: 
 
 ```{r}
-# break down the problem into multiple parts
-# you might want to 
-# a) count how many times each value appears in a vector
-# b) find which value(s) appear most frequently
+# Think of the problem in multiple parts! You might want to: 
+#
+# - count how many times each value appears in a vector
+# - find which value(s) appear most frequently
+#
+# Remember: Google (and AI) are your friends. To use them in a smart way, you can look up how to do each part separately, and think of how to merge them in a function by yourself. 
 ```
-:::
+
 
 ---
 
@@ -243,12 +255,14 @@ What is the mode for the variable `flipper_length_mm`?
 
 Iteration helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns or on different datasets.
 
-On the one hand, you have `for` loops and `while` loops, which are a great place to start because they make iteration very explicit. On the other hand, functional programming (FP) offers tools to extract out duplicated code, so each common `for` loop pattern gets its own function.
+On the one hand, you have `for` loops and `while` loops, which are a great place to start because they make iteration very explicit. 
+
+- `for` loops will repeat an instruction that repeats a block of code a specific number of times or across a collection of items (think of it as "I want to repeat this code as many times as there are columns in the dataframe"). 
+- `while` loops repeat a block of code to infinity until a certain condition is met. Their uses are a little more niche and as such will not be covered in this lab. But they can be useful for example in the cases of web scraping, where you could be interested in the code scrolling down and gathering data until the end of the page is met. For those among you who want to find out more, you can find a pretty good tutorial [here](https://www.r-bloggers.com/2021/09/r-while-loop/).
 
 Remember the code above - it violates the rule of thumb that you should not copy-paste code more than twice.
 
 ```{r, results=FALSE}
-# repetitive code
 df$a <- zscale(df$a)
 df$b <- zscale(df$b)
 df$c <- zscale(df$c)
@@ -261,11 +275,11 @@ df$d <- zscale(df$d)
 
 To solve problems like this one with a `for` loop, we need to think again about the following three components:
 
-1.  **Output:** When you write a loop, you need to decide where the results will go. If you are modifying an existing object, the output is that same object. If you are creating something new, define space for it first, such as an empty vector. Avoid growing the vector inside the loop, because R copies the data each time, which makes the loop much slower (O(n²) behavior). A better way is to store the results in a list during the loop and then combine them into a single vector afterwards. See more on this [here](https://r4ds.had.co.nz/iteration.html).
+1.  **Output:** When you write a loop, you need to decide where the results will go. If you are modifying an existing object, the output is that same object. If you are creating something new, define space for it first, such as an empty vector. Avoid growing the vector inside the loop, because R copies the data each time, which makes the loop much slower. A better way is to store the results in a list during the loop and then combine them into a single vector afterwards. See more on this [here](https://r4ds.had.co.nz/iteration.html).
 
-2.  **Sequence:** we can think about a data frame as a list of columns, so we can iterate over each column with `seq_along(df)`.
+2.  **Sequence:** we can think about a data frame as a list of columns, so we can iterate over each column. We can do this with the function `seq_along(df)`. Try running that command on your script to see its output.  
 
-3.  **Body:** apply `zscale()` or any other function.
+3.  **Body:** the function to be applied, in our case: `zscale()`.
 
 The better solution will look like this:
 
@@ -278,10 +292,10 @@ df$d <- zscale(df$d)
 
 # equivalent iteration
 for (i in seq_along(df)) {       # seq_along() similar to length()
-  df[[i]] <- zscale(df[[i]])     # [[]] because we are working on single elements
+  
+  df[[i]] <- zscale(df[[i]])     # [[]] because we are working on single elements. We are overwriting each column of the df with each iteration. 
 }
 ```
-
 
 Remember, this only works for `for` loops that manipulate existing inputs (i.e. columns in a dataframe). If you want to save the output of your function in a different way, you need to define the object where you wish to store the output **ahead** of the function. In this case, you will see a pre-defined vector and an empty list:
 
@@ -298,7 +312,10 @@ for (i in seq_along(df)) {
 
 # checking result
 output_median
+```
 
+
+```{r}
 ##### List 
 
 # creating an "empty" vector to put the values
@@ -313,12 +330,6 @@ for (i in seq_along(df)) {
 output_median_list
 
 ```
-
-------------------------------------------------------------------------
-
-## While-loops
-
-You should also be aware that there is a conditional version of for-loops called while loops. Their uses are a little more niche and as such will not be covered in this lab. For those among you who are curious about them, you can find a pretty good tutorial [here](https://www.r-bloggers.com/2021/09/r-while-loop/).
 
 ------------------------------------------------------------------------
 
@@ -339,35 +350,25 @@ The `purrr` package provides functions that eliminate the need for many common f
 knitr::include_graphics("pics/purrr_f_list.png")
 ```
 
+`purrr` essentially takes each element of `.x`, applies `.f` to them and collects the results.
 
-Three ways to pass functions to `map()`:
+Different ways to pass functions to `map()`:
 
 1.  pass directly to `map()`
 
 ```{r, results=FALSE}
 
-purrr::map(df, mean, na.rm = TRUE) 
+map(df, mean, na.rm = TRUE) 
 
 ```
 
-2.  use an anonymous function `\(x)`
+2.  use `~`
 
 ```{r, results=FALSE}
 
-purrr::map(df, \(x) {
-  mean(x, na.rm = TRUE) }
-)
+map(.x = df, ~ mean(.x, na.rm = TRUE))
 
 ```
-
-3.  use `~`
-
-```{r, results=FALSE}
-
-purrr::map(.x = df, ~ mean(.x, na.rm = TRUE))
-
-```
-
 
 Let's look at this in practice. Imagine you want to calculate the mean of each column in your data frame:
 
@@ -380,24 +381,24 @@ mean(df$d)
 
 
 # equivalent map function
-purrr::map(.x = df, ~ mean(.x, na.rm =T))
+map(.x = df, ~ mean(.x, na.rm =T))
 
 # map function in tidyverse style
-df |> purrr::map(mean)
+df |> map(mean)
 
 ```
 
 ------------------------------------------------------------------------
 
-## The `purrr::map*()` family of functions 
+## The `map*()` family of functions 
 
 The pattern of looping over a vector, doing something to each element and saving the results is so common that the purrr package provides a family of functions to do it for you. Indeed, their use is so common that several wrapper functions were created to include the final transformation of the list output. There is one function for each type of output:
 
--   `purrr::map()` returns a list.
--   `purrr::map_lgl()` returns a logical vector
--   `purrr::map_int()` returns an integer vector.
--   `purrr::map_dbl()` returns a double vector.
--   `purrr::map_chr()` returns a character vector.
+-   `map()` returns a list.
+-   `map_lgl()` returns a logical vector
+-   `map_int()` returns an integer vector.
+-   `map_dbl()` returns a double vector.
+-   `map_chr()` returns a character vector.
 
 ------------------------------------------------------------------------
 
@@ -415,7 +416,7 @@ Go back to the example above. Since all of the means are numeric, it makes more 
 
 ------------------------------------------------------------------------
 
-## `purrr::map2` 
+## `map2` 
 
 You can also iterate over two inputs at the same time using `map2(.x, .y, .f)`
 
@@ -424,7 +425,7 @@ knitr::include_graphics("pics/purr_f2_input.png")
 
 ```
 
-The function works exactly the same way as the `purrr::map*` functions for a single input. One caveat that applies only to `purrr::map2()` is that both inputs need to have the **same length**!
+The function works exactly the same way as the `map*` functions for a single input. One caveat that applies only to `map2()` is that both inputs need to have the **same length**!
 
 ------------------------------------------------------------------------
 
@@ -436,7 +437,10 @@ Write a function that returns both the mean and the standard deviation for the n
 :::
 
 ```{r}
-
+# Again, split the problem into multiple parts! We want to: 
+# 
+# - Check for numeric data. Think of `if` conditions and the family of `is.character/numeric/double()` functions!
+# - Apply `mean()` and `sd()` to the defined columns.  
 ```
 
 

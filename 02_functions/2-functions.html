@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="pandoc" />
 
-        <meta name="author" content="Killian Conyngham and Carol Sobral" />
+        <meta name="author" content="Carol Sobral, Linus Hagemann and Laia Domenech Burin" />
     
     
     <title>GitHub, Functions and Iteration</title>
@@ -1524,12 +1524,11 @@ margin-left: 0 !important;
           <li><a href="#iteration" id="toc-iteration">3. Iteration</a>
           <ul>
           <li><a href="#for-loops" id="toc-for-loops">For-loops</a></li>
-          <li><a href="#while-loops" id="toc-while-loops">While-loops</a></li>
           <li><a href="#the-purrr-package" id="toc-the-purrr-package">The <code>purrr</code>
           package</a></li>
-          <li><a href="#the-purrrmap-family-of-functions" id="toc-the-purrrmap-family-of-functions">The
-          <code>purrr::map*()</code> family of functions</a></li>
-          <li><a href="#purrrmap2" id="toc-purrrmap2"><code>purrr::map2</code></a></li>
+          <li><a href="#the-map-family-of-functions" id="toc-the-map-family-of-functions">The <code>map*()</code>
+          family of functions</a></li>
+          <li><a href="#map2" id="toc-map2"><code>map2</code></a></li>
           <li><a href="#non-standard-evaluation-optional" id="toc-non-standard-evaluation-optional">Non standard
           evaluation (optional)</a></li>
           </ul></li>
@@ -1538,8 +1537,8 @@ margin-left: 0 !important;
         </nav>
         <ul class="authors">
           <li class="divider"></li>
-                                <li><span><i class="glyphicon glyphicon-user"></i> Killian
-Conyngham and Carol Sobral</span></li>
+                                <li><span><i class="glyphicon glyphicon-user"></i> Carol
+Sobral, Linus Hagemann and Laia Domenech Burin</span></li>
                                          <li><span><i class="glyphicon glyphicon-calendar"></i> (Fall
 2026) Introduction to Data Science</span></li>
                   </ul>     
@@ -1726,45 +1725,48 @@ function to warn you if you tried to scale a character variable.</p>
 <span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>}</span>
 <span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a></span>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="fu">zscale</span>(df<span class="sc">$</span>a)</span></code></pre></div>
-<pre><code>##   [1]  0.572809140 -0.557885943  2.520716741  0.124465817  0.617722071
-##   [6] -1.024352352  0.522436927 -1.011944097 -1.725686977 -0.904433249
-##  [11] -0.357773816  0.575239133  0.524018086 -0.940278623  0.310031964
-##  [16] -0.469739674 -0.988666689  1.069670145 -0.020632287 -0.375582423
-##  [21]  0.220311574 -0.761606664  1.494602183 -0.418005952 -0.957479034
-##  [26]  0.343369789 -0.679110692 -0.388831498 -0.610309375 -0.049412635
-##  [31] -0.640933723  0.105703272  0.415031468 -1.883016521  0.552580437
-##  [36]  0.314410415  1.883056571 -1.558276114  0.551840917  2.270404312
-##  [41]  0.355290106 -1.710781495 -0.775737705  0.475497020  0.253887333
-##  [46]  2.179581166 -0.177334928 -0.813680693  1.397633688  0.004804733
-##  [51]  0.320849200 -0.060672398  0.005341124  2.085432535  0.175053754
-##  [56] -0.997230502  0.191400245 -1.734559851  0.218530391 -1.277816746
-##  [61]  0.983483329  0.364170549 -1.014036778 -0.590032187  0.045662530
-##  [66] -1.853247499  0.862170792  1.033191449 -0.937724272  0.167143198
-##  [71] -0.980690150  1.004211924 -0.198916160 -0.312717980  1.133256933
-##  [76] -0.329847764  0.654874116 -1.188224952  1.758858034 -2.027511132
-##  [81]  1.665267383  0.233594701 -0.325702001  0.128556693 -1.644954845
-##  [86] -2.157946181  0.557416529  1.186623291  0.920880154  0.642873657
-##  [91]  0.032798125  0.229259307 -0.980789876  0.887068096 -0.817860316
-##  [96]  1.160383823 -0.092488796  0.261849087  0.255641149  0.503506435</code></pre>
+<pre><code>##   [1] -0.135109399  2.151980796  1.214338842 -0.592461429 -0.743093532
+##   [6] -0.755758422  1.211630616 -0.381644581  0.080647590  0.476566200
+##  [11] -0.629472749 -0.403485525  0.517641894  0.519876319 -0.493496788
+##  [16]  0.786192000  0.192191447  0.257954971 -0.065595112 -2.120102817
+##  [21] -0.814452637 -0.183963732  0.988636152 -0.776007732 -0.913595883
+##  [26]  2.053915020 -1.370638015 -0.504120769  2.288346084  0.474167911
+##  [31] -1.616009379  1.276528775 -0.494525190  1.082151283 -0.659432233
+##  [36]  1.074089082 -0.593275024 -0.180971050 -0.430481914  0.077491380
+##  [41] -1.278923917 -0.562191021 -0.723195580  0.564278262 -1.345505903
+##  [46]  0.945309609 -1.780509802  0.755148180 -0.642200242 -0.687784828
+##  [51]  0.608976077 -0.222614672 -1.776856065 -0.939616025  1.123529597
+##  [56]  0.107015979  0.847108915  0.803420477  1.237248413  0.148622860
+##  [61] -0.333327820  1.496160688  2.507439184  0.001153731  0.497726942
+##  [66] -0.786957805  1.037910748 -1.507767843  1.273719720 -0.181797179
+##  [71]  0.575001568  0.273851093 -1.009107412 -1.024269248  0.971198423
+##  [76] -0.323973618  0.236703609 -1.954235132 -0.109742355 -1.156882247
+##  [81]  1.249643263 -1.501370622 -1.602133507  0.731874175 -0.622484217
+##  [86] -0.927250771  0.007419533 -0.588893893 -0.451052359  1.090741569
+##  [91]  1.432748799  0.183255858 -0.283716597  0.546585531  1.564957130
+##  [96]  0.359522114 -1.675699336  0.126505650  0.189671979  0.638957890</code></pre>
 <p>Now we can apply our function to any variable that we would like to
 transform. It will run even if we apply it to a character input, but
 warn us that the input does not fit the required input.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>df<span class="sc">$</span>a <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>a)</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>df<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>b)</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>df<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>c)</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>df<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>d)</span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co"># you can also use your function with a pipe!</span></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>df<span class="sc">$</span>d <span class="sc">|&gt;</span> <span class="fu">zscale</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">zscale</span>(<span class="st">&quot;hello&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Not a numeric input!&quot;</code></pre>
+<p>Now, we can apply the transformation to the columns.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>df<span class="sc">$</span>a <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>a)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>df<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>b)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>df<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>c)</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>df<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>d)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co"># you can also use your function with a pipe!</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>df<span class="sc">$</span>d <span class="sc">|&gt;</span> <span class="fu">zscale</span>()</span></code></pre></div>
 <p>Note that there is still a lot of repetition in the example above. We
 can get rid of this repetition using what coders call
 <strong>iteration.</strong> We will take a look at it in a second.</p>
 <hr />
 <p>First, let’s do one last exercise with functions. We will work with
 <code>palmerpenguins</code> again.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">data</span>(penguins)</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">str</span>(penguins)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">data</span>(penguins)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">str</span>(penguins)</span></code></pre></div>
 <pre><code>## tibble [344 × 8] (S3: tbl_df/tbl/data.frame)
 ##  $ species          : Factor w/ 3 levels &quot;Adelie&quot;,&quot;Chinstrap&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ island           : Factor w/ 3 levels &quot;Biscoe&quot;,&quot;Dream&quot;,..: 3 3 3 3 3 3 3 3 3 3 ...
@@ -1779,11 +1781,13 @@ can get rid of this repetition using what coders call
 <p><strong>Exercise 1:</strong></p>
 <p>Can you write a function to calculate the mode for a variable in the
 data? Let’s call it <code>get_mode</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># break down the problem into multiple parts</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co"># you might want to </span></span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co"># a) count how many times each value appears in a vector</span></span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co"># b) find which value(s) appear most frequently</span></span></code></pre></div>
 </div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Think of the problem in multiple parts! You might want to: </span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co"># - count how many times each value appears in a vector</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co"># - find which value(s) appear most frequently</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co"># Remember: Google (and AI) are your friends. To use them in a smart way, you can look up how to do each part separately, and think of how to merge them in a function by yourself. </span></span></code></pre></div>
 <hr />
 <div class="alert-info">
 <p><strong>Exercise 2:</strong></p>
@@ -1799,16 +1803,26 @@ inputs: repeating the same operation on different columns or on
 different datasets.</p>
 <p>On the one hand, you have <code>for</code> loops and
 <code>while</code> loops, which are a great place to start because they
-make iteration very explicit. On the other hand, functional programming
-(FP) offers tools to extract out duplicated code, so each common
-<code>for</code> loop pattern gets its own function.</p>
+make iteration very explicit.</p>
+<ul>
+<li><code>for</code> loops will repeat an instruction that repeats a
+block of code a specific number of times or across a collection of items
+(think of it as “I want to repeat this code as many times as there are
+columns in the dataframe”).</li>
+<li><code>while</code> loops repeat a block of code to infinity until a
+certain condition is met. Their uses are a little more niche and as such
+will not be covered in this lab. But they can be useful for example in
+the cases of web scraping, where you could be interested in the code
+scrolling down and gathering data until the end of the page is met. For
+those among you who want to find out more, you can find a pretty good
+tutorial <a href="https://www.r-bloggers.com/2021/09/r-while-loop/">here</a>.</li>
+</ul>
 <p>Remember the code above - it violates the rule of thumb that you
 should not copy-paste code more than twice.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># repetitive code</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>df<span class="sc">$</span>a <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>a)</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>df<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>b)</span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>df<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>c)</span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>df<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>d)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>df<span class="sc">$</span>a <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>a)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>df<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>b)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>df<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>c)</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>df<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>d)</span></code></pre></div>
 <hr />
 <div id="for-loops" class="section level2">
 <h2>For-loops</h2>
@@ -1820,76 +1834,70 @@ decide where the results will go. If you are modifying an existing
 object, the output is that same object. If you are creating something
 new, define space for it first, such as an empty vector. Avoid growing
 the vector inside the loop, because R copies the data each time, which
-makes the loop much slower (O(n²) behavior). A better way is to store
-the results in a list during the loop and then combine them into a
-single vector afterwards. See more on this <a href="https://r4ds.had.co.nz/iteration.html">here</a>.</p></li>
+makes the loop much slower. A better way is to store the results in a
+list during the loop and then combine them into a single vector
+afterwards. See more on this <a href="https://r4ds.had.co.nz/iteration.html">here</a>.</p></li>
 <li><p><strong>Sequence:</strong> we can think about a data frame as a
-list of columns, so we can iterate over each column with
-<code>seq_along(df)</code>.</p></li>
-<li><p><strong>Body:</strong> apply <code>zscale()</code> or any other
-function.</p></li>
+list of columns, so we can iterate over each column. We can do this with
+the function <code>seq_along(df)</code>. Try running that command on
+your script to see its output.</p></li>
+<li><p><strong>Body:</strong> the function to be applied, in our case:
+<code>zscale()</code>.</p></li>
 </ol>
 <p>The better solution will look like this:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># repetitive code</span></span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>df<span class="sc">$</span>a <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>a)</span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>df<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>b)</span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>df<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>c)</span>
-<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>df<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>d)</span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co"># equivalent iteration</span></span>
-<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(df)) {       <span class="co"># seq_along() similar to length()</span></span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  df[[i]] <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df[[i]])     <span class="co"># [[]] because we are working on single elements</span></span>
-<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># repetitive code</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>df<span class="sc">$</span>a <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>a)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>df<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>b)</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>df<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>c)</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>df<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df<span class="sc">$</span>d)</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="co"># equivalent iteration</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(df)) {       <span class="co"># seq_along() similar to length()</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  </span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>  df[[i]] <span class="ot">&lt;-</span> <span class="fu">zscale</span>(df[[i]])     <span class="co"># [[]] because we are working on single elements. We are overwriting each column of the df with each iteration. </span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>}</span></code></pre></div>
 <p>Remember, this only works for <code>for</code> loops that manipulate
 existing inputs (i.e. columns in a dataframe). If you want to save the
 output of your function in a different way, you need to define the
 object where you wish to store the output <strong>ahead</strong> of the
 function. In this case, you will see a pre-defined vector and an empty
 list:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="do">###### Vector</span></span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co"># creating an &quot;empty&quot; vector to put the values</span></span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>output_median <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, <span class="fu">ncol</span>(df))</span>
-<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co"># running for loop</span></span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(df)) {            </span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>  output_median[[i]] <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[i]])</span>
-<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>}</span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a><span class="co"># checking result</span></span>
-<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>output_median</span></code></pre></div>
-<pre><code>## [1]  0.11508454 -0.46621010  0.04120436 -0.02374933</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="do">##### List </span></span>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="do">###### Vector</span></span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co"># creating an &quot;empty&quot; vector to put the values</span></span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>output_median_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>output_median <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, <span class="fu">ncol</span>(df))</span>
 <span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a></span>
 <span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co"># running for loop</span></span>
 <span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(df)) {            </span>
-<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>  output_median_list[[i]] <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[i]])</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>  output_median[[i]] <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[i]])</span>
 <span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>}</span>
 <span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a></span>
 <span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a><span class="co"># checking result</span></span>
-<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>output_median_list</span></code></pre></div>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>output_median</span></code></pre></div>
+<pre><code>## [1] -0.03222069  0.04073770  0.20517095  0.02886413</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="do">##### List </span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="co"># creating an &quot;empty&quot; vector to put the values</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>output_median_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="co"># running for loop</span></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(df)) {            </span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>  output_median_list[[i]] <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[i]])</span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>}</span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co"># checking result</span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>output_median_list</span></code></pre></div>
 <pre><code>## [[1]]
-## [1] 0.1150845
+## [1] -0.03222069
 ## 
 ## [[2]]
-## [1] -0.4662101
+## [1] 0.0407377
 ## 
 ## [[3]]
-## [1] 0.04120436
+## [1] 0.2051709
 ## 
 ## [[4]]
-## [1] -0.02374933</code></pre>
-<hr />
-</div>
-<div id="while-loops" class="section level2">
-<h2>While-loops</h2>
-<p>You should also be aware that there is a conditional version of
-for-loops called while loops. Their uses are a little more niche and as
-such will not be covered in this lab. For those among you who are
-curious about them, you can find a pretty good tutorial <a href="https://www.r-bloggers.com/2021/09/r-while-loop/">here</a>.</p>
+## [1] 0.02886413</code></pre>
 <hr />
 </div>
 <div id="the-purrr-package" class="section level2">
@@ -1917,40 +1925,36 @@ and thus is easier to learn. The most useful function will be
 Logic behind vectorised functions (also called functional programming).
 </p>
 </div>
-<p>Three ways to pass functions to <code>map()</code>:</p>
+<p><code>purrr</code> essentially takes each element of <code>.x</code>,
+applies <code>.f</code> to them and collects the results.</p>
+<p>Different ways to pass functions to <code>map()</code>:</p>
 <ol style="list-style-type: decimal">
 <li>pass directly to <code>map()</code></li>
 </ol>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(df, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">map</span>(df, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) </span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>use an anonymous function <code>\(x)</code></li>
-</ol>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(df, \(x) {</span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>  <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) }</span>
-<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>)</span></code></pre></div>
-<ol start="3" style="list-style-type: decimal">
 <li>use <code>~</code></li>
 </ol>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x =</span> df, <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> df, <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <p>Let’s look at this in practice. Imagine you want to calculate the
 mean of each column in your data frame:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="co"># repetitive code</span></span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>a)</span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>b)</span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>c)</span>
-<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>d)</span>
-<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a><span class="co"># equivalent map function</span></span>
-<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x =</span> df, <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span>T))</span>
-<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a><span class="co"># map function in tidyverse style</span></span>
-<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a>df <span class="sc">|&gt;</span> purrr<span class="sc">::</span><span class="fu">map</span>(mean)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># repetitive code</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>a)</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>b)</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>c)</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>d)</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a><span class="co"># equivalent map function</span></span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> df, <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span>T))</span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="co"># map function in tidyverse style</span></span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>df <span class="sc">|&gt;</span> <span class="fu">map</span>(mean)</span></code></pre></div>
 <hr />
 </div>
 </div>
-<div id="the-purrrmap-family-of-functions" class="section level2">
-<h2>The <code>purrr::map*()</code> family of functions</h2>
+<div id="the-map-family-of-functions" class="section level2">
+<h2>The <code>map*()</code> family of functions</h2>
 <p>The pattern of looping over a vector, doing something to each element
 and saving the results is so common that the purrr package provides a
 family of functions to do it for you. Indeed, their use is so common
@@ -1958,11 +1962,11 @@ that several wrapper functions were created to include the final
 transformation of the list output. There is one function for each type
 of output:</p>
 <ul>
-<li><code>purrr::map()</code> returns a list.</li>
-<li><code>purrr::map_lgl()</code> returns a logical vector</li>
-<li><code>purrr::map_int()</code> returns an integer vector.</li>
-<li><code>purrr::map_dbl()</code> returns a double vector.</li>
-<li><code>purrr::map_chr()</code> returns a character vector.</li>
+<li><code>map()</code> returns a list.</li>
+<li><code>map_lgl()</code> returns a logical vector</li>
+<li><code>map_int()</code> returns an integer vector.</li>
+<li><code>map_dbl()</code> returns a double vector.</li>
+<li><code>map_chr()</code> returns a character vector.</li>
 </ul>
 <hr />
 <div class="alert-info">
@@ -1973,8 +1977,8 @@ function should we use and how?</p>
 </div>
 <hr />
 </div>
-<div id="purrrmap2" class="section level2">
-<h2><code>purrr::map2</code></h2>
+<div id="map2" class="section level2">
+<h2><code>map2</code></h2>
 <p>You can also iterate over two inputs at the same time using
 <code>map2(.x, .y, .f)</code></p>
 <div class="figure" style="text-align: center">
@@ -1983,10 +1987,10 @@ function should we use and how?</p>
 Logic behind map2().
 </p>
 </div>
-<p>The function works exactly the same way as the
-<code>purrr::map*</code> functions for a single input. One caveat that
-applies only to <code>purrr::map2()</code> is that both inputs need to
-have the <strong>same length</strong>!</p>
+<p>The function works exactly the same way as the <code>map*</code>
+functions for a single input. One caveat that applies only to
+<code>map2()</code> is that both inputs need to have the <strong>same
+length</strong>!</p>
 <hr />
 <div class="alert-info">
 <p><strong>Exercise 4:</strong></p>
@@ -1994,6 +1998,10 @@ have the <strong>same length</strong>!</p>
 deviation for the numeric variables in our <code>palmerpenguins</code>
 data.</p>
 </div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="co"># Again, split the problem into multiple parts! We want to: </span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="co"># - Check for numeric data. Think of `if` conditions and the family of `is.character/numeric/double()` functions!</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a><span class="co"># - Apply `mean()` and `sd()` to the defined columns.  </span></span></code></pre></div>
 <hr />
 <div class="alert-info">
 <p><strong>Exercise 5:</strong></p>
