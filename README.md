@@ -6,7 +6,7 @@
 > Lab materials for future sessions might not be ready yet. We revise the materials on an ongoing basis.
 
 1. (Week 37) Introduction, R basics, and best practices \[[**.html**](https://raw.githack.com/intro-to-data-science-26/labs/main/01_intro/1-intro-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/01_intro/1-intro-lab.Rmd)\]
-2. GitHub, functions, interation, and debugging \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/c87fe5d8c28c0cd588a47b90578fa796c913a337/session-02-functions/2-functions.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-02-functions/2-functions.Rmd)\]
+2. (Week 38) Functions and Iteration \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/c87fe5d8c28c0cd588a47b90578fa796c913a337/session-02-functions/2-functions.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/02_functions/2-functions.Rmd)\]
 3. Iteration, automation, scheduling and debugging. \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/cd4e2b729045aeca1bfddb13829886bcbb3985dc/session-03-automation/3-automation-lab.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-03-automation/3-automation-lab.Rmd)\]
 4. Webdata, Regex and Xpath \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-04-webdata/4-webdata.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-04-webdata/4-webdata.Rmd)\]
 5. Web scraping and APIs  \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-05-web-scraping/5-web-scraping.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-05-web-scraping/5-web-scraping.Rmd)\]
@@ -23,6 +23,7 @@
 The lab sessions to the course Introduction to Data Science by [Simon Munzert](https://simonmunzert.github.io/) at the [Hertie School, Berlin](https://www.hertie-school.org/en/) are taught by [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hagemann](https://linushagemann.de).
 
 ## Office hours
+
 If you have a specific problem you just can't seem to resolve or are feeling behind, then feel free to stop by the office hours of your respective TA.
 
 You can book a slot with Carol [here](https://calendar.app.google/Wr578CPH9rbbAs4z6).
@@ -33,7 +34,7 @@ You can book a slot with Linus [here](https://outlook.office.com/bookwithme/user
 
 ## Acknowledgements
 
-These materials were drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), and [Linus Hagemann](https://linushagemann.de). 
+These materials were drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hagemann](https://linushagemann.de). 
 
 ## License
 

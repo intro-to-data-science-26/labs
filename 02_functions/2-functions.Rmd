@@ -52,7 +52,6 @@ background-color: #2f1a61;
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 library(tidyverse)
-library(purrr)
 ```
 
 # Quick review: `tidyverse` and `dplyr`
@@ -505,4 +504,4 @@ This tutorial is partly based on [*R for Data Science*](https://r4ds.hadley.nz/)
 
 The section on functions and iteration is partly based on [*R for Data Science*](https://r4ds.hadley.nz/), section 5.2, [*Quantitative Politics with R*](https://github.com/erikgahner/qpolr), chapter 3; as well as the [Tidyverse Session](https://github.com/uo-ec607/lectures/tree/master/05-tidyverse) and on the excellent slides by [*Malcolm Barrett*](https://github.com/malcolmbarrett/happy_scientist) in the course Data Science for Economists by Grant McDermott. The data for the exercises was inspired by [R for Epidemiology](https://www.r4epi.com/).
 
-This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), and [Carol Sobral](https://github.com/cbsobral).
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hageman](https://linushagemann.de).

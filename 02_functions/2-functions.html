@@ -1792,23 +1792,26 @@ function to warn you if you tried to scale a character variable.</p>
 <span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>}</span>
 <span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a></span>
 <span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="fu">zscale</span>(df<span class="sc">$</span>a)</span></code></pre></div>
-<pre><code>##   [1] -0.36520958 -0.14649927 -0.78133591  0.78998436  0.88360806 -0.44802521
-##   [7]  1.00110868  0.34789806  1.39428369  0.98528887 -1.21502286 -2.65812251
-##  [13] -1.20907543  0.63932797 -2.00566285 -0.10437025  0.25121178 -1.80237160
-##  [19]  0.40933770 -1.71539336  0.19787853  1.01167273 -0.31227555 -0.65231945
-##  [25] -0.78534140  0.40411384 -1.75619068 -0.61503212 -0.61582159 -0.56003296
-##  [31]  0.57115124  0.51276742 -0.71063139 -1.13711464 -1.10815140  0.58832936
-##  [37]  1.73798436  2.44711731  0.91326293 -0.08955449  0.64234730  0.36470395
-##  [43]  1.08832680 -0.14596390 -0.44186966 -0.77399325 -0.78096562  1.19014547
-##  [49]  0.62908917 -0.45726286 -0.50283580 -1.82776654 -1.21490916  0.03719650
-##  [55]  1.10918653 -0.78997868 -1.33873096 -0.03786529  2.24800852  0.23788061
-##  [61]  0.72596886 -1.92658539  0.07789634 -0.44256606  0.62788207  0.53048348
-##  [67] -0.09268133  0.23767691 -1.28559197  0.59000936  1.12997717  0.76585823
-##  [73]  0.94925365  1.44638804 -0.59315546 -1.08295612  1.55086704 -0.90277247
-##  [79] -0.30424159 -0.71704784  0.36979738 -0.97191794  0.01263324  0.90078037
-##  [85]  0.01031946  1.07077749  0.82280018  1.01998990  1.77446324 -0.22206179
-##  [91]  0.24417378  0.60465478 -1.19296174  0.64371544 -0.25035724  0.13683956
-##  [97]  1.66534222 -1.38307909  0.01922502 -0.08731269</code></pre>
+<pre><code>##   [1] -1.306165650 -1.260273295 -0.794674869  0.161652176  0.152891768
+##   [6]  2.554153520 -0.746606987 -0.273201672  1.320788252  0.245068773
+##  [11] -0.107499944  2.292809677 -0.823203088 -0.256169347  1.252659970
+##  [16] -0.018735325  0.121371485 -0.124935545 -0.611397425 -1.465408415
+##  [21]  1.990376145 -0.251941070  2.306239554  1.052555681 -0.104711846
+##  [26] -1.643002098 -0.671141397 -1.293490941  0.457520398 -1.589906593
+##  [31] -0.269198506  0.210843861  0.464218081  0.008912346  0.163414468
+##  [36] -0.359507267  0.802308671  0.569264313  1.171336951  0.429777241
+##  [41] -0.986475640 -0.452919006 -0.367516591 -1.573431908 -0.925021084
+##  [46] -0.936790124 -1.319022662  0.712328430 -0.442209098  0.033677913
+##  [51]  1.017025932 -0.791953940  0.288031943 -0.157085688  0.143517800
+##  [56]  0.487612602 -0.883898306  1.420457106 -0.828030475 -1.945416298
+##  [61] -0.514526898  1.710278784  0.075878430 -1.574485718 -0.466555046
+##  [66]  2.385567857 -0.667632397  1.315160499  0.334001159  1.771714710
+##  [71] -0.047082947  0.484682748 -0.135921638 -0.118146026 -0.485907480
+##  [76]  0.021179999 -0.730420798 -0.161684239  1.323005632  0.055874716
+##  [81]  1.001895174 -0.843190571 -0.320397331 -0.568717701 -0.117105808
+##  [86] -0.175357638  0.797510449 -1.404414033 -0.505963202  0.214111721
+##  [91]  1.333126649  1.471756893 -1.253728857 -1.857185609  0.313562270
+##  [96]  1.480089858  0.192093541 -0.595245283  0.735636674 -0.723331501</code></pre>
 <p>Now we can apply our function to any variable that we would like to
 transform. It will run even if we apply it to a character input, but
 warn us that the input does not fit the required input.</p>
@@ -1938,7 +1941,7 @@ list:</p>
 <span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a></span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co"># checking result</span></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>output_median</span></code></pre></div>
-<pre><code>## [1]  0.01592913  2.00588404 -0.10313388  0.17391117</code></pre>
+<pre><code>## [1] -0.11230288  1.17713370  0.03693398 -0.01385454</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="do">##### List </span></span>
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a></span>
 <span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="co"># creating an &quot;empty&quot; list to put the values</span></span>
@@ -1952,16 +1955,16 @@ list:</p>
 <span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a><span class="co"># checking result</span></span>
 <span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>output_median_list</span></code></pre></div>
 <pre><code>## [[1]]
-## [1] 0.01592913
+## [1] -0.1123029
 ## 
 ## [[2]]
-## [1] 2.005884
+## [1] 1.177134
 ## 
 ## [[3]]
-## [1] -0.1031339
+## [1] 0.03693398
 ## 
 ## [[4]]
-## [1] 0.1739112</code></pre>
+## [1] -0.01385454</code></pre>
 <hr />
 </div>
 <div id="the-purrr-package" class="section level2">
@@ -2105,8 +2108,8 @@ McDermott. The data for the exercises was inspired by <a href="https://www.r4epi
 <p>This script was drafted by <a href="https://github.com/tom-arend">Tom
 Arendt</a> and <a href="https://lfoswald.github.io/">Lisa Oswald</a>,
 with contributions by <a href="https://smkerr.github.io/">Steve
-Kerr</a>, <a href="https://github.com/hiba-ahmad">Hiba Ahmad</a>, <a href="https://github.com/cgarroca">Carmen Garro</a>, <a href="https://seramirezruiz.github.io/">Sebastian Ramirez-Ruiz</a>, <a href="https://github.com/Killian-Conyngham">Killian Conyngham</a>, and
-<a href="https://github.com/cbsobral">Carol Sobral</a>.</p>
+Kerr</a>, <a href="https://github.com/hiba-ahmad">Hiba Ahmad</a>, <a href="https://github.com/cgarroca">Carmen Garro</a>, <a href="https://seramirezruiz.github.io/">Sebastian Ramirez-Ruiz</a>, <a href="https://github.com/Killian-Conyngham">Killian Conyngham</a>, <a href="https://github.com/cbsobral">Carol Sobral</a>, <a href="https://ldmnch.github.io/layitx/about.html">Laia Domenech
+Burin</a>, and <a href="https://linushagemann.de">Linus Hageman</a>.</p>
 </div>
 
    
