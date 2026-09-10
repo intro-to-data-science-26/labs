@@ -8,7 +8,7 @@
         <meta name="author" content="Carol Sobral, Linus Hagemann and Laia Domenech Burin" />
     
     
-    <title>GitHub, Functions and Iteration</title>
+    <title>Functions and Iteration</title>
 
         <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1508,7 +1508,7 @@ margin-left: 0 !important;
    <div class="book with-summary">
       <div class="book-summary">
         <ul>
-          <li class="title">GitHub, Functions and Iteration</li>
+          <li class="title">Functions and Iteration</li>
           <li class="divider"></li>
         </ul>
         <nav role="navigation" id="toc">
@@ -1521,7 +1521,7 @@ margin-left: 0 !important;
           Syntax</a></li>
           <li><a href="#conditional-functions" id="toc-conditional-functions">Conditional functions</a></li>
           </ul></li>
-          <li><a href="#iteration" id="toc-iteration">3. Iteration</a>
+          <li><a href="#iteration" id="toc-iteration">Iteration</a>
           <ul>
           <li><a href="#for-loops" id="toc-for-loops">For-loops</a></li>
           <li><a href="#the-purrr-package" id="toc-the-purrr-package">The <code>purrr</code>
@@ -1553,7 +1553,7 @@ Sobral, Linus Hagemann and Laia Domenech Burin</span></li>
       
    
         
-      <h1 class="title">GitHub, Functions and Iteration</h1>
+      <h1 class="title">Functions and Iteration</h1>
       
         
 
@@ -1633,8 +1633,8 @@ another).</p></li>
 <li><p>You can give functions descriptive names that make your code
 easier to understand.</p></li>
 </ol>
-<p>You can read more on functions in <a href="https://r4ds.had.co.nz/functions.html#functions">this section</a>
-of Rfor Data Science.</p>
+<p>You can read more on functions in <a href="https://r4ds.hadley.nz/functions.html">this section</a> of R for
+Data Science.</p>
 <hr />
 </div>
 <div id="basic-syntax" class="section level2">
@@ -1670,6 +1670,8 @@ the function. The body of the function is represented by a
 <pre><code>function_name &lt;- function(input_parameters) {
   Do what you want to do in the body of the
   function, just like you would write other code in R.
+  
+  return(function_output) # This is the result of your function call.
 }</code></pre>
 <p>In our example, we could simplify the z-transformation of four
 variables with this function:</p>
@@ -1725,26 +1727,23 @@ function to warn you if you tried to scale a character variable.</p>
 <span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>}</span>
 <span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a></span>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="fu">zscale</span>(df<span class="sc">$</span>a)</span></code></pre></div>
-<pre><code>##   [1] -0.135109399  2.151980796  1.214338842 -0.592461429 -0.743093532
-##   [6] -0.755758422  1.211630616 -0.381644581  0.080647590  0.476566200
-##  [11] -0.629472749 -0.403485525  0.517641894  0.519876319 -0.493496788
-##  [16]  0.786192000  0.192191447  0.257954971 -0.065595112 -2.120102817
-##  [21] -0.814452637 -0.183963732  0.988636152 -0.776007732 -0.913595883
-##  [26]  2.053915020 -1.370638015 -0.504120769  2.288346084  0.474167911
-##  [31] -1.616009379  1.276528775 -0.494525190  1.082151283 -0.659432233
-##  [36]  1.074089082 -0.593275024 -0.180971050 -0.430481914  0.077491380
-##  [41] -1.278923917 -0.562191021 -0.723195580  0.564278262 -1.345505903
-##  [46]  0.945309609 -1.780509802  0.755148180 -0.642200242 -0.687784828
-##  [51]  0.608976077 -0.222614672 -1.776856065 -0.939616025  1.123529597
-##  [56]  0.107015979  0.847108915  0.803420477  1.237248413  0.148622860
-##  [61] -0.333327820  1.496160688  2.507439184  0.001153731  0.497726942
-##  [66] -0.786957805  1.037910748 -1.507767843  1.273719720 -0.181797179
-##  [71]  0.575001568  0.273851093 -1.009107412 -1.024269248  0.971198423
-##  [76] -0.323973618  0.236703609 -1.954235132 -0.109742355 -1.156882247
-##  [81]  1.249643263 -1.501370622 -1.602133507  0.731874175 -0.622484217
-##  [86] -0.927250771  0.007419533 -0.588893893 -0.451052359  1.090741569
-##  [91]  1.432748799  0.183255858 -0.283716597  0.546585531  1.564957130
-##  [96]  0.359522114 -1.675699336  0.126505650  0.189671979  0.638957890</code></pre>
+<pre><code>##   [1] -0.14576631 -0.40483229  0.09873183 -1.90109382 -0.28403948  0.40023153
+##   [7] -0.24890804 -1.14894628 -2.12349048 -0.30836612  1.34130348  0.45585393
+##  [13]  1.46944835 -0.37317845 -1.80117433 -0.01386010 -0.42661001 -1.74399875
+##  [19]  0.04440205 -1.03221171 -0.09829619  0.32082036 -0.71462232  0.26999483
+##  [25] -0.81430637 -0.71959578 -0.19526413 -0.60627454 -0.66005734  0.14118668
+##  [31] -0.63400850  0.90941905  1.52394388  1.32559972  0.87910471  2.42567409
+##  [37] -2.01466822  0.75809081  1.10764122  1.50457753 -0.15783245  1.09375026
+##  [43]  0.66931957 -0.78501384 -2.24598589  0.08839914 -0.42218945  0.33462664
+##  [49] -0.72032782  0.13530428 -0.21503193 -1.47828553  1.44332030  0.32367610
+##  [55]  0.46511521  0.91992950 -0.10239822  0.10566708  0.13353565  0.91761777
+##  [61]  0.93824355  0.79437476 -0.70687441 -0.86344323 -0.65180658  0.44762179
+##  [67]  0.35760152 -1.21514114  0.24853627 -0.31807681 -0.16157575  0.98500211
+##  [73]  0.12965228 -1.17402875  0.66115282 -1.80908612 -0.18826348  0.12861671
+##  [79]  1.40163727  2.82479312 -0.25219952  1.08536963 -0.12130391 -1.09394072
+##  [85]  0.87522891 -0.83336036 -0.83342565  1.88910489 -1.60015830 -0.01550652
+##  [91]  1.22501859  0.32273103 -0.05268146 -1.01134639  0.44104740 -1.05283617
+##  [97] -0.09735142 -0.13510865  0.46835154  1.89778026</code></pre>
 <p>Now we can apply our function to any variable that we would like to
 transform. It will run even if we apply it to a character input, but
 warn us that the input does not fit the required input.</p>
@@ -1797,7 +1796,7 @@ data? Let’s call it <code>get_mode</code>.</p>
 </div>
 </div>
 <div id="iteration" class="section level1">
-<h1>3. Iteration</h1>
+<h1>Iteration</h1>
 <p>Iteration helps you when you need to do the same thing to multiple
 inputs: repeating the same operation on different columns or on
 different datasets.</p>
@@ -1860,7 +1859,7 @@ your script to see its output.</p></li>
 existing inputs (i.e. columns in a dataframe). If you want to save the
 output of your function in a different way, you need to define the
 object where you wish to store the output <strong>ahead</strong> of the
-function. In this case, you will see a pre-defined vector and an empty
+loop. In this case, you will see a pre-defined vector and an empty
 list:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="do">###### Vector</span></span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
@@ -1874,10 +1873,10 @@ list:</p>
 <span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a></span>
 <span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a><span class="co"># checking result</span></span>
 <span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>output_median</span></code></pre></div>
-<pre><code>## [1] -0.03222069  0.04073770  0.20517095  0.02886413</code></pre>
+<pre><code>## [1] -0.03409399 -0.47401092 -0.06601165  0.02945982</code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="do">##### List </span></span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="co"># creating an &quot;empty&quot; vector to put the values</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="co"># creating an &quot;empty&quot; list to put the values</span></span>
 <span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>output_median_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a></span>
 <span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="co"># running for loop</span></span>
@@ -1888,16 +1887,16 @@ list:</p>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co"># checking result</span></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>output_median_list</span></code></pre></div>
 <pre><code>## [[1]]
-## [1] -0.03222069
+## [1] -0.03409399
 ## 
 ## [[2]]
-## [1] 0.0407377
+## [1] -0.4740109
 ## 
 ## [[3]]
-## [1] 0.2051709
+## [1] -0.06601165
 ## 
 ## [[4]]
-## [1] 0.02886413</code></pre>
+## [1] 0.02945982</code></pre>
 <hr />
 </div>
 <div id="the-purrr-package" class="section level2">
@@ -1947,18 +1946,19 @@ mean of each column in your data frame:</p>
 <span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a></span>
 <span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a><span class="co"># equivalent map function</span></span>
 <span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> df, <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span>T))</span>
-<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a></span>
-<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="co"># map function in tidyverse style</span></span>
-<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>df <span class="sc">|&gt;</span> <span class="fu">map</span>(mean)</span></code></pre></div>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="fu">map</span>(df, mean)</span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a><span class="co"># or in tidyverse style</span></span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>df <span class="sc">|&gt;</span> <span class="fu">map</span>(mean)</span></code></pre></div>
 <hr />
 </div>
 </div>
 <div id="the-map-family-of-functions" class="section level2">
 <h2>The <code>map*()</code> family of functions</h2>
 <p>The pattern of looping over a vector, doing something to each element
-and saving the results is so common that the purrr package provides a
-family of functions to do it for you. Indeed, their use is so common
-that several wrapper functions were created to include the final
+and saving the results is so common that the <code>purrr</code> package
+provides a family of functions to do it for you. Indeed, their use is so
+common that several wrapper functions were created to include the final
 transformation of the list output. There is one function for each type
 of output:</p>
 <ul>
@@ -2017,11 +2017,13 @@ those of you who want to take it further, you can find more information
 consider this as is the first exposure to functions (that can actually
 already get you pretty far). However, it is important that you apply
 your new skills and practice further on your own.</p>
-<p>One such skill is the question of how to integrate tidyverse
-functions into your own functions. Most dplyr verbs use tidy evaluation
-in some way. Tidy evaluation is a special type of non-standard
-evaluation (meaning the way R interprets your written code) used
-throughout the tidyverse. There are two basic forms found in dplyr:</p>
+<p>One such skill is the question of how to integrate
+<code>tidyverse</code> functions into your own functions. Most
+<code>dplyr</code> verbs use tidy evaluation in some way. Tidy
+evaluation is a special type of non-standard evaluation (meaning the way
+R interprets your written code) used throughout the
+<code>tidyverse.</code> There are two basic forms found in
+<code>dplyr</code>:</p>
 <ul>
 <li><strong>data masking</strong> makes it so that you can use data
 variables as if they were variables in the environment (i.e. you write

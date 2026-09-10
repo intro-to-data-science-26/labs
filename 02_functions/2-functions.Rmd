@@ -1,5 +1,5 @@
 ---
-title: "GitHub, Functions and Iteration"
+title: "Functions and Iteration"
 author: "Carol Sobral, Linus Hagemann and Laia Domenech Burin"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
@@ -253,7 +253,7 @@ What is the mode for the variable `flipper_length_mm`?
 
 ------------------------------------------------------------------------
 
-# 3. Iteration 
+# Iteration 
 
 Iteration helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns or on different datasets.
 
