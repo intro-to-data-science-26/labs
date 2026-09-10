@@ -17,7 +17,6 @@
 10. Flexdashboards \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-10-flexdash/10-flex.html) | [**.Rmd**](https://github.com/intro-to-data-science-24/labs/blob/main/session-09-packaging/09-packaging.Rmd)\]
 12. Review \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-12/session-12-review.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-12/session-12-review.Rmd)\]
 
-
 ## Instructors
 
 The lab sessions to the course Introduction to Data Science by [Simon Munzert](https://simonmunzert.github.io/) at the [Hertie School, Berlin](https://www.hertie-school.org/en/) are taught by [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hagemann](https://linushagemann.de).
@@ -31,6 +30,15 @@ You can book a slot with Carol [here](https://calendar.app.google/Wr578CPH9rbbAs
 You can book a slot with Laia [here](https://outlook.office.com/bookwithme/user/f9c516a74844497886c0367ff4c006cd@hertie-school.org/meetingtype/l6XLWc6VMkWftK9xAHsazA2?bookingcode=1e4334f5-72d6-4985-b830-222294e60cce&anonymous&ismsaljsauthenabled&ep=mlink).
 
 You can book a slot with Linus [here](https://outlook.office.com/bookwithme/user/e34eaf5c4f8b414d85099a831468a048@students.hertie-school.org/meetingtype/eSO3mzF8ZU6kJx7Xj4gA1g2?anonymous&ismsaljsauthenabled&ep=mlink).
+
+## Working with these Materials
+
+We recommend that you clone this repository to your computer, following the steps we outlined in the first lab. Before each weeks session, pull once, to get the updated materials for the week. Usually, you'll want to work with the respective `.Rmd` file. **Ideally, you install any packages necessary for the materials before the lab session**.
+
+> [!TIP]
+> Usually, you will not need to *knit* the `.Rmd` files in this repository. In case you still want to do that, the following packages will need to be installed (+ special packages necessary for each weeks content): `rmarkdown`, `rmdformats`, `devtools`, and `emo` (needs to be installed with `devtools::install_github("hadley/emo")`.)
+
+
 
 ## Acknowledgements
 
