@@ -468,7 +468,7 @@ Iterate over the relevant columns.
 
 There is, of course, much more to learn about functions in R and for those of you who want to take it further, you can find more information [here](https://adv-r.hadley.nz/functions.html). For now, consider this as is the first exposure to functions (that can actually already get you pretty far). However, it is important that you apply your new skills and practice further on your own.
 
-One such skill is the question of how to integrate tidyverse functions into your own functions. Most dplyr verbs use tidy evaluation in some way. Tidy evaluation is a special type of non-standard evaluation (meaning the way R interprets your written code) used throughout the tidyverse. There are two basic forms found in dplyr:
+One such skill is the question of how to integrate `tidyverse` functions into your own functions. Most `dplyr` verbs use tidy evaluation in some way. Tidy evaluation is a special type of non-standard evaluation (meaning the way R interprets your written code) used throughout the `tidyverse.` There are two basic forms found in `dplyr`:
 
 -   **data masking** makes it so that you can use data variables as if they were variables in the environment (i.e. you write `my_variable` instead of `df$myvariable`).
 -   **tidy selection** allows you to switch choosing variables based on their position, name, or type (e.g. `starts_with("x")` or `is.numeric`).
