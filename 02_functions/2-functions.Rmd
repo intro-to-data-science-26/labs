@@ -55,9 +55,56 @@ library(tidyverse)
 library(purrr)
 ```
 
+# Quick review: `tidyverse` and `dplyr`
+
+## Data manipulation with `dplyr`
+
+A fundamental package of the tidyverse is called `dplyr`. Last class we briefly talked about them, but we are going to do a short review. The main `dplyr` functions are:
+
+- `select()`: Select (i.e. subset) columns by their names (keep or exclude some columns)
+- `filter()`: Filter (i.e. subset) rows based on their values (keep rows that satisfy your conditions)
+- `mutate()`: Create new columns or edit existing ones
+- `group_by()`: Define groups within your data set
+- `summarize()`: Collapse multiple rows into a single summary value (summary statistics)
+- `arrange()`: Arrange (i.e. reorder) rows based on their values (reorder rows according to single or multiple variables)
+
+We are going to practice a short exercise with the `gapminder` dataset, which contains development data for various countries over time.
+
+```{r}
+library(gapminder)
+head(gapminder) 
+```
+
+::: alert-info
+**Review Exercise**
+
+We can leverage the pipe operator to sequence our code in a logical manner. Can you adapt the following code chunk with the pipe and conditional logical operators we discussed previously?
+:::
+
+```{r}
+only_2007 <- filter(gapminder, year == 2007)
+only_2007_europe <- filter(only_2007, continent == "Europe")
+only_2007_europe_country <- select(only_2007_europe, country, lifeExp, gdpPercap)
+final_df <- only_2007_europe_country
+final_df
+```
+
+Additionally, the `tidyverse` has functions to export and import data. We usually will work with data in csv format. The function to read those files is `read_csv`. It only requires to pass by the path of the file as a string, and store the function call in an R object so the dataframe is stored in the R environment.
+
+The functions to export the file is [`write_csv`](https://readr.tidyverse.org/reference/write_delim.html). Its most important arguments are `x` and `file`, where you indicate the dataframe object you want to export and the path of the file respectively. Let's try them out! In the following block, export the created `final_df` dataframe as a csv and then try to import it.
+
+```{r eval=FALSE, include=FALSE}
+# Export the file: 
+
+write_csv()
+
+# Import the file: 
+
+final_df_imported <- read_csv(x = ...,
+                              file = ...)
+```
 
 # Functions with `R`
-
 
 ## Quick review: lists 📄
 
@@ -77,17 +124,11 @@ list <- list(a = "hello", b = 1, c = mean)
 
 When you think about it, data.frames are also lists (or rather a list of columns).
 
-```{r}
-library(gapminder)
-head(gapminder) 
-```
-
 Lists are very useful when you start writing your own functions and iterating through them using the `purrr` family of functions.
-
 
 ------------------------------------------------------------------------
 
-## Functions 
+## Functions
 
 In any coding language a fundamental principle should be **DRY** (**D**on't **R**epeat **Y**ourself). A good rule of thumb: once you've copy-pasted code twice, it's time to write a function.
 
@@ -97,7 +138,7 @@ Functions allow you to automate tasks in a more powerful and general way. Writin
 
 2.  You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
 
-3. You can give functions descriptive names that make your code easier to understand.
+3.  You can give functions descriptive names that make your code easier to understand.
 
 You can read more on functions in [this section](https://r4ds.hadley.nz/functions.html) of R for Data Science.
 
@@ -125,7 +166,7 @@ There are three key steps to creating a new function:
 
 1.  Pick a **name** for the function. We'll use `zscale` because this function re-scales (or "z-transforms") a vector to have a mean of 0 and a standard deviation of 1.
 
-2. List the **inputs**, or **arguments**, to the function inside the brackets. Here we have just one argument. If we had more, the call would look like this: `function(x, y, z)`.
+2.  List the **inputs**, or **arguments**, to the function inside the brackets. Here we have just one argument. If we had more, the call would look like this: `function(x, y, z)`.
 
 3.  Place the code you have developed in the **body** of the function. The body of the function is represented by a `{}` block that immediately follows the `function(...)` call.
 
@@ -147,7 +188,6 @@ zscale <- function(x) {
   (x - mean(x, na.rm = T) / sd(x, na.rm = T))
 }
 ```
-
 
 Now instead of repeating that long formula four times (and risking copy-paste errors), we can simply use:
 
@@ -213,7 +253,7 @@ Note that there is still a lot of repetition in the example above. We can get ri
 
 ------------------------------------------------------------------------
 
-First, let's do one last exercise with functions. We will work with `palmerpenguins` again. 
+First, let's do one last exercise with functions. We will work with `palmerpenguins` again.
 
 ```{r, eval=T}
 library(palmerpenguins)
@@ -223,11 +263,11 @@ str(penguins)
 
 ------------------------------------------------------------------------
 
-:::alert-info
+::: alert-info
 **Exercise 1:**
 
-Can you write a function to calculate the mode for a variable in the data? Let's call it `get_mode`. 
-::: 
+Can you write a function to calculate the mode for a variable in the data? Let's call it `get_mode`.
+:::
 
 ```{r}
 # Think of the problem in multiple parts! You might want to: 
@@ -238,10 +278,9 @@ Can you write a function to calculate the mode for a variable in the data? Let's
 # Remember: Google (and AI) are your friends. To use them in a smart way, you can look up how to do each part separately, and think of how to merge them in a function by yourself. 
 ```
 
+------------------------------------------------------------------------
 
----
-
-:::alert-info
+::: alert-info
 **Exercise 2:**
 
 What is the mode for the variable `flipper_length_mm`?
@@ -253,13 +292,13 @@ What is the mode for the variable `flipper_length_mm`?
 
 ------------------------------------------------------------------------
 
-# Iteration 
+# Iteration
 
 Iteration helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns or on different datasets.
 
-On the one hand, you have `for` loops and `while` loops, which are a great place to start because they make iteration very explicit. 
+On the one hand, you have `for` loops and `while` loops, which are a great place to start because they make iteration very explicit.
 
-- `for` loops will repeat an instruction that repeats a block of code a specific number of times or across a collection of items (think of it as "I want to repeat this code as many times as there are columns in the dataframe"). 
+- `for` loops will repeat an instruction that repeats a block of code a specific number of times or across a collection of items (think of it as "I want to repeat this code as many times as there are columns in the dataframe").
 - `while` loops repeat a block of code to infinity until a certain condition is met. Their uses are a little more niche and as such will not be covered in this lab. But they can be useful for example in the cases of web scraping, where you could be interested in the code scrolling down and gathering data until the end of the page is met. For those among you who want to find out more, you can find a pretty good tutorial [here](https://www.r-bloggers.com/2021/09/r-while-loop/).
 
 Remember the code above - it violates the rule of thumb that you should not copy-paste code more than twice.
@@ -279,7 +318,7 @@ To solve problems like this one with a `for` loop, we need to think again about 
 
 1.  **Output:** When you write a loop, you need to decide where the results will go. If you are modifying an existing object, the output is that same object. If you are creating something new, define space for it first, such as an empty vector. Avoid growing the vector inside the loop, because R copies the data each time, which makes the loop much slower. A better way is to store the results in a list during the loop and then combine them into a single vector afterwards. See more on this [here](https://r4ds.had.co.nz/iteration.html).
 
-2.  **Sequence:** we can think about a data frame as a list of columns, so we can iterate over each column. We can do this with the function `seq_along(df)`. Try running that command on your script to see its output.  
+2.  **Sequence:** we can think about a data frame as a list of columns, so we can iterate over each column. We can do this with the function `seq_along(df)`. Try running that command on your script to see its output.
 
 3.  **Body:** the function to be applied, in our case: `zscale()`.
 
@@ -316,7 +355,6 @@ for (i in seq_along(df)) {
 output_median
 ```
 
-
 ```{r}
 ##### List 
 
@@ -335,18 +373,17 @@ output_median_list
 
 ------------------------------------------------------------------------
 
-## The `purrr` package 
+## The `purrr` package
 
-For-loops are not as important in R as they are in other languages because R is a functional programming language. This means that it's possible to wrap up for-loops in a function, and call that function instead of using the for-loop directly. 
-
+For-loops are not as important in R as they are in other languages because R is a functional programming language. This means that it's possible to wrap up for-loops in a function, and call that function instead of using the for-loop directly.
 
 ### Basic syntax
 
 The `purrr` package provides functions that eliminate the need for many common for loops. The apply family of functions in base R (`apply()`, `lapply()`, `tapply()`, etc.) solve a similar problem, but `purrr` is more consistent and thus is easier to learn. The most useful function will be `map(.x, .f)`, where:
 
--   `.x`: is a vector, list, or data frame
--   `.f`: is a function
--   output: is a list
+- `.x`: is a vector, list, or data frame
+- `.f`: is a function
+- output: is a list
 
 ```{r, echo = FALSE, out.width="49%", out.height="20%",fig.cap="Logic behind vectorised functions (also called functional programming).",fig.show='hold',fig.align='center'}
 knitr::include_graphics("pics/purrr_f_list.png")
@@ -393,19 +430,19 @@ df |> map(mean)
 
 ------------------------------------------------------------------------
 
-## The `map*()` family of functions 
+## The `map*()` family of functions
 
 The pattern of looping over a vector, doing something to each element and saving the results is so common that the `purrr` package provides a family of functions to do it for you. Indeed, their use is so common that several wrapper functions were created to include the final transformation of the list output. There is one function for each type of output:
 
--   `map()` returns a list.
--   `map_lgl()` returns a logical vector
--   `map_int()` returns an integer vector.
--   `map_dbl()` returns a double vector.
--   `map_chr()` returns a character vector.
+- `map()` returns a list.
+- `map_lgl()` returns a logical vector
+- `map_int()` returns an integer vector.
+- `map_dbl()` returns a double vector.
+- `map_chr()` returns a character vector.
 
 ------------------------------------------------------------------------
 
-:::alert-info
+::: alert-info
 **Exercise 3:**
 
 Go back to the example above. Since all of the means are numeric, it makes more sense to store them in a vector rather than a list. Which function should we use and how?
@@ -414,21 +451,6 @@ Go back to the example above. Since all of the means are numeric, it makes more 
 ```{r}
 
 ```
-
-
-
-------------------------------------------------------------------------
-
-## `map2` 
-
-You can also iterate over two inputs at the same time using `map2(.x, .y, .f)`
-
-```{r, echo = FALSE, out.width="49%", out.height="20%",fig.cap="Logic behind map2().",fig.show='hold',fig.align='center'}
-knitr::include_graphics("pics/purr_f2_input.png")
-
-```
-
-The function works exactly the same way as the `map*` functions for a single input. One caveat that applies only to `map2()` is that both inputs need to have the **same length**!
 
 ------------------------------------------------------------------------
 
@@ -470,13 +492,10 @@ There is, of course, much more to learn about functions in R and for those of yo
 
 One such skill is the question of how to integrate `tidyverse` functions into your own functions. Most `dplyr` verbs use tidy evaluation in some way. Tidy evaluation is a special type of non-standard evaluation (meaning the way R interprets your written code) used throughout the `tidyverse.` There are two basic forms found in `dplyr`:
 
--   **data masking** makes it so that you can use data variables as if they were variables in the environment (i.e. you write `my_variable` instead of `df$myvariable`).
--   **tidy selection** allows you to switch choosing variables based on their position, name, or type (e.g. `starts_with("x")` or `is.numeric`).
+- **data masking** makes it so that you can use data variables as if they were variables in the environment (i.e. you write `my_variable` instead of `df$myvariable`).
+- **tidy selection** allows you to switch choosing variables based on their position, name, or type (e.g. `starts_with("x")` or `is.numeric`).
 
 Data masking and tidy selection make interactive data exploration fast and fluid, but they add some new challenges when you attempt to use them indirectly such as in a for loop or a function. [This vignette](https://dplyr.tidyverse.org/articles/programming.html) shows you how to overcome those challenges.
-
-
-
 
 ------------------------------------------------------------------------
 
