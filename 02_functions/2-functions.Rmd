@@ -135,6 +135,8 @@ The overall structure of a function looks like this:
 function_name <- function(input_parameters) {
   Do what you want to do in the body of the
   function, just like you would write other code in R.
+  
+  return(function_output) # This is the result of your function call.
 }
 ```
 
@@ -297,7 +299,7 @@ for (i in seq_along(df)) {       # seq_along() similar to length()
 }
 ```
 
-Remember, this only works for `for` loops that manipulate existing inputs (i.e. columns in a dataframe). If you want to save the output of your function in a different way, you need to define the object where you wish to store the output **ahead** of the function. In this case, you will see a pre-defined vector and an empty list:
+Remember, this only works for `for` loops that manipulate existing inputs (i.e. columns in a dataframe). If you want to save the output of your function in a different way, you need to define the object where you wish to store the output **ahead** of the loop. In this case, you will see a pre-defined vector and an empty list:
 
 ```{r}
 ###### Vector
@@ -318,7 +320,7 @@ output_median
 ```{r}
 ##### List 
 
-# creating an "empty" vector to put the values
+# creating an "empty" list to put the values
 output_median_list <- list()
 
 # running for loop
@@ -382,8 +384,9 @@ mean(df$d)
 
 # equivalent map function
 map(.x = df, ~ mean(.x, na.rm =T))
-
-# map function in tidyverse style
+# or
+map(df, mean)
+# or in tidyverse style
 df |> map(mean)
 
 ```
@@ -392,7 +395,7 @@ df |> map(mean)
 
 ## The `map*()` family of functions 
 
-The pattern of looping over a vector, doing something to each element and saving the results is so common that the purrr package provides a family of functions to do it for you. Indeed, their use is so common that several wrapper functions were created to include the final transformation of the list output. There is one function for each type of output:
+The pattern of looping over a vector, doing something to each element and saving the results is so common that the `purrr` package provides a family of functions to do it for you. Indeed, their use is so common that several wrapper functions were created to include the final transformation of the list output. There is one function for each type of output:
 
 -   `map()` returns a list.
 -   `map_lgl()` returns a logical vector
