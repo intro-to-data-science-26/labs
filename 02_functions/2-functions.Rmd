@@ -99,7 +99,7 @@ Functions allow you to automate tasks in a more powerful and general way. Writin
 
 3. You can give functions descriptive names that make your code easier to understand.
 
-You can read more on functions in [this section](https://r4ds.had.co.nz/functions.html#functions) of Rfor Data Science.
+You can read more on functions in [this section](https://r4ds.hadley.nz/functions.html) of R for Data Science.
 
 ------------------------------------------------------------------------
 
