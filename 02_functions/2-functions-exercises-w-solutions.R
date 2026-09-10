@@ -10,10 +10,10 @@ get_mode <- function(v) {
   
 }
 
-# Way 1: tidyverse solution
+# Way 2: tidyverse solution
 library(tidyverse)
 get_mode <- function(v) {
-  as.data.frame(v) |> 
+  data_frame(v) |> 
     filter(!is.na(v)) |> 
     count(v, sort = TRUE) |> 
     slice(1) |> 
