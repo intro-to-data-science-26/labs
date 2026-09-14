@@ -333,7 +333,7 @@ df$d <- zscale(df$d)
 # equivalent iteration
 for (i in seq_along(df)) {       # seq_along() similar to length()
   
-  df[[i]] <- zscale(df[[i]])     # [[]] because we are working on single elements. We are overwriting each column of the df with each iteration. 
+  df[[i]] <- zscale(df[[i]])     # [[]] because we are working on single elements. We are overwriting one column of the df with each iteration. 
 }
 ```
 
