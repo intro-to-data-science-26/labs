@@ -255,10 +255,13 @@ When working with file paths in R, you can use either relative or absolute paths
 
 ```{r eval = FALSE}
 # install.packages("cronR")
+# install.packages("here")
 library(cronR)
-# define the path to your Master R script
-cmd <- cron_rscript(here::here("03-automation","lotr_project","scripts","Makefile.R"))
-# add a new cron job to run the script every day at 1am
+
+# Define the path to your Master R script
+cmd <- cron_rscript(here::here("03_automation","lotr_project","scripts","Makefile.R"))
+
+# Add a new cron job to run the script every day at 1am
 cron_add(
   command = cmd,
   frequency = "daily",
@@ -299,12 +302,13 @@ cron_add(command = cron_rscript("script.R"), frequency = "0 9 1 * *")
 ```{r eval = FALSE}
 # install.packages("taskscheduleR")
 library(taskscheduleR)
-# define the path to your Master R script
-makefile_path <- here::here("03-automation","lotr_project","scripts","Makefile.R")
+
+# Define the path to your Master R script
+makefile_path <- here::here("03_automation","lotr_project","scripts","Makefile.R")
 
 # Schedule our LOTR pipeline to run daily at 8 AM
 taskscheduler_create(
-  taskname = "lotr_pipeline_daily",
+  taskname = "daily",
   rscript = makefile_path,
   schedule = "DAILY",
   starttime = "08:00"
@@ -341,6 +345,6 @@ taskscheduler_create(taskname = "lotr_pipeline_monthly", rscript = "path/to/your
 
 # Acknowledgements {-}
 
-This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral). It draws heavily on the materials for the Introduction to R workshop within the Data Science Seminar series at Hertie, created by [Therese Anders](http://therese.rbind.io/), Statistical Modeling and Causal Inference by Sebastian Ramirez-Ruiz and Lisa Oswald.
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), [Laia Domenech Burin](https://ldmnch.github.io/layitx/about.html), and [Linus Hageman](https://linushagemann.de).
 
 The Lord of the Rings dialogue analysis example is based on an the Github for STAT545 at UBC. You can find their version [here](https://github.com/STAT545-UBC/STAT545-UBC-original-website/blob/master/automation01_slides/slides.md).
