@@ -1,5 +1,5 @@
 ## import raw data
-lotr_dat <- read_tsv("./session-03-automation/lotr_project/data/raw/lotr_raw.tsv")
+lotr_dat <- read_tsv("./03_automation/lotr_project/data/raw/lotr_raw.tsv")
 
 ## reorder Film factor levels based on story
 old_levels <- levels(as.factor(lotr_dat$Film))
@@ -23,7 +23,7 @@ lotr_dat <- lotr_dat %>%
   droplevels
   
 # write data to file
-write_tsv(lotr_dat, file = "./session-03-automation/lotr_project/data/processed/lotr_clean.tsv")
+write_tsv(lotr_dat, file = "./03_automation/lotr_project/data/processed/lotr_clean.tsv")
 
 # Print message
 print("Data processed and saved.")
