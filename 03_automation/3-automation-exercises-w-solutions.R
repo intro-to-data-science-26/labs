@@ -1,17 +1,17 @@
 # Debugging ####
-library(tidyverse) # package misspelled
+library(gaminder) # package name
 
-penguins_selected <- penguins |> # df assignment missing
-  select(species, body_mass_g) 
+gapminder_selected <- gapminder |> # df assignment missing
+  select(continent, pop)
 
 
-penguin_summary <- penguins_selected |>
-  group_by(species) |> # pipe missing
-summarise(
-  mean_mass = mean(body_mass_g, na.rm = TRUE)
-)
+gapminder_summary <- gapminder_selected |>
+  group_by(continent) # pipe missing 
+  summarise(
+    mean_pop = mean(pop, na.rm = TRUE) # TRUE or T
+  )
 
-penguin_summary
+gapminder_summary
 
 
 # Automation exercises: ####
