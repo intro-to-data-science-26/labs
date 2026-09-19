@@ -98,7 +98,7 @@ library(cowsay)
 | Error in library(cowsay) : there is no package called ‘cowsay’
 ```
 
-If the package is not installed run `install.packages("")`
+If the package is not installed run `install.packages("name_of_missing_package")`
 
 ### Package not loaded
 
@@ -214,6 +214,8 @@ A useful check is to restart R, clear the Environment, and run your code again f
 .rs.restartR()
 rm(list = ls())
 ```
+
+Instead of doing this via code, you can also use the **Session** menu from RStudio.
 
 When you knit an R Markdown document, R starts from a fresh session and runs the code from top to bottom. An object you created earlier in the Console will therefore not be available unless the code that creates it is also in the document.
 

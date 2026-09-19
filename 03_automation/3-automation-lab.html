@@ -1574,8 +1574,8 @@ color:#291854;
 color:#cc0065;
 }
 </style>
-<div id="welcome-to-week-3" class="section level2">
-<h2>Welcome to Week 3! 👋</h2>
+<div id="welcome-to-week-3" class="section level1">
+<h1>Welcome to Week 3! 👋</h1>
 <p>This week’s tutorial will be divided in three parts.</p>
 <ol style="list-style-type: decimal">
 <li>More iteration practice and debugging</li>
@@ -1638,7 +1638,7 @@ earlier?</li>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(cowsay)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="sc">|</span> Error <span class="cf">in</span> <span class="fu">library</span>(cowsay) <span class="sc">:</span> there is no package called ‘cowsay’</span></code></pre></div>
 <p>If the package is not installed run
-<code>install.packages(&quot;&quot;)</code></p>
+<code>install.packages(&quot;name_of_missing_package&quot;)</code></p>
 </div>
 <div id="package-not-loaded" class="section level3">
 <h3>Package not loaded</h3>
@@ -1683,36 +1683,37 @@ are different objects.</p>
 <h3>Tracing errors</h3>
 <p>R can help you identify where an error occurred. You can inspect the
 traceback to see the sequence of function calls that led to it.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(body_mass_g)) <span class="sc">|&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    <span class="at">body_mass_kg =</span> body_mass_g <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_mass =</span> <span class="fu">mean</span>(body_weight_g)) <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_mass))</span></code></pre></div>
-<p>This produces an error because <code>body_mass_g_wrong</code> does
-not exist. To find exactly where the error is, you can run the code step
-by step, adding one part at a time until it fails. You can also inspect
-the traceback: use <code>rlang::last_trace()</code> for many tidyverse
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(body_mass_g)) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="at">body_mass_kg =</span> body_mass_g <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_mass =</span> <span class="fu">mean</span>(body_weight_g)) <span class="sc">|&gt;</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_mass))</span></code></pre></div>
+<p>This produces an error because <code>body_weight_g</code> does not
+exist. To find exactly where the error is, you can run the code step by
+step, adding one part at a time until it fails. You can also inspect the
+traceback: use <code>rlang::last_trace()</code> for many tidyverse
 errors, or <code>traceback()</code> for base R errors.</p>
 <hr />
 <div class="alert-info">
 <p><strong>Exercise 1</strong></p>
 <p>The following code contains several problems. Run it line by line,
 read each error message, and fix the problems.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">library</span>(tidyvers)</span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">library</span>(gaminder)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">select</span>(species, body_mass_g) </span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>gapminder <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">select</span>(continent, pop) </span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>penguin_summary <span class="ot">&lt;-</span> penguins_selected <span class="sc">|&gt;</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fu">group_by</span>(species) </span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>gapminder_summary <span class="ot">&lt;-</span> gapminder_selected <span class="sc">|&gt;</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fu">group_by</span>(continent) </span>
 <span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>    <span class="at">mean_mass =</span> <span class="fu">mean</span>(body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>    <span class="at">mean_pop =</span> <span class="fu">mean</span>(pop, <span class="at">na.rm =</span> true)</span>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  )</span>
 <span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>penguin_summary</span></code></pre></div>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>gapminder_summary</span></code></pre></div>
 </div>
 <hr />
 </div>
@@ -1732,6 +1733,8 @@ something is missing from your file.</p>
 code again from the beginning:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">.rs.restartR</span>()</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span></code></pre></div>
+<p>Instead of doing this via code, you can also use the
+<strong>Session</strong> menu from RStudio.</p>
 <p>When you knit an R Markdown document, R starts from a fresh session
 and runs the code from top to bottom. An object you created earlier in
 the Console will therefore not be available unless the code that creates
@@ -1776,7 +1779,7 @@ produces an error.</p>
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>}</span>
 <span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
 <span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="fu">f1</span>(<span class="st">&quot;x&quot;</span>)</span></code></pre></div>
-<pre><code>## Error in log(x) : argumento não numérico para função matemática</code></pre>
+<pre><code>## Error in log(x) : non-numeric argument to mathematical function</code></pre>
 <p>Suppress error message:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { </span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">try</span>(<span class="fu">log</span>(x), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
@@ -1861,9 +1864,9 @@ order.</p>
 </div>
 <div id="lets-try-it-ourselves" class="section level2">
 <h2>Let’s try it ourselves</h2>
-<p>To work with this example I have created all the files and folders as
-above in this week’s lab within the lotr_project folder. Try running the
-<code>Makefile.R</code> script to see how it works. You can open the
+<p>To work with this example, we have created all the files and folders
+as above in this week’s lab within the lotr_project folder. Try running
+the <code>Makefile.R</code> script to see how it works. You can open the
 different scripts and run the makefile line by line to see what each
 part does.</p>
 <hr />
@@ -1970,7 +1973,7 @@ demonstration.)</p>
 <span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a></span>
 <span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="co"># Schedule our LOTR pipeline to run daily at 8 AM</span></span>
 <span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="fu">taskscheduler_create</span>(</span>
-<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="at">taskname =</span> <span class="st">&quot;daily&quot;</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="at">taskname =</span> <span class="st">&quot;lotr_pipeline_daily&quot;</span>,</span>
 <span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>  <span class="at">rscript =</span> makefile_path,</span>
 <span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>  <span class="at">schedule =</span> <span class="st">&quot;DAILY&quot;</span>,</span>
 <span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>  <span class="at">starttime =</span> <span class="st">&quot;08:00&quot;</span></span>
