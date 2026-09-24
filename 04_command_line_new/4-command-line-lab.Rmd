@@ -1,0 +1,281 @@
+---
+title: "The Command Line"
+subtitle: "A small, durable toolbox for data work"
+author: "Carol Sobral, Linus Hagemann and Laia Domenech Burin"
+date: "(Fall 2026) Introduction to Data Science"
+output: 
+    rmdformats::robobook:
+    toc: TRUE
+    df_print: paged
+    number_sections: FALSE
+    highlight: tango
+    toc_depth: 3
+    toc_float: true
+    self_contained: false
+---
+
+```{=html}
+<style>
+.h1,h2,h3 {
+color:#2f1a61;
+}
+
+.subtitle, section.normal {
+color:#291854;
+}
+
+.title {
+color:#cc0065;
+}
+
+</style>
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Welcome to Week 4! 👋
+
+Today we will work with the **command line interface** (CLI): a text-based way to ask your computer to do things. The program that reads and runs those commands is a **shell**. On macOS and Linux this will usually be `zsh` or `bash`; on Windows, use the RStudio Terminal configured with WSL or Git Bash.
+
+The goal is not to memorise hundreds of commands. If this is the only command-line session you take, you should leave able to:
+
+- know where a command will run and move deliberately through folders;
+- inspect files and search text safely;
+- connect small commands with pipes and save their output;
+- run a reproducible script, including an R script; and
+- read a command suggested by an AI agent before approving it.
+
+Throughout the lab, commands beginning with `$` are commands to type in the terminal. Do **not** type the `$`; it represents the prompt.
+
+---
+
+# 1. The shell is another console
+
+RStudio already contains two command-line interfaces. In the **R Console**, you type R expressions and R evaluates them. In the **Terminal** tab, you type shell commands and the shell starts programs such as `ls`, `grep`, `git`, or `Rscript`.
+
+Both consoles have a current **working directory**. This is the default location for relative file paths. In R, check it with `getwd()`; in a shell, check it with `pwd` (*print working directory*). A relative path such as `data/bird_notes.txt` only makes sense relative to that location.
+
+Open RStudio's Terminal (Tools > Terminal > New Terminal) and try:
+
+```bash
+$ pwd
+$ whoami
+$ echo "Hello from the shell"
+```
+
+`echo` prints its arguments. This tiny command is useful for checking that you understand quoting, variables, and redirection later on.
+
+::: alert-info
+**Exercise 1 — Locate yourself**
+
+Run `pwd` in the Terminal and `getwd()` in the R Console. Are they the same? If not, explain why a command using `data/file.csv` might work in one place but fail in the other.
+:::
+
+## Getting help and recovering from mistakes
+
+The shell is deliberately terse. When you meet an unfamiliar command, start with its manual page or built-in help:
+
+```bash
+$ man grep
+$ grep --help
+$ which Rscript
+```
+
+Press `q` to leave a `man` page. `which Rscript` asks the shell which executable it would run; this is especially helpful when you have more than one R installation.
+
+Use the up and down arrows to revisit earlier commands, `Tab` to complete paths, and `Ctrl`+`C` to stop a command currently running in the foreground. Read errors from top to bottom: `No such file or directory` usually means that the current directory or a path is not what you thought it was.
+
+---
+
+# 2. Files, folders, and the working directory
+
+For this lab, first move into the folder containing this file. Replace the example path with the path on *your* computer.
+
+```bash
+$ cd /path/to/ids_labs_26/04_command_line_new
+$ pwd
+$ ls
+```
+
+`cd` changes directory and `ls` lists its contents. Some useful variations are:
+
+| Command | Meaning |
+|:--|:--|
+| `ls -la` | list all entries, including hidden files, with details |
+| `cd data` | move into the `data` subfolder |
+| `cd ..` | move one folder up |
+| `cd ~` | move to your home folder |
+| `mkdir results` | create a folder called `results` |
+| `touch notes.txt` | create an empty file (or update its timestamp) |
+| `cp source.txt copy.txt` | copy a file |
+| `mv old.txt new.txt` | move or rename a file |
+
+Paths that begin with `/` (or a drive/mount point on Windows) are **absolute**: they identify one exact location. Paths without that beginning are **relative** to `pwd`. A dot (`.`) means “this folder”; two dots (`..`) mean its parent.
+
+Before using a command that changes files, inspect the target first with `pwd` and `ls`. In particular, `rm` deletes files rather than moving them to a recycle bin; leave it out of exploratory commands until you are completely sure about the path.
+
+::: alert-info
+**Exercise 2 — Navigate deliberately**
+
+1. From the lab folder, list the contents of `data` without changing directories.
+2. Change into `data`, verify it with `pwd`, then return to the lab folder using `cd ..`.
+3. Create a folder called `scratch`, inspect it, and remove it again with `rmdir scratch`. Why is `rmdir` safer than a recursive delete for this exercise?
+:::
+
+---
+
+# 3. Reading and searching text
+
+Many data formats are plain text: CSV, TSV, logs, JSON, source code, and Markdown. The shell is excellent for looking at these files without opening a spreadsheet or writing a complete R script.
+
+Our small dataset, `data/bird_notes.txt`, contains field notes. First preview it:
+
+```bash
+$ head data/bird_notes.txt
+$ tail -n 3 data/bird_notes.txt
+$ wc -l data/bird_notes.txt
+```
+
+`head` and `tail` show the beginning and end; `wc -l` counts lines. For a long file, use `less data/bird_notes.txt`, scroll with the arrows or Space, search with `/word`, and press `q` to quit.
+
+## `grep`: find lines that match a pattern
+
+`grep` prints lines containing a pattern. Start with a literal search:
+
+```bash
+$ grep "sparrow" data/bird_notes.txt
+$ grep -n "sparrow" data/bird_notes.txt
+$ grep -i "sparrow" data/bird_notes.txt
+```
+
+`-n` adds line numbers and `-i` ignores case. Quote patterns with spaces or punctuation so that the shell passes them to `grep` as one argument. The pattern language is regular expressions (regex): a compact way to describe text. You do not need to become a regex expert today, but these three patterns are worth recognising:
+
+```bash
+$ grep '^2026-09' data/bird_notes.txt   # lines beginning with a September date
+$ grep 'rain$' data/bird_notes.txt     # lines ending in rain
+$ grep -E 'sparrow|robin' data/bird_notes.txt  # either word
+```
+
+Here `^` means “start of line”, `$` means “end of line”, and `|` means “or” when `-E` enables extended regular expressions. Use `grep -v` to keep *non-matching* lines, and `grep -c` to count matching lines rather than print them.
+
+::: alert-info
+**Exercise 3 — Ask questions of a text file**
+
+Using `data/bird_notes.txt`, write commands to:
+
+1. show all lines mentioning `robin`, regardless of case, with line numbers;
+2. count notes containing `rain`; and
+3. show notes that do **not** contain the word `heard`.
+
+Then alter one of your commands so it searches `data` recursively. Hint: `grep -R`.
+:::
+
+---
+
+# 4. Redirecting output and building pipelines
+
+Every command has an input stream and an output stream. A **pipe** (`|`) sends the output of the command on its left to the input of the command on its right. This resembles R's `|>`: each step receives the result of the previous one.
+
+For example, this pipeline searches, sorts, counts duplicates, and sorts the resulting counts numerically:
+
+```bash
+$ grep -i -o -E 'sparrow|robin|blackbird' data/bird_notes.txt | sort | uniq -c | sort -nr
+```
+
+Read it from left to right: extract each bird name (`grep -o`), put equal names beside one another (`sort`), count adjacent duplicates (`uniq -c`), then order the counts (`sort -nr`). A good debugging habit is to run the pipeline one piece at a time before combining it.
+
+`>` redirects standard output into a file, creating the file or replacing its contents. `>>` appends instead. Redirect the final pipeline output into a new, deliberately named results file:
+
+```bash
+$ mkdir -p results
+$ grep -i -o -E 'sparrow|robin|blackbird' data/bird_notes.txt | sort | uniq -c | sort -nr > results/bird-counts.txt
+$ cat results/bird-counts.txt
+```
+
+Be careful with `>`: it overwrites an existing file silently. Confirm the working directory and target path first. `tee` is useful when you want to see output *and* save it:
+
+```bash
+$ grep -i 'rain' data/bird_notes.txt | tee results/rain-notes.txt
+```
+
+::: alert-info
+**Exercise 4 — A reproducible text summary**
+
+Create `results/weather-counts.txt` containing the counts for `sun`, `cloud`, and `rain` in the field notes. Use a pipeline and inspect the result. What would change if you used `>>` instead of `>` and ran the command twice?
+:::
+
+---
+
+# 5. From commands to a script — and from shell to R
+
+Commands you expect to reuse belong in a script. A shell script is a plain-text file containing commands; it documents the workflow and makes it repeatable. Open `scripts/make_report.sh` in RStudio and read it before running it.
+
+```bash
+$ bash scripts/make_report.sh
+$ ls results
+$ cat results/bird-counts.txt
+$ cat results/bird-summary.csv
+```
+
+The script starts with `#!/usr/bin/env bash`, called a *shebang*. It declares that the script is written for Bash. We run it explicitly with `bash` today, which avoids needing to change file permissions. Notice its safeguards:
+
+- `set -euo pipefail` stops the script when a command fails, an unset variable is used, or a pipeline fails;
+- it works from the project root, rather than relying on whatever folder the Terminal happened to open in; and
+- it creates only the `results` folder and overwrites only named outputs there.
+
+The final command, `Rscript scripts/make_summary.R ...`, runs R without opening the RStudio interface. Arguments after the script name are available inside R as `commandArgs(trailingOnly = TRUE)`. This is a useful bridge: the shell can organise files and lightweight text tasks, while R can handle richer data transformation and statistical work.
+
+Try running the R part directly:
+
+```bash
+$ Rscript scripts/make_summary.R data/bird_notes.txt results/bird-summary.csv
+```
+
+::: alert-info
+**Exercise 5 — Make a useful script change**
+
+1. Read `scripts/make_report.sh` and identify every output it writes.
+2. Add one `echo` line that tells a future reader what the script is about to do.
+3. Run the script again. Change one input path to a deliberately wrong path, run it, read the error, then restore the correct path.
+
+Optional: change the list of birds in the `grep` pattern and rerun the report.
+:::
+
+---
+
+# 6. The CLI in the age of AI agents
+
+The command line matters more, not less, now that coding agents can work in a project. Tools such as Codex, Claude Code, and Gemini CLI use the shell to inspect folders, search code with `grep`, run tests, install packages, and execute scripts. They can write useful commands faster than anyone in the room—but they do not remove the need for judgement.
+
+Reading a shell command is therefore a supervision skill. Before approving an agent-proposed command, ask:
+
+1. **Where will it run?** Check `pwd` and resolve relative paths.
+2. **What will it touch?** Look carefully at paths and wildcards such as `*`.
+3. **Does it overwrite, delete, install, or send data anywhere?** Treat `>`, `mv`, `rm`, package installers, and network commands as consequential.
+4. **Can I inspect first?** Prefer `ls`, `head`, `git diff`, or a dry run before a large change.
+
+For example, `grep -R "TODO" .` is a read-only search inside the current project. By contrast, `rm -rf results/*` has a very different effect, and could be disastrous in the wrong working directory. An agent should be able to explain both commands in plain language before you approve them.
+
+::: alert-info
+**Final reflection**
+
+Imagine an AI agent proposes a command that writes a report into `results/`. What two checks would you perform before approving it? How could `pwd`, `ls`, and a careful reading of `>` help?
+:::
+
+---
+
+# Key takeaways
+
+- The shell, like R, has a working directory: use `pwd` before relying on relative paths.
+- `ls`, `cd`, `head`, `less`, `grep`, `wc`, `sort`, and `uniq` let you inspect and combine text data quickly.
+- Pipes pass output forward; `>` saves output but overwrites, while `>>` appends.
+- Scripts turn a sequence of commands into a readable, repeatable workflow. `Rscript` lets that workflow call R.
+- You do not need to memorise commands. You do need to read them, understand their paths and side effects, and know how to get help.
+
+## Further practice
+
+- [Software Carpentry: The Unix Shell](https://swcarpentry.github.io/shell-novice/)
+- [Effective Shell](https://effective-shell.com/)
+- [explainshell](https://explainshell.com/) for decoding shell command options
