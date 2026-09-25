@@ -3,6 +3,7 @@
 set -euo pipefail
 
 # Run from the project root even if this script was called elsewhere.
+# Just focus on why this is a good idea for now - no need to grok it right now.
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$project_root"
 

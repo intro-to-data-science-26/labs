@@ -1,6 +1,6 @@
 # Command-line exercises — suggested solutions
 
-Run these from the `04_command_line_new` folder unless stated otherwise.
+Run these from the `04_command_line` folder unless stated otherwise.
 
 ## Exercise 1
 
@@ -26,7 +26,6 @@ rmdir scratch
 grep -in "robin" data/bird_notes.txt
 grep -ic "rain" data/bird_notes.txt
 grep -iv "heard" data/bird_notes.txt
-grep -Rin "robin" data
 ```
 
 ## Exercise 4
