@@ -1,0 +1,10 @@
+2026-09-03 | morning | sparrow heard near library | sun
+2026-09-03 | evening | Robin seen in courtyard | cloud
+2026-09-04 | morning | blackbird heard from oak | rain
+2026-09-05 | morning | sparrow seen near library | sun
+2026-09-06 | afternoon | robin heard by canal | cloud
+2026-09-07 | morning | blackbird seen in garden | rain
+2026-09-08 | evening | sparrow heard near station | sun
+2026-09-09 | morning | gull seen above courtyard | cloud
+2026-09-10 | morning | robin heard by canal | rain
+2026-09-11 | evening | blackbird heard from oak | sun
