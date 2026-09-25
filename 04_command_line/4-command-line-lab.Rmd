@@ -83,7 +83,7 @@ RStudio already contains two command-line interfaces. In the **R Console**, you 
 
 Both consoles have a current **working directory**. This is the default location for relative file paths. In R, check it with `getwd()`; in a shell, check it with `pwd` (*print working directory*). A relative path such as `data/bird_notes.txt` only makes sense relative to that location.
 
-Open RStudio's Terminal (Tools > Terminal > New Terminal) and try:
+Open RStudio's Terminal (Tools > Terminal > New Terminal or press Alt + Shift + R) and try:
 
 ```bash
 $ pwd
@@ -96,7 +96,7 @@ $ echo "Hello from the shell"
 ::: alert-info
 **Exercise 1 — Locate yourself**
 
-Run `pwd` in the Terminal and `getwd()` in the R Console. Are they the same? Why would a command using `data/file.csv` might work in one place but fail in the other.
+Run `pwd` in the Terminal and `getwd()` in the R Console. Are they the same? Why would a command using `data/file.csv` work in one place but fail in the other.
 :::
 
 ## Getting help and recovering from mistakes
@@ -129,12 +129,12 @@ Most shell commands follow the same broad pattern:
 command [flags] [arguments]
 ```
 
-The command names the program, arguments tell it what to work on, and flags (also called options) modify its behaviour. For example:
+The command names the program, flags or options modify its behavior, and arguments tell it what to work on. For example:
 
 ```bash
 grep -in "robin" data/bird_notes.txt
 ```
-Here, `grep` is the command, `"robin"` and `data/bird_notes.txt` are arguments, `-i` means “ignore upper/lower case,” and `-n` adds line numbers.
+Here, `grep` is the command, `-i` means "ignore upper/lower case," and `-n` adds line numbers, `"robin"` and `data/bird_notes.txt` are arguments. 
 
 Short flags usually begin with one dash (`-n`); longer, more readable flags often use two (`--help`). Short flags can be combined, so instead of supplying a command with `-c -i` you can also write `-ci`. Every command defines its own flags, so use command `--help` or man command rather than trying to memorise them.
 
@@ -142,7 +142,7 @@ Short flags usually begin with one dash (`-n`); longer, more readable flags ofte
 
 # 3. Files, folders, and the working directory
 
-For this lab, first move into the folder containing this file. Replace the example path with the path on *your* computer. If you are using an RProject, you will probably already be in the right place (nifty, right?) - check with `pwd` before navigating somewhere.
+For this lab, first move into the folder containing this file. Replace the example path with the path on *your* computer. If you are using an R Project, you will probably already be in the right place (nifty, right?) - check with `pwd` before navigating somewhere.
 
 ```bash
 $ cd /path/to/ids_labs_26/04_command_line
@@ -163,7 +163,7 @@ $ ls
 | `cp source.txt copy.txt` | copy a file |
 | `mv old.txt new.txt` | move or rename a file |
 
-Paths that begin with `/` (or a drive/mount point on Windows) are **absolute**: they identify one exact location. Paths without that beginning are **relative** to `pwd`. A dot (`.`) means “this folder”; two dots (`..`) mean its parent.
+Paths that begin with `/` (or a drive/mount point on Windows) are **absolute**: they identify one exact location. Paths without that beginning are **relative** to `pwd`. A dot (`.`) means "this folder"; two dots (`..`) mean its parent.
 
 Before using a command that changes files, inspect the target first with `pwd` and `ls`. In particular, `rm` deletes files rather than moving them to a recycle bin; leave it out of exploratory commands until you are completely sure about the path.
 
@@ -209,7 +209,7 @@ $ grep 'rain$' data/bird_notes.txt     # lines ending in rain
 $ grep -E 'sparrow|robin' data/bird_notes.txt  # either word
 ```
 
-Here `^` means “start of line”, `$` means “end of line”, and `|` means “or” when `-E` enables extended regular expressions. Use `grep -v` to keep *non-matching* lines, and `grep -c` to count matching lines rather than print them.
+Here `^` means "start of line", `$` means "end of line", and `|` means "or" when `-E` enables extended regular expressions. Use `grep -v` to keep *non-matching* lines, and `grep -c` to count matching lines rather than print them.
 
 :::orange-box
 You might have seen regex already in the context of `R` code (`str_detect`...) or in other programming languages. While the general idea of regular expressions is similar across all programming languages/tools, the same expression might look different across different "flavors". `grep` uses a flavor called POSIX regex. To debug/learn more about regular expressions, check out [regex101.com](https://regex101.com/). 
@@ -275,7 +275,7 @@ $ echo "$bird"
 robin
 ```
 
-There must be **no spaces** around `=`. To use a variable’s value, put `$` before its name. Quoting the expansion—`"$bird"` rather than `$bird`—is a good habit: it keeps a value containing spaces together as one argument.
+There must be **no spaces** around `=`. To use a variable’s value, put `$` before its name. Quoting the expansion —`"$bird"` rather than `$bird`— is a good habit: it keeps a value containing spaces together as one argument.
 
 Variables make commands easier to read and update. Compare:
 
