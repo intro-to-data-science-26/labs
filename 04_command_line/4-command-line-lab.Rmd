@@ -93,6 +93,8 @@ $ echo "Hello from the shell"
 
 `echo` prints its arguments. This tiny command is useful for checking that you understand quoting, variables, and redirection later on.
 
+If you have one or more shell commands selected, you can send them to your active terminal with Ctrl+Alt+Enter.
+
 ::: alert-info
 **Exercise 1 — Locate yourself**
 
@@ -104,7 +106,7 @@ Run `pwd` in the Terminal and `getwd()` in the R Console. Are they the same? Why
 The shell is deliberately terse. When you meet an unfamiliar command, start with its manual page or built-in help:
 
 ```bash
-$ man grep
+$ man grep # man might now work on windows
 $ grep --help
 $ which Rscript
 ```
@@ -142,7 +144,7 @@ Short flags usually begin with one dash (`-n`); longer, more readable flags ofte
 
 # 3. Files, folders, and the working directory
 
-For this lab, first move into the folder containing this file. Replace the example path with the path on *your* computer. If you are using an R Project, you will probably already be in the right place (nifty, right?) - check with `pwd` before navigating somewhere.
+For this lab, first move into the folder containing this file. Replace the example path with the path on *your* computer. If you are using an R Project, your working directory for the shell will usually be the root folder of your project - check with `pwd` where you are, before navigating somewhere.
 
 ```bash
 $ cd /path/to/ids_labs_26/04_command_line
@@ -395,5 +397,5 @@ Imagine an AI agent proposes a command that writes a report into `results/`. Wha
 
 ---
 
-This script was drafted by [Linus Hagemann](https://linushagemann.de). Large parts of the material were originally generated with GPT-5.6, based on the accompanying [lecture slides by Simon Munzert](https://github.com/intro-to-data-science-26/lectures/tree/main/04_command-line).
+This script was drafted by [Linus Hagemann](https://linushagemann.de). Large parts of the material were originally generated with GPT-5.6, based on the accompanying [lecture slides by Simon Munzert](https://github.com/intro-to-data-science-26/lectures/tree/main/04_command-line). Edits by [Carol Sobral](https://github.com/cbsobral).
 

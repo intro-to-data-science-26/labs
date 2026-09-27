@@ -1663,26 +1663,27 @@ is the default location for relative file paths. In R, check it with
 (<em>print working directory</em>). A relative path such as
 <code>data/bird_notes.txt</code> only makes sense relative to that
 location.</p>
-<p>Open RStudio’s Terminal (Tools &gt; Terminal &gt; New Terminal) and
-try:</p>
+<p>Open RStudio’s Terminal (Tools &gt; Terminal &gt; New Terminal or
+press Alt + Shift + R) and try:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">$</span> pwd</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="ex">$</span> whoami</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="ex">$</span> echo <span class="st">&quot;Hello from the shell&quot;</span></span></code></pre></div>
 <p><code>echo</code> prints its arguments. This tiny command is useful
 for checking that you understand quoting, variables, and redirection
 later on.</p>
+<p>If you have one or more shell commands selected, you can send them to
+your active terminal with Ctrl+Alt+Enter.</p>
 <div class="alert-info">
 <p><strong>Exercise 1 — Locate yourself</strong></p>
 <p>Run <code>pwd</code> in the Terminal and <code>getwd()</code> in the
 R Console. Are they the same? Why would a command using
-<code>data/file.csv</code> might work in one place but fail in the
-other.</p>
+<code>data/file.csv</code> work in one place but fail in the other.</p>
 </div>
 <div id="getting-help-and-recovering-from-mistakes" class="section level2">
 <h2>Getting help and recovering from mistakes</h2>
 <p>The shell is deliberately terse. When you meet an unfamiliar command,
 start with its manual page or built-in help:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">$</span> man grep</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">$</span> man grep <span class="co"># man might now work on windows</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="ex">$</span> grep <span class="at">--help</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="ex">$</span> which Rscript</span></code></pre></div>
 <p>Press <code>q</code> to leave a <code>man</code> page.
@@ -1716,12 +1717,13 @@ commands easier to inspect, test one step at a time, and reuse.</p>
 <h1>Commands, arguments, and flags</h1>
 <p>Most shell commands follow the same broad pattern:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="bu">command</span> <span class="pp">[</span><span class="ss">flags</span><span class="pp">]</span> <span class="pp">[</span><span class="ss">arguments</span><span class="pp">]</span></span></code></pre></div>
-<p>The command names the program, arguments tell it what to work on, and
-flags (also called options) modify its behaviour. For example:</p>
+<p>The command names the program, flags or options modify its behavior,
+and arguments tell it what to work on. For example:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-in</span> <span class="st">&quot;robin&quot;</span> data/bird_notes.txt</span></code></pre></div>
-<p>Here, <code>grep</code> is the command, <code>&quot;robin&quot;</code> and
-<code>data/bird_notes.txt</code> are arguments, <code>-i</code> means
-“ignore upper/lower case,” and <code>-n</code> adds line numbers.</p>
+<p>Here, <code>grep</code> is the command, <code>-i</code> means “ignore
+upper/lower case,” and <code>-n</code> adds line numbers,
+<code>&quot;robin&quot;</code> and <code>data/bird_notes.txt</code> are
+arguments.</p>
 <p>Short flags usually begin with one dash (<code>-n</code>); longer,
 more readable flags often use two (<code>--help</code>). Short flags can
 be combined, so instead of supplying a command with <code>-c -i</code>
@@ -1734,9 +1736,9 @@ trying to memorise them.</p>
 <h1>3. Files, folders, and the working directory</h1>
 <p>For this lab, first move into the folder containing this file.
 Replace the example path with the path on <em>your</em> computer. If you
-are using an RProject, you will probably already be in the right place
-(nifty, right?) - check with <code>pwd</code> before navigating
-somewhere.</p>
+are using an R Project, your working directory for the shell will
+usually be the root folder of your project - check with <code>pwd</code>
+where you are, before navigating somewhere.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">$</span> cd /path/to/ids_labs_26/04_command_line</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="ex">$</span> pwd</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="ex">$</span> ls</span></code></pre></div>
@@ -1919,8 +1921,9 @@ filename or folder path.</p>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="ex">robin</span></span></code></pre></div>
 <p>There must be <strong>no spaces</strong> around <code>=</code>. To
 use a variable’s value, put <code>$</code> before its name. Quoting the
-expansion—<code>&quot;$bird&quot;</code> rather than <code>$bird</code>—is a good
-habit: it keeps a value containing spaces together as one argument.</p>
+expansion —<code>&quot;$bird&quot;</code> rather than <code>$bird</code>— is a
+good habit: it keeps a value containing spaces together as one
+argument.</p>
 <p>Variables make commands easier to read and update. Compare:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="ex">$</span> grep <span class="at">-i</span> <span class="st">&quot;robin&quot;</span> data/bird_notes.txt <span class="op">&gt;</span> results/robin-notes.txt</span></code></pre></div>
 <p>with:</p>
@@ -1995,7 +1998,7 @@ name are available inside R as
 the shell can organise files and lightweight text tasks, while R can
 handle richer data transformation and statistical work.</p>
 <p>Try running the R part directly:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="ex">$</span> Rscript scripts/make_summary.R data/bird_notes.txt results/bird-summary.csv</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>    <span class="ex">$</span> Rscript scripts/make_summary.R data/bird_notes.txt results/bird-summary.csv</span></code></pre></div>
 <div class="alert-info">
 <p><strong>Exercise 5 — Make a useful script change</strong></p>
 <ol style="list-style-type: decimal">
@@ -2078,7 +2081,7 @@ shell command options</li>
 <p>This script was drafted by <a href="https://linushagemann.de">Linus
 Hagemann</a>. Large parts of the material were originally generated with
 GPT-5.6, based on the accompanying <a href="https://github.com/intro-to-data-science-26/lectures/tree/main/04_command-line">lecture
-slides by Simon Munzert</a>.</p>
+slides by Simon Munzert</a>. Edits by <a href="https://github.com/cbsobral">Carol Sobral</a>.</p>
 </div>
 </div>
 
