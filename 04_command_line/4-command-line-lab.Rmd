@@ -106,7 +106,7 @@ Run `pwd` in the Terminal and `getwd()` in the R Console. Are they the same? Why
 The shell is deliberately terse. When you meet an unfamiliar command, start with its manual page or built-in help:
 
 ```bash
-$ man grep # man might now work on windows
+$ man grep # man might not work on windows
 $ grep --help
 $ which Rscript
 ```
