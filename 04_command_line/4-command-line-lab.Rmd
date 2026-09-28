@@ -199,8 +199,8 @@ $ wc -l data/bird_notes.txt
 
 ```bash
 $ grep "sparrow" data/bird_notes.txt
-$ grep -n "sparrow" data/bird_notes.txt
-$ grep -i "sparrow" data/bird_notes.txt
+$ grep -n "Robin" data/bird_notes.txt
+$ grep -i "robin" data/bird_notes.txt
 ```
 
 `-n` adds line numbers and `-i` ignores case. Quote patterns with spaces or punctuation so that the shell passes them to `grep` as one argument. The pattern language is regular expressions (regex): a compact way to describe text. You do not need to become a regex expert today, but these three patterns are worth recognising:

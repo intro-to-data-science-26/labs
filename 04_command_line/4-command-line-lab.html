@@ -1831,8 +1831,8 @@ search with <code>/word</code>, and press <code>q</code> to quit.</p>
 <p><code>grep</code> prints lines containing a pattern. Start with a
 literal search:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">$</span> grep <span class="st">&quot;sparrow&quot;</span> data/bird_notes.txt</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">$</span> grep <span class="at">-n</span> <span class="st">&quot;sparrow&quot;</span> data/bird_notes.txt</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="ex">$</span> grep <span class="at">-i</span> <span class="st">&quot;sparrow&quot;</span> data/bird_notes.txt</span></code></pre></div>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">$</span> grep <span class="at">-n</span> <span class="st">&quot;Robin&quot;</span> data/bird_notes.txt</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="ex">$</span> grep <span class="at">-i</span> <span class="st">&quot;robin&quot;</span> data/bird_notes.txt</span></code></pre></div>
 <p><code>-n</code> adds line numbers and <code>-i</code> ignores case.
 Quote patterns with spaces or punctuation so that the shell passes them
 to <code>grep</code> as one argument. The pattern language is regular
