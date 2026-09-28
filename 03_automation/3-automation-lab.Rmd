@@ -386,7 +386,7 @@ Task scheduling allows you to:
 
 ### Aside: Relative vs Absolute Paths 🗺️
 
-When working with file paths in R, you can use either relative or absolute paths. So far we have used relative paths as this makes it easier to share code with others. When we schedule tasks however the working directory might not be what we expect, so it is often safer to use absolute paths. A useful package for this is `here` which allows you to construct file paths relative to the root of your project. You will see some examples of this in the code below. (Note that for this reason also, the lotr project as we have set it up above will not work if you just run the `Makefile.R` script, as it uses relative paths. You would have to amend the script to use absolute paths, the `here` package or set your working directory to the lotr_project folder first. Below it is included just for demonstration.)
+When working with file paths in R, you can use either relative or absolute paths. So far we have used relative paths as this makes it easier to share code with others. When we schedule tasks however the working directory might not be what we expect, so it is often safer to use absolute paths. A useful package for this is `here` which allows you to construct absolute file paths relative to the root of your project. You will see some examples of this in the code below. (Note that for this reason also, the lotr project as we have set it up above will not necessarily work if you just run the `Makefile.R` script, as it uses relative paths. You would have to amend the script to use absolute paths, the `here` package or set your working directory to labs folder first. Below it is included just for demonstration.)
 
 ## Scheduling with `cronR` on Mac and Linux ⏰
 
