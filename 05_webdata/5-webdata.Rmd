@@ -178,7 +178,7 @@ numbers_vec
 ```
 ---
 
-## Basic regex syntax
+## Basic Regular Expression Syntax (in R)
 
 ```{r}
 example.obj <- "1. A small sentence. - 2. Another tiny sentence."
@@ -196,7 +196,8 @@ str_extract(example.obj, "banana")
 str_extract(example.obj, "small")
 str_extract(example.obj, "SMALL")
 str_extract(example.obj, 
-            regex("SMALL", ignore_case = TRUE))
+            regex("SMALL", ignore_case = TRUE)
+            )
 ```
 
 ### We can match arbitrary combinations of characters
@@ -206,7 +207,8 @@ str_extract(example.obj, "mall sent")
 ```
 
 ## Meta-characters
-Meta characters allow us to abstract from explicit patterns. These meta characters are `. \ | ( ) [ { ^ $ * + ?`. 
+
+Meta characters (such as `. \ | ( ) [ { ^ $ * + ?`) allow us to abstract from explicit patterns.
 
 ### Wildcards `r emo::ji('mag')`
 For example, `.` is called a wildcard, as it matches any character, except for line breaks (`\n`). 
@@ -252,7 +254,7 @@ unlist(str_extract_all(example.obj, fixed(".")))
 :::
 
 :::alert-info
-**Exercise 2**: Can you find every letter or number followed by a dot in `example.obj`?
+**Exercise 2**: Can you find every character followed by a dot in `example.obj`?
 
 ```{r}
 # Your code here
@@ -269,6 +271,8 @@ unlist(str_extract_all(example.obj, fixed(".")))
 ```{r}
 str_extract(example.obj, "sm[abc]ll")
 ```
+
+The above would match all of: "small", "smbll", and "smcll".
 
 Some character classes are pre-defined. They are very convenient to efficiently describe specific string patterns.
 
@@ -289,6 +293,7 @@ Some character classes are pre-defined. They are very convenient to efficiently 
 ### Character classes in action
 
 Pre-defined character classes are useful because they are efficient and let us
+
 - combine different kinds of characters
 - facilitate reading of an expression
 - include special characters, e.g., ß, ö, æ, ...
@@ -300,14 +305,15 @@ unlist(str_extract_all(example.obj, "[[:punct:]ABC]"))
 
 ### Meta symbols in character classes
 
-Within a character class, most meta-characters lose their special meaning. There are exceptions though: 
+Within a character class, most meta-characters lose their special meaning. This means that `[.]de` would match ".de" but not "ade", even though the `.` matches everything if used outside of a character class. There are exceptions though: 
 
 - `^` becomes "not":  `[^abc]` matches any character other than "a", "b", or "c".
 - `-` becomes a range specifier: `[a-d]` matches any character from a to d. However, `-` at the beginning or the end of a character class matches the hyphen. 
 
 ```{r}
 unlist(str_extract_all(example.obj, "[^[:alnum:]]"))
-str_extract(example.obj, "sm[a-p]ll")
+# character class matches only once!
+unlist(str_extract(c(example.obj, "smmll", "smmall"), "sm[a-p]ll"))
 unlist(str_extract_all(example.obj, "[1-2]"))
 unlist(str_extract_all(example.obj, "[12-]"))
 ```
@@ -361,7 +367,7 @@ str_extract(example.obj, "A.+?sentence")
 ```
 :::
 :::alert-info
-**Exercise 6** In the example sentence can you find all the words that are less than 6 characters long?
+**Exercise 6** In `example.obj` can you find all the words that are less than 6 characters long?
 
 Hint: `\\b` can be use to match a word boundary, i.e. the start or end of a word.
 ```{r}
@@ -381,16 +387,16 @@ The first pattern is defined with round brackets, as in `(pattern)`. We then ref
 str_extract(example.obj, "([[:alpha:]]).+?\\1")
 ```
 
-## Useful links
+## Useful Links
 For more info on regex in R, check out the documentation:
 
 ```{r, eval=FALSE}
 ?base::regex
 ```
 
-The stringr package also provides a [vignette](https://stringr.tidyverse.org/articles/regular-expressions.html) on working with regex.
+The `stringr` package also provides a [vignette](https://stringr.tidyverse.org/articles/regular-expressions.html) on working with regex.
 
-Here is a [cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/strings.pdf) for stringr and regex.
+Here is a [cheat sheet](https://rstudio.github.io/cheatsheets/html/strings.html) for `stringr` and regex.
 
 Finally a word of caution at the end: Since regular expressions are extremely powerful in string manipulation, it is easy to try and solve every problem with a single regex. Do not forget that you have other tools available in a programming language and you can break down the problem by writing a series of simpler regexes. 
 
@@ -498,26 +504,26 @@ parsed_doc <- rvest::read_html("http://www.r-datacollection.com/materials/ch-4-x
 
 ---
 
-# 5. Xpath Basics (Bonus) `r emo::ji('woman_technologist')`
+# 5. XPath Basics (Bonus) `r emo::ji('woman_technologist')`
 
-While HTML displays data and describes the structure of a webpage, XML stores and transfers data. XML is a standard language which can define other computer languages. XPath uses path expressions to select nodes or node-sets in an XML document. HTML and Xpath can thus be exploited in conjunction to interact with the stored HTML structure of a website. 
+While HTML displays data and describes the structure of a webpage, XML stores and transfers data. XML is a standard language which can define other computer languages. XPath uses path expressions to select nodes or node-sets in an XML document. HTML and XPath can thus be exploited in conjunction to interact with the stored HTML structure of a website. 
 
-A simple Xpath in the example mentioned above would be `html/body/div/h1`. The simple slashes in this example indicate an **absolute path**. This means, we start at the root node and follow the whole way down to our target element h1.
+A simple XPath in the example mentioned above would be `html/body/div/h1`. The simple slashes in this example indicate an **absolute path**. This means, we start at the root node and follow the whole way down to our target element h1.
 
 **Relative paths** on the other hand are indicated with double slashes `//`. Relative paths skip nodes and do not need to start at the root node. An example here would be `//body//h1`.
 
-The wildcard operator `*` allows us to skip elements in the Xpath.
+The wildcard operator `*` allows us to skip elements in the XPath.
 
-After having parsed the webiste from HTML to an XML document, we can locate individual elements with Xpaths. The `html_elements()` function from the `rvest` package, finds and selects elements in the parsed document. We can use both **css** and **xpath** selectors, but for now we will only look at Xpath selectors. 
+After having parsed the webiste from HTML to an XML document, we can locate individual elements with XPaths. The `html_elements()` function from the `rvest` package, finds and selects elements in the parsed document. We can use both **CSS** and **XPath** selectors, but for now we will only look at XPath selectors. 
 
 ```{r}
 rvest::html_elements(parsed_doc, xpath = "/html/body/div/p/i")
 ```
 
 
-## The xpath grammar `r emo::ji('mage')`
+## The XPath grammar `r emo::ji('mage')`
 
-We can use xpath to select certain aspects of the webpage, or more precisely the underlying XML from the html file.
+We can use XPath to select certain aspects of the webpage:
 
 ```{r, fig.align='center', echo=F, out.width = "90%"}
 knitr::include_graphics("pics/Xpath.png")
@@ -526,14 +532,14 @@ knitr::include_graphics("pics/Xpath.png")
 * `//`: The releative path that lets us start with our current element
 * tagname: the tagname of our current element
 * `@`: The `@` is used to select an attribute in out element.
-* Attribute: The name of our attribute.
+* `Attribute`: The name of our attribute.
 * Value: The value of our attribute
 
 ---
 
 ## XPath Predicates 
 
-Now let's take a look at some more complex examples of Xpaths. Elements on the webpage can also be selected with Xpath by leveraging their relations to the elements that they are connected to. The basic syntax for this is `element1/relation::element2`. 
+Now let's take a look at some more complex examples of XPaths. Elements on the webpage can also be selected with XPath by leveraging their relations to the elements that they are connected to. The basic syntax for this is `element1/relation::element2`. 
 
 If we would like to extract the two names on our example webpage, using element relations, we can do so like this:
 
@@ -541,13 +547,13 @@ If we would like to extract the two names on our example webpage, using element 
 rvest::html_elements(parsed_doc, xpath = "//p/preceding-sibling::h1")
 ```
 
-Finally, we can also use True/False conditions on our elements to filter them. In Xpath, this is called **predicates**. A **numeric predicate** lets us select the nth element within a given path. Let us use this to extract the Source of the quotes on our example page:
+Finally, we can also use True/False conditions on our elements to filter them. In XPath, this is called **predicates**. A **numeric predicate** lets us select the $n$th element within a given path. Let us use this to extract the source of the quotes on our example page:
 
 ```{r}
 rvest::html_elements(parsed_doc, xpath = "//p[2]")
 ```
 
-Next to numeric predicates, there are also **textual predicates**. Textual predicates allow us to do rudimentary text matching. This is implemented in string functions like `contains()`, `starts_with` or `ends_with()`. Predicates can also be chained together with `and`. Multiple xpaths can be combined in an or logic with the pipe operator `|`:
+Next to numeric predicates, there are also **textual predicates**. Textual predicates allow us to do rudimentary text matching. This is implemented in string functions like `contains()`, `starts_with` or `ends_with()`. Predicates can also be chained together with `and`. Multiple XPaths can be combined in an or logic with the pipe operator `|`:
 
 ```{r}
 rvest::html_elements(parsed_doc, xpath = "//h1[contains(., 'Rolf')] | //h1[contains(., 'Robert')]" )
@@ -555,13 +561,13 @@ rvest::html_elements(parsed_doc, xpath = "//h1[contains(., 'Rolf')] | //h1[conta
 
 ---
 
-## Xpath exercise `r emo::ji('pick')``
+## XPath exercise `r emo::ji('pick')`
 
 Can you find all links in on our example document?
 
 
 ```{r}
-
+# Your Code Here
 ```
 
 ---
@@ -571,7 +577,7 @@ Can you find all links in on our example document?
 This tutorial drew heavily on Simon Munzert's book [Automated Data Collection with R](http://r-datacollection.com/) and related [course materials](https://github.com/simonmunzert/web-scraping-with-r-extended-edition). 
 For the regex part, we used examples from the string manipulation section in Hadley Wickham' s [R for Data Science](https://r4ds.had.co.nz/strings.html) book.
 
-This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral).
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), and  [Linus Hagemann](https://linushagemann.de).
 
 ---
 

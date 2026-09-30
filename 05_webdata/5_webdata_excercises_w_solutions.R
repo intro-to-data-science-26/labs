@@ -32,7 +32,7 @@ str_split_1(example.obj, pattern = "\\b") |>
   str_subset("^[[:alpha:]]{1,5}$") |>
   print()
 # Note you can use `str_c()` to recombine the words into a single string if you want.
-# 
+
 # Regular Expressions Exercises
 # 
 # 1.a.
@@ -119,3 +119,7 @@ secret <- "clcopCow1zmstc0d87wnkig7OvdicpNuggvhryn92Gjuwczi8hqrfpRxs5Aj5dwpn0Tan
 
 solved <- unlist(str_extract_all(secret, "[[:upper:][:punct:]]"))
 str_c(solved, collapse = "")
+
+# XPath Solutions
+parsed_doc <- rvest::read_html("http://www.r-datacollection.com/materials/ch-4-xpath/fortunes/fortunes.html") 
+rvest::html_elements(parsed_doc, xpath = "//a")
