@@ -1,7 +1,7 @@
 ---
 title: "Webdata"
-subtitle: "Working with Regex and Xpath"
-author: "Killian Conyngham & Carol Sobral"
+subtitle: "Working with Regular Expressions and XPath"
+author: "Carol Sobral, Linus Hagemann and Laia Domenech Burin"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
@@ -55,9 +55,11 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ***
-## Welcome to Week 4! `r emo::ji("wave")`
+## Welcome to Week 5! `r emo::ji("wave")`
 
-Today's session will focus on regular expressions, a powerful tool for extracting information from unstructured text data and the `stringr` package, which provides a cohesive set of functions designed to make string manipulation easier in R. There is also material on Html structure and Xpath, for you to work through after the Lecture. While some of these tools may seem abstract at first, locating data in unstructured text and nested html structures is particularly useful when it comes to scraping data from the web, which we will cover in our next session.
+Today's session will focus on regular expressions, a powerful tool for extracting information from unstructured text data and the `stringr` package, which provides a cohesive set of functions designed to make string manipulation easier in R. There is also material on HTML structure and XPath, which we include as a refresher for you after the lecture. Those will likely be more for you to refer to on your after the session.
+
+While some of these tools may seem abstract at first, locating data in unstructured text and nested HTML structures is particularly useful when it comes to scraping data from the web, which we will cover in our next session. As soon as you are collecting your own data, you will most likely use one or multiple of the techniques we talk about today and in the coming weeks.
 
 ***
 
@@ -67,43 +69,44 @@ Today's session will focus on regular expressions, a powerful tool for extractin
 library(stringr)
 ```
 
-`stringr` and `stringi` are the two most common libraries for string manipulation in R. Before we look into regular expressions, let us quickly look into some of th core functionalities of `stringr` and how you can use them.   
+`stringr` is **the** library for string manipulation in the *tidyverse*. Before we look into regular expressions, let us quickly look into some of the core functionalities of `stringr` and how you can use them.
 
-Here is a quick overview of the most useful functions in the `stringr` package. Firstly, `stringr::str_detect()` allows you to detect the presence or absence of a pattern in a string. It returns a vector of TRUE and FALSE values depending on if the pattern was found or not.
+Firstly, `stringr::str_detect()` allows you to detect the presence or absence of a pattern in a string. It returns a vector of `TRUE` and `FALSE` values depending on whether the pattern was found or not.
 
 ```{r}
 x <- c("apple", "banana", "pear")
 
-stringr::str_detect(x, "e")
+str_detect(x, "e")
 ```
 
 To extract the actual text of a match, use `stringr::str_extract()`. Note that `stringr::str_extract()` only extracts the first match. To get all matches, use `stringr::str_extract_all()`, which returns a list.
 
 
 ```{r}
-stringr::str_extract(x, 'a')
+str_extract(x, 'a')
 ```
 
 ```{r}
-stringr::str_extract_all(x, 'a')
+str_extract_all(x, 'a')
 ```
 
 `stringr::str_replace()` and `stringr::str_replace_all()` allow you to replace matches with new strings. The simplest way is to replace a fixed string, however with `stringr::str_replace_all()` you can perform multiple replacements by supplying a named vector:
 
 ```{r}
-stringr::str_replace_all(x, c("a" = "A", "b" = "B", "p" = "P"))
+str_replace_all(x, c("a" = "A", "b" = "B", "p" = "P"))
 ```
 
-`stringr::str_locate()` and `stringr::str_locate_all()` give you the starting and ending positions of each match. These are particularly useful when none of the other functions does exactly what you want. 
+`stringr::str_locate()` and `stringr::str_locate_all()` give you the starting and ending positions of each match. These are particularly useful when none of the other functions does exactly what you want, as you can use the indices to very precisely access/manipulate the original string.
 
 ```{r}
-stringr::str_locate_all(x, 'a')
+x # to remind us of the original vector
+str_locate_all(x, 'a')
 ```
 
 `stringr::str_view()` and `stringr::str_view_all()` are useful for visualizing matches. They display the strings with the matched patterns highlighted.
 
 ```{r, echo}
-stringr::str_view(x, "a")
+str_view(x, "a")
 ```
 
 :::alert-info
@@ -112,8 +115,6 @@ stringr::str_view(x, "a")
 words <- c("running", "jumps", "swimming", "biking", "skates", "hiking", "fishing", "reading")
 
 # Your code here
-stringr::str_replace_all(words, c("ing" = "er", "er" = "ed"))
-stringr::str_replace_all(words, "ing", "er")
 ```
 :::
 
@@ -121,11 +122,9 @@ stringr::str_replace_all(words, "ing", "er")
 **Exercise 2**: Can you find how many words in the inbuilt `stringr::words` vector contain the sequence "ise"?
 ```{r, echo=FALSE}
 # Your code here
-
 # You can access the words vector with: stringr::words
 ```
 :::
-
 
 # 2. Regular expressions `r emo::ji('memo')`
 
