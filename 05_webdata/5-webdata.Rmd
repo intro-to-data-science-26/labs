@@ -247,7 +247,7 @@ unlist(str_extract_all(example.obj, "\\."))
 unlist(str_extract_all(example.obj, fixed(".")))
 ```
 :::alert-info
-**Exercise 1**: Can you find all the words in `stringr::words` that end in "ing" or "ise"?
+**Exercise 1**: Can you find all the words in `stringr::words` that end in "ing"?
 ```{r}
 # Your code here
 ```
