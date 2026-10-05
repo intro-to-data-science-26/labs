@@ -278,17 +278,18 @@ Some character classes are pre-defined. They are very convenient to efficiently 
 
 | Specification | Meaning | Shorthand version |
   |---|---|---|
-  | `[:digit:]`  | Digits: 0 1 2 3 4 5 6 7 8 9 | \\d |
-  | `[:lower:]`  | Lower-case characters: a-z | \\l |
-  | `[:upper:]`  | Upper-case characters: A-Z | \\u |
-  | `[:alpha:]`  | Alphabetic characters: a-z and A-Z | \\w |
-  | `[:alnum:]`  | Digits and alphabetic characters | |
+  | `[:digit:]`  | Digits: 0 1 2 3 4 5 6 7 8 9 | \\\\d |
+  | `[:lower:]`  | Lower-case characters: a-z | |
+  | `[:upper:]`  | Upper-case characters: A-Z | |
+  | `[:alpha:]`  | Alphabetic characters: a-z and A-Z | |
+  | `[:alnum:]`  | Digits and alphabetic characters | approx. \\\\w |
   | `[:punct:]`  | Punctuation characters: `.`, `,`, `;`, etc. | |
   | `[:graph:]`  | Graphical characters: `[:alnum:]` and `[:punct:]` | |
-  | `[:blank:]`  | Blank characters: Space and tab | \\s |
-  | `[:space:]`  | Space characters: Space, tab, newline, and others | \\_s |
-  | `[:print:]`  | Printable characters: `[:alnum:]`, `[:punct:]` and `[:space:]`| \\p |
+  | `[:blank:]`  | Blank characters: Space and tab | \\\\s |
+  | `[:space:]`  | Space characters: Space, tab, newline, and others| |
+  | `[:print:]`  | Printable characters: `[:alnum:]`, `[:punct:]` and `[:space:]`| |
 
+*Note, that the shorthands are to be typed with **two backslashes**. If you look at this `.Rmd` document, the double escape is necessary for the rendering in the HTML to be correct.*
 
 ### Character classes in action
 

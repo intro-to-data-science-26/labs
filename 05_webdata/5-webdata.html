@@ -1863,27 +1863,27 @@ efficiently describe specific string patterns.</p>
 <tr class="odd">
 <td><code>[:digit:]</code></td>
 <td>Digits: 0 1 2 3 4 5 6 7 8 9</td>
-<td>\d</td>
+<td>\\d</td>
 </tr>
 <tr class="even">
 <td><code>[:lower:]</code></td>
 <td>Lower-case characters: a-z</td>
-<td>\l</td>
+<td></td>
 </tr>
 <tr class="odd">
 <td><code>[:upper:]</code></td>
 <td>Upper-case characters: A-Z</td>
-<td>\u</td>
+<td></td>
 </tr>
 <tr class="even">
 <td><code>[:alpha:]</code></td>
 <td>Alphabetic characters: a-z and A-Z</td>
-<td>\w</td>
+<td></td>
 </tr>
 <tr class="odd">
 <td><code>[:alnum:]</code></td>
 <td>Digits and alphabetic characters</td>
-<td></td>
+<td>approx. \\w</td>
 </tr>
 <tr class="even">
 <td><code>[:punct:]</code></td>
@@ -1900,21 +1900,25 @@ efficiently describe specific string patterns.</p>
 <tr class="even">
 <td><code>[:blank:]</code></td>
 <td>Blank characters: Space and tab</td>
-<td>\s</td>
+<td>\\s</td>
 </tr>
 <tr class="odd">
 <td><code>[:space:]</code></td>
 <td>Space characters: Space, tab, newline, and others</td>
-<td>\_s</td>
+<td></td>
 </tr>
 <tr class="even">
 <td><code>[:print:]</code></td>
 <td>Printable characters: <code>[:alnum:]</code>, <code>[:punct:]</code>
 and <code>[:space:]</code></td>
-<td>\p</td>
+<td></td>
 </tr>
 </tbody>
 </table>
+<p><em>Note, that the shorthands are to be typed with <strong>two
+backslashes</strong>. If you look at this <code>.Rmd</code> document,
+the double escape is necessary for the rendering in the HTML to be
+correct.</em></p>
 </div>
 <div id="character-classes-in-action" class="section level3">
 <h3>Character classes in action</h3>
