@@ -2010,7 +2010,7 @@ certain string pattern should be allowed to appear.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="fu">str_extract</span>(example.obj, <span class="st">&quot;s[[:alpha:]]{3}l&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="fu">str_extract</span>(example.obj, <span class="st">&quot;s[:alpha:]{3}l&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;small&quot;</code></pre>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a><span class="fu">str_extract</span>(example.obj, <span class="st">&quot;A.+sentence&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;A small sentence. - 2. Another tiny sentence&quot;</code></pre>
@@ -2051,7 +2051,7 @@ repeated match of previously matched pattern.</p>
 (or with <code>\2</code> for the second pattern, etc.).</p>
 <p><strong>Example:</strong> Match the first letter, then anything until
 you ﬁnd the first letter again (not greedy).</p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" tabindex="-1"></a><span class="fu">str_extract</span>(example.obj, <span class="st">&quot;([[:alpha:]]).+?</span><span class="sc">\\</span><span class="st">1&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" tabindex="-1"></a><span class="fu">str_extract</span>(example.obj, <span class="st">&quot;([:alpha:]).+?</span><span class="sc">\\</span><span class="st">1&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;A small sentence. - 2. A&quot;</code></pre>
 </div>
 <div id="useful-links" class="section level2">

@@ -347,7 +347,7 @@ Quantifiers are meta-characters that allow you to specify how often a certain st
   | `{n,m}`  |  The preceding item is matched between n and m times |
 
 ```{r}
-str_extract(example.obj, "s[[:alpha:]]{3}l")
+str_extract(example.obj, "s[:alpha:]{3}l")
 str_extract(example.obj, "A.+sentence")
 ```
 
@@ -385,7 +385,7 @@ The first pattern is defined with round brackets, as in `(pattern)`. We then ref
 **Example:** Match the first letter, then anything until you ﬁnd the first letter again (not greedy).
 
 ```{r}
-str_extract(example.obj, "([[:alpha:]]).+?\\1")
+str_extract(example.obj, "([:alpha:]).+?\\1")
 ```
 
 ## Useful Links
