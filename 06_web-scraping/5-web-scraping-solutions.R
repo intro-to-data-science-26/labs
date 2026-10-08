@@ -4,16 +4,15 @@ library(rvest)
 
 
 # Exercise 1
-# Precise XPath from Chrome
+# Precise XPath copied from Firefox
 parsed_url |> 
-  rvest::html_element(xpath = '//*[@id="mw-content-text"]/div[1]/p[8]') |> 
-  rvest::html_text2()
-
+  html_elements(xpath = '//*[@id="mwAdU"]') |> 
+  html_text()
 
 # More flexible, getting the second paragraph of the header Roman Cologne
 parsed_url |> 
-  rvest::html_element(xpath = '//h3[@id="Roman_Cologne"]/following::p[2]') |> 
-  rvest::html_text2()
+  html_element(xpath = '//*[@aria-labelledby="Riots"]/following::p[2]') |> 
+  html_text2()
 
 
 

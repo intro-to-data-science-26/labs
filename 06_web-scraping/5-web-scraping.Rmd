@@ -105,7 +105,7 @@ knitr::include_graphics("pics/workflow.png")
 
 # Scraping static sites with `rvest` `r emo::ji("tractor")`
 
-Who doesn't love Wikipedia? Let's use this as our first, straight forward test case. Let's take a look at the [Cologne page](https://en.wikipedia.org/wiki/Cologne). 
+Who doesn't love Wikipedia? Let's use this as our first, straight forward test case. Let's take a look at the [Stonewall Riots page](https://en.wikipedia.org/wiki/Stonewall_riots). 
 
 :::{.alert-info .pad-box}
 
@@ -125,43 +125,39 @@ library(rvest)
 library(stringr)
 library(tidyverse)
 library(here)
+library(janitor)
 ```
 
 **Step 2.** Parse the page source. If encoding is necessary, you can add it in the reading html step.
 
 ```{r}
-parsed_url <- rvest::read_html("https://en.wikipedia.org/wiki/Cologne", 
+parsed_url <- read_html("https://en.wikipedia.org/wiki/Stonewall_riots", 
                                encoding = "UTF-8")
 ```
 
 **Step 3.** Extract information.
 
 ```{r}
+# Method 1: Section-based selection
+# Finds the 3rd <section> element on the page, then grabs the first <p> element within that section
+# Less robust because it relies on the structure of the page (can be updated, changed and then the query will break)
+
 parsed_url |> 
-  rvest::html_element(xpath = '//p[76]') |> 
-  rvest::html_text()
+  html_element(xpath = '//section[3]/p') |> 
+  html_text()
 
 ```
 
-There are many ways to get the same content:
+There are different ways to get the same content:
 
 ```{r}
-# Method 1: Semantic/content-based selection
-# Finds the h3 heading with id "Carnival", then grabs the paragraph that follows it
+# Method 2: Semantic/content-based selection
+# Finds the h3 heading with id "Earlier_resistance_and_riots", then grabs the paragraph that follows it
 # More robust because it relies on the content structure (headings and their IDs)
 # Will still work even if Wikipedia adds/removes other content on the page
 parsed_url |> 
-  rvest::html_element(xpath = '//div[contains(@class, "mw-heading mw-heading3")]//h3[@id="Carnival"]/following::p') |> 
-  rvest::html_text()
-
-
-# Method 2: Absolute path selection  
-# Goes to the exact 76th paragraph in a very specific location in the HTML tree
-# Super fragile - breaks if Wikipedia changes anything above this paragraph
-# Like giving directions "take the 76th door" instead of "go to the room labeled Carnival"
-parsed_url |> 
-  rvest::html_element(xpath = "/html/body/div[2]/div/div[3]/main/div[3]/div[3]/div[1]/p[76]") |> 
-  rvest::html_text()
+  html_element(xpath = '//h3[@id="Earlier_resistance_and_riots"]/following::p') |> 
+  html_text()
 ```
 
 
@@ -177,26 +173,28 @@ In here we present two ways:
 
 ---
 
-**Option 1.** On your page of interest, go to a section/table that you'd like to scrape. Our favorite browser for web scraping is Google Chrome, but others work as well. On Chrome, you go in `View > Developer > inspect elements` or right click on the element you are interested and go to `Inspect`. 
+**Option 1.** On your page of interest, go to a section/table that you'd like to scrape. Web scraping exploration is different for Chrome and Firefox. 
+- On Google Chrome, you go in `View > Developer > inspect elements` or right click on the element you are interested and go to `Inspect`. 
+- On Firefox, you go in `Tools > Web Developer > Inspector` or right click on the element you are interested and go to `Inspect Element`.
 
 If you hover over the  code on the right, you should see boxes of different colors framing different elements of the page. Once the part of the page you would like to scrape is selected, right click on the HTML code and `Copy > Copy XPath`. That's it.
 
-Let's try it with the [Cologne Wikipedia page.](https://en.wikipedia.org/wiki/Cologne#Carnival)
+Let's try it with the [Stonewall Riots Wikipedia page.](https://en.wikipedia.org/wiki/Stonewall_riots)
 
 ```{r, fig.align='center', echo=F, out.width = "90%"}
-knitr::include_graphics("pics/inspect.png")
+knitr::include_graphics("pics/inspect_stonewall.png")
 ```
 
 
 ```{r}
 parsed_url |> 
-  rvest::html_elements(xpath = '//*[@id="mw-content-text"]/div[1]/p[76]') |> 
-  rvest::html_text()
+  html_elements(xpath = '//div[@class="infobox-caption"]') |> 
+  html_text()
 ```
 
 ---
 
-**Option 2.** `SelectorGadget`. You can download the [Chrome Extension](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb?hl=de) `SelectorGadget` and activate it while browsing the page you'd like to scrape from. You will see a selection box moving with your cursor. You select an element by clicking on it. It turns green - and so does all other content that would be selected with the current XPath.
+**Option 2.** `SelectorGadget`. You can download the [Chrome Extension](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb?hl=de)  (it is not available for Firefox) and activate it while browsing the page you'd like to scrape from. You will see a selection box moving with your cursor. You select an element by clicking on it. It turns green - and so does all other content that would be selected with the current XPath.
 
 ```{r, fig.align='center', echo=F, out.width = "90%"}
 knitr::include_graphics("pics/selector.png")
@@ -208,20 +206,23 @@ Now click on any irrelevant elements to deselect them (they'll turn red when des
 knitr::include_graphics("pics/selector2.png")
 ```
 
-```{r}
-parsed_url |> 
-  rvest::html_elements(xpath = '//p[(((count(preceding-sibling::*) + 1) = 179) and parent::*)]') |> 
-  rvest::html_text()
+---
+
+**Option 3.** `Selenium IDE`. You can download the [Selenium IDE](https://www.selenium.dev/selenium-ide/) software for test automation. It works for both Firefox and Google Chrome, and you can activate it to record tests browsing a website. You can click on different elements of te page, scroll, move and type and the software will record all your actions. You can then export the recorded test as an XPath query.
+
+```{r, fig.align='center', echo=F, out.width = "90%"}
+knitr::include_graphics("pics/selenium_ide_example.gif")
 ```
 
----
+Selenium IDE can be particulary useful as it also shows how to interact with an interactive website. For example, if you want to scrape a table that is only shown after clicking on a button, Selenium IDE will record this action and you can then export the query. We do not cover dynamic web scraping in this tutorial, but the Selenium is the tool used to do so. You can read more on that [here](https://medium.com/@alfredo-hs/web-scraping-dynamic-pages-in-r-with-selenium-b106850ddd4a) and [here](https://github.com/ropensci/RSelenium). 
+
 
 
 :::{.alert-info .pad-box}
 
 **Exercise 1** 🏋 
 
-Your task is to extract the second paragraph from the "Roman Cologne" section of the Wikipedia page on Cologne any way you like. Use the `parsed_url` object we created earlier. 
+Your task is to extract the second paragraph from the "Inspect Police Raid" section of the Wikipedia page on Stonewall Riots any way you like. Use the `parsed_url` object we created earlier. 
 ::: 
 
 ```{r}
@@ -247,12 +248,12 @@ Let's take a look at the [List of Spotify streaming records](https://en.wikipedi
 
 ```{r}
 # load html
-url_p <- rvest::read_html("https://en.wikipedia.org/wiki/List_of_Spotify_streaming_records")
+url_p <- read_html("https://en.wikipedia.org/wiki/List_of_Spotify_streaming_records")
 
 # extract table
-spotify_table_raw <- rvest::html_table(url_p, header = T) |> # extracts all <table> elements from page
-  purrr::pluck(1) |> # get table in nth place (1)
-  janitor::clean_names() # clean the table names
+spotify_table_raw <- html_table(url_p, header = T) |> # extracts all <table> elements from page
+  pluck(1) |> # get table in nth place (1)
+  clean_names() # clean the table names
 
 # inspect the table we got
 head(spotify_table_raw)
@@ -260,11 +261,11 @@ tail(spotify_table_raw)
 
 # clean up table a bit 
 spotify_table <- spotify_table_raw |>
-  dplyr::mutate(song = stringr::str_remove_all(song, '\"'), # remove quotation marks from song titles
+  mutate(song = str_remove_all(song, '\"'), # remove quotation marks from song titles
                 streams_billions = as.numeric(streams_billions) # make stream_billions a numeric variable
                 ) |> 
-  dplyr::slice(1:100) |> # drop last row
-  dplyr::select(-ref) # drop ref col
+  slice(1:100) |> # drop last row
+  select(-ref) # drop ref col
 
 head(spotify_table)
 ```
@@ -278,6 +279,11 @@ Can you tell us:
 
 a) What does it take to be within the top-100 most streamed songs on Spotify? (i.e., how many streams?)
 b) Which artists have the highest number of most streamed songs? (Note that the `artist_s` string might contain multiple unique artists)
+
+```{r}
+# YOUR ANSWER HERE
+
+```
 
 
 *Bonus at home 🏠*
@@ -316,16 +322,16 @@ issueurl <- c(paste0("0", 1:9), 10:12) # 01 to 12 maximum number of issues in a 
 # (there is a more efficient way of dealing with the inconsistency, but
 # let's try to keep this simple
 
-combinations <- tidyr::expand_grid(volurl, issueurl)
+combinations <- expand_grid(volurl, issueurl)
 #tidyr::expand_grid produces all combinations of volurl and issueurl
 
 urls_list <- combinations |> 
-  dplyr::mutate(url = paste0(baseurl, volurl, 'i', issueurl)) |>
-  dplyr::pull(url)
+  mutate(url = paste0(baseurl, volurl, 'i', issueurl)) |>
+  pull(url)
 
 names_for_files <- combinations |>
-  dplyr::mutate(name = paste0(volurl, '_', issueurl, '.html')) |>
-  dplyr::pull(name)
+  mutate(name = paste0(volurl, '_', issueurl, '.html')) |>
+  pull(name)
 
 ```
 
@@ -395,20 +401,20 @@ datePublish <- character()
 # then run the loop
 for (i in seq_along(list_files_path)) {
   
-   html_out <- rvest::read_html(list_files_path[i], encoding = "UTF-8")
+   html_out <- read_html(list_files_path[i], encoding = "UTF-8")
     
   authors[i] <- html_out |> 
-    rvest::html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "authors_long", " " ))]//strong') |> 
-    rvest::html_text2()
+    html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "authors_long", " " ))]//strong') |> 
+    html_text2()
     
     
   title[i] <- html_out |> 
-    rvest::html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "page-header", " " ))]') |> 
-    rvest::html_text2()
+    html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "page-header", " " ))]') |> 
+    html_text2()
     
   datePublish[i] <- html_out |> 
-    rvest::html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "article-meta", " " ))]//*[contains(concat( " ", @class, " " ), concat( " ", "row", " " )) and (((count(preceding-sibling::*) + 1) = 2) and parent::*)]//*[contains(concat( " ", @class, " " ), concat( " ", "col-sm-8", " " ))]') |> 
-    rvest::html_text2()
+    html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "article-meta", " " ))]//*[contains(concat( " ", @class, " " ), concat( " ", "row", " " )) and (((count(preceding-sibling::*) + 1) = 2) and parent::*)]//*[contains(concat( " ", @class, " " ), concat( " ", "col-sm-8", " " ))]') |> 
+    html_text2()
   
 }
 
@@ -485,10 +491,10 @@ baseurl <- "https://swapi.dev/api/"
 
 query <- 'films'
 
-httr::GET(paste0(baseurl, query)) |> # Make API call
-  httr::content(as = 'text') |> # extract content as text
-  jsonlite::fromJSON() |> 
-  purrr::pluck(4) |> 
+GET(paste0(baseurl, query)) |> # Make API call
+  content(as = 'text') |> # extract content as text
+  fromJSON() |> 
+  pluck(4) |> 
   head(1)
 ```
 
@@ -502,8 +508,8 @@ Now let's query the API for people matching "Skywalker". We'll go through this s
 ```{r}
 query <- 'people/?search=skywalker'
 
-httr::GET(paste0(baseurl, query)) |>
-  httr::http_type()  # Check what output returns
+GET(paste0(baseurl, query)) |>
+  http_type()  # Check what output returns
 ```
 
 
@@ -516,11 +522,11 @@ The JSON has four main elements: "count", "next", "previous", and "results". The
 
 ```{r}
 # Make the API call and show the raw JSON text
-raw_json <- httr::GET(paste0(baseurl, query)) |>
-  httr::content(as = 'text')  # Get raw JSON as text
+raw_json <- GET(paste0(baseurl, query)) |>
+  content(as = 'text')  # Get raw JSON as text
 
 # Print the raw JSON to see the structure
-cat(substr(jsonlite::prettify(raw_json), 1, 2000))
+cat(substr(prettify(raw_json), 1, 2000))
 ```
 
 
@@ -530,13 +536,13 @@ cat(substr(jsonlite::prettify(raw_json), 1, 2000))
 
 ```{r}
 # Parse the JSON
-parsed_data <- httr::GET(paste0(baseurl, query)) |>
-  httr::content(as = 'text') |>
-  jsonlite::fromJSON()
+parsed_data <- GET(paste0(baseurl, query)) |>
+  content(as = 'text') |>
+  fromJSON()
 
 # Extract the "results" element (4th position) and display
 parsed_data |>
-  purrr::pluck(4) |>  # Get the 4th element ("results")
+  pluck(4) |>  # Get the 4th element ("results")
   head(3)
 
 # Alternatively, you could parse by name
@@ -564,7 +570,7 @@ baseurl <- "https://api.congress.gov/v3/" # base url (remains consistent across 
 api_key <- glue::glue("api_key={Sys.getenv('MY_API_KEY')}") # your personal API key
 query <- "bill" # query
 
-try2 <- GET(glue::glue(baseurl, query, "?", api_key)) |> 
+try2 <- GET(glue(baseurl, query, "?", api_key)) |> 
   content(as = "text") |> 
   fromJSON() |> 
   pluck(1) |> 
@@ -576,7 +582,7 @@ try2 <- GET(glue::glue(baseurl, query, "?", api_key)) |>
 # US Congress: Actions on a specific nomination
 query <- "nomination/115/2259/actions"
 
-GET(glue::glue(baseurl, query, "?", api_key)) |> 
+GET(glue(baseurl, query, "?", api_key)) |> 
   content(as = "text") |> 
   fromJSON() |> 
   pluck(1) |> 
@@ -587,7 +593,7 @@ GET(glue::glue(baseurl, query, "?", api_key)) |>
 # US Congress: Summaries filtered by congress and bill type
 query <- "summaries/117/hr?fromDateTime=2022-04-01T00:00:00Z&toDateTime=2022-04-03T00:00:00Z&sort=updateDate+desc"
 
-GET(glue::glue("{baseurl}{query}&{api_key}")) |> # another way of using glue()
+GET(glue("{baseurl}{query}&{api_key}")) |> # another way of using glue()
   content(as = 'text') |>
   fromJSON() |>
   pluck(3) |>
@@ -598,7 +604,7 @@ GET(glue::glue("{baseurl}{query}&{api_key}")) |> # another way of using glue()
 # US Congress: Legislation sponsored by a specific congress member
 query <- "member/L000174/sponsored-legislation.xml" # data can be formatted as xml too
 
-GET(glue::glue(baseurl, query, "?", api_key),
+GET(glue(baseurl, query, "?", api_key),
     add_headers("X-Api-Key" = Sys.getenv("MY_API_KEY"))) |>
   content(as = "text") |>
   read_xml() |>
@@ -640,7 +646,7 @@ General rules are listed under `User-agent: *` which is most interesting for R-b
 
 First thing would be not to scrape at a speed that causes trouble for their server. Therefore, whenever you loop over a list of URLs, add a pause to the system at the end of the loop (e.g., `Sys.sleep(runif(1, 1, 2))` a random number between 1 and 2, and then the `Sys.sleep()` function causes the R script to pause for that random number of seconds).
 
-And generally, it is better practice to store data on your local drive first (`download.file()`), then parse (`rvest::read_html()`). 
+And generally, it is better practice to store data on your local drive first (`download.file()`), then parse (`read_html()`). 
 
 :::{.alert-primary .pad-box}
 
@@ -663,7 +669,7 @@ Furthermore, downloading massive amounts of data may arouse attention from serve
 url <- "http://a-totally-random-website.com"
 
 #rvest's session() creates a session object that responds to HTTP and HTML methods.
-rvest_session <- rvest::session(url, 
+rvest_session <- session(url, 
                                 httr::add_headers(
                                   `From` = "my@email.com", 
                                   `UserAgent` = R.Version()$version.string
@@ -671,8 +677,8 @@ rvest_session <- rvest::session(url,
                                 )
                 
 scraped_text <- rvest_session |> 
-            rvest::html_elements(xpath = "p//a") |> 
-            rvest::html_text()
+            html_elements(xpath = "p//a") |> 
+            html_text()
 ```
 
 rvest's `session()` creates a session object that responds to HTTP and HTML methods.
