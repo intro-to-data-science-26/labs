@@ -1514,7 +1514,7 @@ margin-left: 0 !important;
         <nav role="navigation" id="toc">
           <ul>
           <li><a href="#why-webscrape-with-r" id="toc-why-webscrape-with-r">Why webscrape with R?
-          🌏</a></li>
+          🌍</a></li>
           <li><a href="#scraping-static-sites-with-rvest" id="toc-scraping-static-sites-with-rvest">Scraping static
           sites with <code>rvest</code> 🚜</a>
           <ul>
@@ -1618,7 +1618,7 @@ data</li>
 </ul>
 <hr />
 <div id="why-webscrape-with-r" class="section level1">
-<h1>Why webscrape with R? 🌏</h1>
+<h1>Why webscrape with R? 🌍</h1>
 <p>Web scraping broadly includes:</p>
 <ul>
 <li>getting (unstructured) data from the web, and</li>
@@ -1957,24 +1957,20 @@ tidying the data, not into the actual downloading/scraping part.</p>
 your assignment!), it can be useful to <strong>.gitignore</strong> the
 folder of downloaded files. This means that the folder can be stored in
 your local directory of the project but will not be synced with the
-remote (main) repository. Here is information on how to do this using <a href="https://carpentries-incubator.github.io/git-Rstudio-course/02-ignore/index.html">RStudio</a>.</p>
-<p>In Github Desktop it is very simple, you do your scraping work, the
-folder is created in your local repository and before your commit and
-push these changes, you go on <code>Repository</code> &gt;
-<code>Repository Settings</code> &gt; <code>Ignored Files</code> and
-edit the .gitignore file (add the name of the new folder / files you
-don’t want to sync). More generally, it makes sense to exclude .Rproj
-files, .RData files (and other binary or large data files), draft
-folders and sensitive information from version control. Remember, git is
-built to track changes in code, not in large data files.</p>
+remote (main) repository. To do this from your RStudio environment, you
+can go to the “Git” tab, right-click on the folder you want to ignore,
+and select “Ignore”. This will add the folder to your .gitignore
+file.</p>
 <p>Or you can access the .gitignore file in your file explorer
-<code>command + shift + .</code> in macOS.</p>
+<code>command + shift + .</code> in macOS. For Windows, you can use
+<code>Ctrl + H</code> to show hidden files. Then, you can add the folder
+name to the .gitignore file.</p>
 <hr />
 </div>
 </div>
 <div id="on-an-api-far-far-away" class="section level1">
 <h1>On an API far, far away… ⭐</h1>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">library</span>(httr2)</span>
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
 <span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="fu">library</span>(xml2)</span>
 <span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="fu">library</span>(glue)</span></code></pre></div>
@@ -1986,12 +1982,12 @@ this:</p>
 <li>Find out the parameters referring to the resources of interest to
 you</li>
 <li>Create a query url from the base url and the query parameters</li>
-<li>Run the <code>GET</code> function on the query url</li>
+<li>Run the <code>request</code> function on the query url</li>
 <li>Depending on the encoding (usually, it’s json), you will need
 to:</li>
 </ol>
 <ul>
-<li>Parse the result with the <code>content</code> function</li>
+<li>Parse the result with the <code>resp_body_json</code> function</li>
 <li>Either use <code>jsonlite</code> or <code>xml2</code> to parse the
 json or xml files</li>
 </ul>
@@ -2010,33 +2006,165 @@ resource types we can query:</p>
 <p>Let’s start by querying the films resource:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>baseurl <span class="ot">&lt;-</span> <span class="st">&quot;https://swapi.dev/api/&quot;</span></span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&#39;films&#39;</span></span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a><span class="fu">GET</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span> <span class="co"># Make API call</span></span>
-<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&#39;text&#39;</span>) <span class="sc">|&gt;</span> <span class="co"># extract content as text</span></span>
-<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>  <span class="fu">fromJSON</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">4</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">1</span>)</span></code></pre></div>
-<pre><code>##        title episode_id
-## 1 A New Hope          4
-##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        opening_crawl
-## 1 It is a period of civil war.\r\nRebel spaceships, striking\r\nfrom a hidden base, have won\r\ntheir first victory against\r\nthe evil Galactic Empire.\r\n\r\nDuring the battle, Rebel\r\nspies managed to steal secret\r\nplans to the Empire&#39;s\r\nultimate weapon, the DEATH\r\nSTAR, an armored space\r\nstation with enough power\r\nto destroy an entire planet.\r\n\r\nPursued by the Empire&#39;s\r\nsinister agents, Princess\r\nLeia races home aboard her\r\nstarship, custodian of the\r\nstolen plans that can save her\r\npeople and restore\r\nfreedom to the galaxy....
-##       director                  producer release_date
-## 1 George Lucas Gary Kurtz, Rick McCallum   1977-05-25
-##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  characters
-## 1 https://swapi.dev/api/people/1/, https://swapi.dev/api/people/2/, https://swapi.dev/api/people/3/, https://swapi.dev/api/people/4/, https://swapi.dev/api/people/5/, https://swapi.dev/api/people/6/, https://swapi.dev/api/people/7/, https://swapi.dev/api/people/8/, https://swapi.dev/api/people/9/, https://swapi.dev/api/people/10/, https://swapi.dev/api/people/12/, https://swapi.dev/api/people/13/, https://swapi.dev/api/people/14/, https://swapi.dev/api/people/15/, https://swapi.dev/api/people/16/, https://swapi.dev/api/people/18/, https://swapi.dev/api/people/19/, https://swapi.dev/api/people/81/
-##                                                                                                planets
-## 1 https://swapi.dev/api/planets/1/, https://swapi.dev/api/planets/2/, https://swapi.dev/api/planets/3/
-##                                                                                                                                                                                                                                                                                            starships
-## 1 https://swapi.dev/api/starships/2/, https://swapi.dev/api/starships/3/, https://swapi.dev/api/starships/5/, https://swapi.dev/api/starships/9/, https://swapi.dev/api/starships/10/, https://swapi.dev/api/starships/11/, https://swapi.dev/api/starships/12/, https://swapi.dev/api/starships/13/
-##                                                                                                                                     vehicles
-## 1 https://swapi.dev/api/vehicles/4/, https://swapi.dev/api/vehicles/6/, https://swapi.dev/api/vehicles/7/, https://swapi.dev/api/vehicles/8/
-##                                                                                                                                                                    species
-## 1 https://swapi.dev/api/species/1/, https://swapi.dev/api/species/2/, https://swapi.dev/api/species/3/, https://swapi.dev/api/species/4/, https://swapi.dev/api/species/5/
-##                       created                      edited
-## 1 2014-12-10T14:23:31.880000Z 2014-12-20T19:49:45.256000Z
-##                              url
-## 1 https://swapi.dev/api/films/1/</code></pre>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&#39;films&#39;</span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a><span class="fu">request</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span>   <span class="co"># Build the request</span></span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span>                   <span class="co"># Make the API call</span></span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>  <span class="fu">resp_body_json</span>() <span class="sc">|&gt;</span>                <span class="co"># Parse the JSON body (uses jsonlite internally)</span></span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [[1]]
+## [[1]]$title
+## [1] &quot;A New Hope&quot;
+## 
+## [[1]]$episode_id
+## [1] 4
+## 
+## [[1]]$opening_crawl
+## [1] &quot;It is a period of civil war.\r\nRebel spaceships, striking\r\nfrom a hidden base, have won\r\ntheir first victory against\r\nthe evil Galactic Empire.\r\n\r\nDuring the battle, Rebel\r\nspies managed to steal secret\r\nplans to the Empire&#39;s\r\nultimate weapon, the DEATH\r\nSTAR, an armored space\r\nstation with enough power\r\nto destroy an entire planet.\r\n\r\nPursued by the Empire&#39;s\r\nsinister agents, Princess\r\nLeia races home aboard her\r\nstarship, custodian of the\r\nstolen plans that can save her\r\npeople and restore\r\nfreedom to the galaxy....&quot;
+## 
+## [[1]]$director
+## [1] &quot;George Lucas&quot;
+## 
+## [[1]]$producer
+## [1] &quot;Gary Kurtz, Rick McCallum&quot;
+## 
+## [[1]]$release_date
+## [1] &quot;1977-05-25&quot;
+## 
+## [[1]]$characters
+## [[1]]$characters[[1]]
+## [1] &quot;https://swapi.dev/api/people/1/&quot;
+## 
+## [[1]]$characters[[2]]
+## [1] &quot;https://swapi.dev/api/people/2/&quot;
+## 
+## [[1]]$characters[[3]]
+## [1] &quot;https://swapi.dev/api/people/3/&quot;
+## 
+## [[1]]$characters[[4]]
+## [1] &quot;https://swapi.dev/api/people/4/&quot;
+## 
+## [[1]]$characters[[5]]
+## [1] &quot;https://swapi.dev/api/people/5/&quot;
+## 
+## [[1]]$characters[[6]]
+## [1] &quot;https://swapi.dev/api/people/6/&quot;
+## 
+## [[1]]$characters[[7]]
+## [1] &quot;https://swapi.dev/api/people/7/&quot;
+## 
+## [[1]]$characters[[8]]
+## [1] &quot;https://swapi.dev/api/people/8/&quot;
+## 
+## [[1]]$characters[[9]]
+## [1] &quot;https://swapi.dev/api/people/9/&quot;
+## 
+## [[1]]$characters[[10]]
+## [1] &quot;https://swapi.dev/api/people/10/&quot;
+## 
+## [[1]]$characters[[11]]
+## [1] &quot;https://swapi.dev/api/people/12/&quot;
+## 
+## [[1]]$characters[[12]]
+## [1] &quot;https://swapi.dev/api/people/13/&quot;
+## 
+## [[1]]$characters[[13]]
+## [1] &quot;https://swapi.dev/api/people/14/&quot;
+## 
+## [[1]]$characters[[14]]
+## [1] &quot;https://swapi.dev/api/people/15/&quot;
+## 
+## [[1]]$characters[[15]]
+## [1] &quot;https://swapi.dev/api/people/16/&quot;
+## 
+## [[1]]$characters[[16]]
+## [1] &quot;https://swapi.dev/api/people/18/&quot;
+## 
+## [[1]]$characters[[17]]
+## [1] &quot;https://swapi.dev/api/people/19/&quot;
+## 
+## [[1]]$characters[[18]]
+## [1] &quot;https://swapi.dev/api/people/81/&quot;
+## 
+## 
+## [[1]]$planets
+## [[1]]$planets[[1]]
+## [1] &quot;https://swapi.dev/api/planets/1/&quot;
+## 
+## [[1]]$planets[[2]]
+## [1] &quot;https://swapi.dev/api/planets/2/&quot;
+## 
+## [[1]]$planets[[3]]
+## [1] &quot;https://swapi.dev/api/planets/3/&quot;
+## 
+## 
+## [[1]]$starships
+## [[1]]$starships[[1]]
+## [1] &quot;https://swapi.dev/api/starships/2/&quot;
+## 
+## [[1]]$starships[[2]]
+## [1] &quot;https://swapi.dev/api/starships/3/&quot;
+## 
+## [[1]]$starships[[3]]
+## [1] &quot;https://swapi.dev/api/starships/5/&quot;
+## 
+## [[1]]$starships[[4]]
+## [1] &quot;https://swapi.dev/api/starships/9/&quot;
+## 
+## [[1]]$starships[[5]]
+## [1] &quot;https://swapi.dev/api/starships/10/&quot;
+## 
+## [[1]]$starships[[6]]
+## [1] &quot;https://swapi.dev/api/starships/11/&quot;
+## 
+## [[1]]$starships[[7]]
+## [1] &quot;https://swapi.dev/api/starships/12/&quot;
+## 
+## [[1]]$starships[[8]]
+## [1] &quot;https://swapi.dev/api/starships/13/&quot;
+## 
+## 
+## [[1]]$vehicles
+## [[1]]$vehicles[[1]]
+## [1] &quot;https://swapi.dev/api/vehicles/4/&quot;
+## 
+## [[1]]$vehicles[[2]]
+## [1] &quot;https://swapi.dev/api/vehicles/6/&quot;
+## 
+## [[1]]$vehicles[[3]]
+## [1] &quot;https://swapi.dev/api/vehicles/7/&quot;
+## 
+## [[1]]$vehicles[[4]]
+## [1] &quot;https://swapi.dev/api/vehicles/8/&quot;
+## 
+## 
+## [[1]]$species
+## [[1]]$species[[1]]
+## [1] &quot;https://swapi.dev/api/species/1/&quot;
+## 
+## [[1]]$species[[2]]
+## [1] &quot;https://swapi.dev/api/species/2/&quot;
+## 
+## [[1]]$species[[3]]
+## [1] &quot;https://swapi.dev/api/species/3/&quot;
+## 
+## [[1]]$species[[4]]
+## [1] &quot;https://swapi.dev/api/species/4/&quot;
+## 
+## [[1]]$species[[5]]
+## [1] &quot;https://swapi.dev/api/species/5/&quot;
+## 
+## 
+## [[1]]$created
+## [1] &quot;2014-12-10T14:23:31.880000Z&quot;
+## 
+## [[1]]$edited
+## [1] &quot;2014-12-20T19:49:45.256000Z&quot;
+## 
+## [[1]]$url
+## [1] &quot;https://swapi.dev/api/films/1/&quot;</code></pre>
 <hr />
 <p>Now let’s query the API for people matching “Skywalker”. We’ll go
 through this step by step to understand the API response structure.</p>
@@ -2044,8 +2172,9 @@ through this step by step to understand the API response structure.</p>
 output it returns.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&#39;people/?search=skywalker&#39;</span></span>
 <span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="fu">GET</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span></span>
-<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="fu">http_type</span>()  <span class="co"># Check what output returns</span></span></code></pre></div>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="fu">request</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>  <span class="fu">resp_content_type</span>()  <span class="co"># Check what output returns</span></span></code></pre></div>
 <pre><code>## [1] &quot;application/json&quot;</code></pre>
 <hr />
 <p><strong>Step 2.</strong> Look at the raw JSON response to understand
@@ -2053,11 +2182,12 @@ its structure.</p>
 <p>The JSON has four main elements: “count”, “next”, “previous”, and
 “results”. The actual data we want is in “results”, the 4th element.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># Make the API call and show the raw JSON text</span></span>
-<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>raw_json <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span></span>
-<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&#39;text&#39;</span>)  <span class="co"># Get raw JSON as text</span></span>
-<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a><span class="co"># Print the raw JSON to see the structure</span></span>
-<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">substr</span>(<span class="fu">prettify</span>(raw_json), <span class="dv">1</span>, <span class="dv">2000</span>))</span></code></pre></div>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>raw_json <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="fu">paste0</span>(baseurl, query))  <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>  <span class="fu">resp_body_string</span>()  <span class="co"># Get raw JSON as text</span></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a><span class="co"># Print the raw JSON to see the structure</span></span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">substr</span>(<span class="fu">prettify</span>(raw_json), <span class="dv">1</span>, <span class="dv">2000</span>))</span></code></pre></div>
 <pre><code>## {
 ##     &quot;count&quot;: 3,
 ##     &quot;next&quot;: null,
@@ -2123,46 +2253,209 @@ its structure.</p>
 <p><strong>Step 3.</strong> Parse the results and create an R
 object.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># Parse the JSON</span></span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>parsed_data <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&#39;text&#39;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>  <span class="fu">fromJSON</span>()</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>parsed_data <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="fu">paste0</span>(baseurl, query)) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>  <span class="fu">resp_body_json</span>()</span>
 <span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a></span>
 <span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a><span class="co"># Extract the &quot;results&quot; element (4th position) and display</span></span>
 <span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>parsed_data <span class="sc">|&gt;</span></span>
 <span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">4</span>) <span class="sc">|&gt;</span>  <span class="co"># Get the 4th element (&quot;results&quot;)</span></span>
 <span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">3</span>)</span></code></pre></div>
-<pre><code>##               name height    mass hair_color skin_color eye_color birth_year
-## 1   Luke Skywalker    172      77      blond       fair      blue      19BBY
-## 2 Anakin Skywalker    188      84      blond       fair      blue    41.9BBY
-## 3   Shmi Skywalker    163 unknown      black       fair     brown      72BBY
-##   gender                        homeworld
-## 1   male https://swapi.dev/api/planets/1/
-## 2   male https://swapi.dev/api/planets/1/
-## 3 female https://swapi.dev/api/planets/1/
-##                                                                                                                            films
-## 1 https://swapi.dev/api/films/1/, https://swapi.dev/api/films/2/, https://swapi.dev/api/films/3/, https://swapi.dev/api/films/6/
-## 2                                 https://swapi.dev/api/films/4/, https://swapi.dev/api/films/5/, https://swapi.dev/api/films/6/
-## 3                                                                 https://swapi.dev/api/films/4/, https://swapi.dev/api/films/5/
-##   species
-## 1    NULL
-## 2    NULL
-## 3    NULL
-##                                                                 vehicles
-## 1 https://swapi.dev/api/vehicles/14/, https://swapi.dev/api/vehicles/30/
-## 2 https://swapi.dev/api/vehicles/44/, https://swapi.dev/api/vehicles/46/
-## 3                                                                       
-##                                                                                                       starships
-## 1                                      https://swapi.dev/api/starships/12/, https://swapi.dev/api/starships/22/
-## 2 https://swapi.dev/api/starships/39/, https://swapi.dev/api/starships/59/, https://swapi.dev/api/starships/65/
-## 3                                                                                                              
-##                       created                      edited
-## 1 2014-12-09T13:50:51.644000Z 2014-12-20T21:17:56.891000Z
-## 2 2014-12-10T16:20:44.310000Z 2014-12-20T21:17:50.327000Z
-## 3 2014-12-19T17:57:41.191000Z 2014-12-20T21:17:50.401000Z
-##                                url
-## 1  https://swapi.dev/api/people/1/
-## 2 https://swapi.dev/api/people/11/
-## 3 https://swapi.dev/api/people/43/</code></pre>
+<pre><code>## [[1]]
+## [[1]]$name
+## [1] &quot;Luke Skywalker&quot;
+## 
+## [[1]]$height
+## [1] &quot;172&quot;
+## 
+## [[1]]$mass
+## [1] &quot;77&quot;
+## 
+## [[1]]$hair_color
+## [1] &quot;blond&quot;
+## 
+## [[1]]$skin_color
+## [1] &quot;fair&quot;
+## 
+## [[1]]$eye_color
+## [1] &quot;blue&quot;
+## 
+## [[1]]$birth_year
+## [1] &quot;19BBY&quot;
+## 
+## [[1]]$gender
+## [1] &quot;male&quot;
+## 
+## [[1]]$homeworld
+## [1] &quot;https://swapi.dev/api/planets/1/&quot;
+## 
+## [[1]]$films
+## [[1]]$films[[1]]
+## [1] &quot;https://swapi.dev/api/films/1/&quot;
+## 
+## [[1]]$films[[2]]
+## [1] &quot;https://swapi.dev/api/films/2/&quot;
+## 
+## [[1]]$films[[3]]
+## [1] &quot;https://swapi.dev/api/films/3/&quot;
+## 
+## [[1]]$films[[4]]
+## [1] &quot;https://swapi.dev/api/films/6/&quot;
+## 
+## 
+## [[1]]$species
+## list()
+## 
+## [[1]]$vehicles
+## [[1]]$vehicles[[1]]
+## [1] &quot;https://swapi.dev/api/vehicles/14/&quot;
+## 
+## [[1]]$vehicles[[2]]
+## [1] &quot;https://swapi.dev/api/vehicles/30/&quot;
+## 
+## 
+## [[1]]$starships
+## [[1]]$starships[[1]]
+## [1] &quot;https://swapi.dev/api/starships/12/&quot;
+## 
+## [[1]]$starships[[2]]
+## [1] &quot;https://swapi.dev/api/starships/22/&quot;
+## 
+## 
+## [[1]]$created
+## [1] &quot;2014-12-09T13:50:51.644000Z&quot;
+## 
+## [[1]]$edited
+## [1] &quot;2014-12-20T21:17:56.891000Z&quot;
+## 
+## [[1]]$url
+## [1] &quot;https://swapi.dev/api/people/1/&quot;
+## 
+## 
+## [[2]]
+## [[2]]$name
+## [1] &quot;Anakin Skywalker&quot;
+## 
+## [[2]]$height
+## [1] &quot;188&quot;
+## 
+## [[2]]$mass
+## [1] &quot;84&quot;
+## 
+## [[2]]$hair_color
+## [1] &quot;blond&quot;
+## 
+## [[2]]$skin_color
+## [1] &quot;fair&quot;
+## 
+## [[2]]$eye_color
+## [1] &quot;blue&quot;
+## 
+## [[2]]$birth_year
+## [1] &quot;41.9BBY&quot;
+## 
+## [[2]]$gender
+## [1] &quot;male&quot;
+## 
+## [[2]]$homeworld
+## [1] &quot;https://swapi.dev/api/planets/1/&quot;
+## 
+## [[2]]$films
+## [[2]]$films[[1]]
+## [1] &quot;https://swapi.dev/api/films/4/&quot;
+## 
+## [[2]]$films[[2]]
+## [1] &quot;https://swapi.dev/api/films/5/&quot;
+## 
+## [[2]]$films[[3]]
+## [1] &quot;https://swapi.dev/api/films/6/&quot;
+## 
+## 
+## [[2]]$species
+## list()
+## 
+## [[2]]$vehicles
+## [[2]]$vehicles[[1]]
+## [1] &quot;https://swapi.dev/api/vehicles/44/&quot;
+## 
+## [[2]]$vehicles[[2]]
+## [1] &quot;https://swapi.dev/api/vehicles/46/&quot;
+## 
+## 
+## [[2]]$starships
+## [[2]]$starships[[1]]
+## [1] &quot;https://swapi.dev/api/starships/39/&quot;
+## 
+## [[2]]$starships[[2]]
+## [1] &quot;https://swapi.dev/api/starships/59/&quot;
+## 
+## [[2]]$starships[[3]]
+## [1] &quot;https://swapi.dev/api/starships/65/&quot;
+## 
+## 
+## [[2]]$created
+## [1] &quot;2014-12-10T16:20:44.310000Z&quot;
+## 
+## [[2]]$edited
+## [1] &quot;2014-12-20T21:17:50.327000Z&quot;
+## 
+## [[2]]$url
+## [1] &quot;https://swapi.dev/api/people/11/&quot;
+## 
+## 
+## [[3]]
+## [[3]]$name
+## [1] &quot;Shmi Skywalker&quot;
+## 
+## [[3]]$height
+## [1] &quot;163&quot;
+## 
+## [[3]]$mass
+## [1] &quot;unknown&quot;
+## 
+## [[3]]$hair_color
+## [1] &quot;black&quot;
+## 
+## [[3]]$skin_color
+## [1] &quot;fair&quot;
+## 
+## [[3]]$eye_color
+## [1] &quot;brown&quot;
+## 
+## [[3]]$birth_year
+## [1] &quot;72BBY&quot;
+## 
+## [[3]]$gender
+## [1] &quot;female&quot;
+## 
+## [[3]]$homeworld
+## [1] &quot;https://swapi.dev/api/planets/1/&quot;
+## 
+## [[3]]$films
+## [[3]]$films[[1]]
+## [1] &quot;https://swapi.dev/api/films/4/&quot;
+## 
+## [[3]]$films[[2]]
+## [1] &quot;https://swapi.dev/api/films/5/&quot;
+## 
+## 
+## [[3]]$species
+## list()
+## 
+## [[3]]$vehicles
+## list()
+## 
+## [[3]]$starships
+## list()
+## 
+## [[3]]$created
+## [1] &quot;2014-12-19T17:57:41.191000Z&quot;
+## 
+## [[3]]$edited
+## [1] &quot;2014-12-20T21:17:50.401000Z&quot;
+## 
+## [[3]]$url
+## [1] &quot;https://swapi.dev/api/people/43/&quot;</code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co"># Alternatively, you could parse by name</span></span>
 <span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co"># parsed_data$results |&gt; </span></span>
 <span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="co">#   head(3)</span></span></code></pre></div>
@@ -2178,50 +2471,62 @@ institutions</a>.</p>
 <p>We can sign up for an API key <a href="https://api.data.gov/signup/">here</a>. The API website, gives us
 detailed information on how to build our queries. But how do we actually
 authenticate ourselves with the API key? The <a href="https://api.data.gov/docs/api-key/">documentation</a> tells us
-that there are multiple ways to go about this. We can either do adapt
-the use HTTP basic authentication, the GET query parameter, or the HTTP
-header.</p>
-<p>Here’s a quick overview of how to implement these with
-<code>httr</code>:</p>
+that there are multiple ways to go about this.</p>
+<p>Here’s a quick overview of how to implement this with
+<code>httr2</code>:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="co"># sign up for API key: https://api.data.gov/signup/</span></span>
-<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="co">#Sys.setenv(MY_API_KEY = &quot;[YOUR API KEY GOES HERE]&quot;) # store your personal API key in R environment</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="co"># Sys.setenv(MY_API_KEY = &quot;[YOUR API KEY GOES HERE]&quot;)</span></span>
 <span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a><span class="co"># US Congress: Bills</span></span>
-<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>baseurl <span class="ot">&lt;-</span> <span class="st">&quot;https://api.congress.gov/v3/&quot;</span> <span class="co"># base url (remains consistent across queries)</span></span>
-<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">&quot;api_key={Sys.getenv(&#39;MY_API_KEY&#39;)}&quot;</span>) <span class="co"># your personal API key</span></span>
-<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&quot;bill&quot;</span> <span class="co"># query</span></span>
-<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a></span>
-<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a>try2 <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="fu">glue</span>(baseurl, query, <span class="st">&quot;?&quot;</span>, api_key)) <span class="sc">|&gt;</span> </span>
-<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&quot;text&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a>  <span class="fu">fromJSON</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb34-12"><a href="#cb34-12" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-13"><a href="#cb34-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>baseurl <span class="ot">&lt;-</span> <span class="st">&quot;https://api.congress.gov/v3/&quot;</span></span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;MY_API_KEY&quot;</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a><span class="co"># Reusable request builder: sets base URL and API key once</span></span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a>congress_req <span class="ot">&lt;-</span> <span class="cf">function</span>(path, ...) {</span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a>  <span class="fu">request</span>(baseurl) <span class="sc">|&gt;</span></span>
+<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a>    <span class="fu">req_url_path_append</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a>    <span class="fu">req_url_query</span>(..., <span class="at">api_key =</span> api_key)</span>
+<span id="cb34-12"><a href="#cb34-12" tabindex="-1"></a>}</span>
+<span id="cb34-13"><a href="#cb34-13" tabindex="-1"></a></span>
+<span id="cb34-14"><a href="#cb34-14" tabindex="-1"></a><span class="co"># US Congress: Bills</span></span>
+<span id="cb34-15"><a href="#cb34-15" tabindex="-1"></a>try2 <span class="ot">&lt;-</span> <span class="fu">congress_req</span>(<span class="st">&quot;bill&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-16"><a href="#cb34-16" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb34-17"><a href="#cb34-17" tabindex="-1"></a>  <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-18"><a href="#cb34-18" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-19"><a href="#cb34-19" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="co"># US Congress: Actions on a specific nomination</span></span>
-<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&quot;nomination/115/2259/actions&quot;</span></span>
-<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a><span class="fu">GET</span>(<span class="fu">glue</span>(baseurl, query, <span class="st">&quot;?&quot;</span>, api_key)) <span class="sc">|&gt;</span> </span>
-<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&quot;text&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>  <span class="fu">fromJSON</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="fu">congress_req</span>(<span class="st">&quot;nomination/115/2259/actions&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>  <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="co"># US Congress: Summaries filtered by congress and bill type</span></span>
-<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&quot;summaries/117/hr?fromDateTime=2022-04-01T00:00:00Z&amp;toDateTime=2022-04-03T00:00:00Z&amp;sort=updateDate+desc&quot;</span></span>
-<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a><span class="fu">GET</span>(<span class="fu">glue</span>(<span class="st">&quot;{baseurl}{query}&amp;{api_key}&quot;</span>)) <span class="sc">|&gt;</span> <span class="co"># another way of using glue()</span></span>
-<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&#39;text&#39;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a>  <span class="fu">fromJSON</span>() <span class="sc">|&gt;</span></span>
-<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb36-8"><a href="#cb36-8" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="co"># US Congress: Legislation sponsored by a specific congress member</span></span>
-<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&quot;member/L000174/sponsored-legislation.xml&quot;</span> <span class="co"># data can be formatted as xml too</span></span>
-<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a><span class="fu">GET</span>(<span class="fu">glue</span>(baseurl, query, <span class="st">&quot;?&quot;</span>, api_key),</span>
-<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>    <span class="fu">add_headers</span>(<span class="st">&quot;X-Api-Key&quot;</span> <span class="ot">=</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;MY_API_KEY&quot;</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>  <span class="fu">content</span>(<span class="at">as =</span> <span class="st">&quot;text&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a>  <span class="fu">read_xml</span>() <span class="sc">|&gt;</span></span>
-<span id="cb37-8"><a href="#cb37-8" tabindex="-1"></a>  <span class="fu">xml_find_all</span>(<span class="st">&quot;//sponsoredLegislation//title&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb37-9"><a href="#cb37-9" tabindex="-1"></a>  <span class="fu">xml_text</span>()</span></code></pre></div>
-<p>Retrieving data from API’s using <code>httr</code> can at times be
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a><span class="fu">congress_req</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>  <span class="st">&quot;summaries/117/hr&quot;</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>  <span class="at">fromDateTime =</span> <span class="st">&quot;2022-04-01T00:00:00Z&quot;</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>  <span class="at">toDateTime   =</span> <span class="st">&quot;2022-04-03T00:00:00Z&quot;</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a>  <span class="at">sort         =</span> <span class="st">&quot;updateDate desc&quot;</span>   <span class="co"># httr2 encodes the space for you</span></span>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb36-8"><a href="#cb36-8" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb36-9"><a href="#cb36-9" tabindex="-1"></a>  <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-10"><a href="#cb36-10" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-11"><a href="#cb36-11" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="co"># US Congress: Legislation sponsored by a specific member (XML)</span></span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a><span class="fu">congress_req</span>(<span class="st">&quot;member/L000174/sponsored-legislation.xml&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>  <span class="fu">req_headers</span>(<span class="st">&quot;X-Api-Key&quot;</span> <span class="ot">=</span> api_key) <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a>  <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>  <span class="fu">resp_body_xml</span>() <span class="sc">|&gt;</span></span>
+<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>  <span class="fu">xml_find_all</span>(<span class="st">&quot;//sponsoredLegislation//title&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a>  <span class="fu">xml_text</span>()</span></code></pre></div>
+<p>Remember that any API Key that you generate and use should be kept
+private. You should not share your API key with anyone, and you should
+not include it in any public code repositories. If you believe your API
+key has been compromised, you should regenerate it immediately. A good
+practice is to set the key as an environment variable in your
+<code>.Renviron</code> file, which is not shared publicly. You can then
+access it in your R code using <code>Sys.getenv(&quot;MY_API_KEY&quot;)</code>.
+More on this in the <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/managing-r.html#renviron">R
+Studio User Guide</a>.</p>
+<p>Retrieving data from API’s using <code>httr2</code> can at times be
 quite tiresome. Luckily, there are many R libraries that make it much
 easier to retrieve data from APIs. Here is a <a href="https://ropensci.org/packages/data-access/">list of ready-made R
 bindings to web-APIs</a>. Actually, even the Star Wars API we queried

@@ -439,18 +439,16 @@ You see, scraping data from multiple pages is no problem in R. Most of the brain
 
 ## (Git)ignoring files `r emo::ji("no_good_woman")`
 
-In case you scraping project is linked to GitHub (as it will be in your assignment!), it can be useful to **.gitignore** the folder of downloaded files. This means that the folder can be stored in your local directory of the project but will not be synced with the remote (main) repository. Here is information on how to do this using [RStudio](https://carpentries-incubator.github.io/git-Rstudio-course/02-ignore/index.html).
+In case you scraping project is linked to GitHub (as it will be in your assignment!), it can be useful to **.gitignore** the folder of downloaded files. This means that the folder can be stored in your local directory of the project but will not be synced with the remote (main) repository. To do this from your RStudio environment, you can go to the "Git" tab, right-click on the folder you want to ignore, and select "Ignore". This will add the folder to your .gitignore file.
 
-In Github Desktop it is very simple, you do your scraping work, the folder is created in your local repository and before your commit and push these changes, you go on `Repository` > `Repository Settings` > `Ignored Files` and edit the .gitignore file (add the name of the new folder / files you don't want to sync). More generally, it makes sense to exclude .Rproj files, .RData files (and other binary or large data files), draft folders and sensitive information from version control. Remember, git is built to track changes in code, not in large data files.
-
-Or you can access the .gitignore file in your file explorer `command + shift + .` in macOS.
+Or you can access the .gitignore file in your file explorer `command + shift + .` in macOS. For Windows, you can use `Ctrl + H` to show hidden files. Then, you can add the folder name to the .gitignore file.
 
 ---
 
 # On an API far, far away... `r emo::ji("star")`
 
 ```{r}
-library(httr)
+library(httr2)
 library(jsonlite)
 library(xml2)
 library(glue)
@@ -462,9 +460,9 @@ To get data from an API, we suggest to follow a workflow like this:
 2. Get the baseurl
 3. Find out the parameters referring to the resources of interest to you
 4. Create a query url from the base url and the query parameters
-5. Run the `GET` function on the query url
+5. Run the `request` function on the query url
 6. Depending on the encoding (usually, it's json), you will need to:
-  + Parse the result with the `content` function
+  + Parse the result with the `resp_body_json` function
   + Either use `jsonlite` or `xml2` to parse the json or xml files
 
 ---
@@ -489,13 +487,15 @@ Let's start by querying the films resource:
 ```{r}
 baseurl <- "https://swapi.dev/api/"
 
+
 query <- 'films'
 
-GET(paste0(baseurl, query)) |> # Make API call
-  content(as = 'text') |> # extract content as text
-  fromJSON() |> 
-  pluck(4) |> 
+request(paste0(baseurl, query)) |>   # Build the request
+  req_perform() |>                   # Make the API call
+  resp_body_json() |>                # Parse the JSON body (uses jsonlite internally)
+  pluck(4) |>
   head(1)
+
 ```
 
 
@@ -508,8 +508,9 @@ Now let's query the API for people matching "Skywalker". We'll go through this s
 ```{r}
 query <- 'people/?search=skywalker'
 
-GET(paste0(baseurl, query)) |>
-  http_type()  # Check what output returns
+request(paste0(baseurl, query)) |>
+  req_perform() |> 
+  resp_content_type()  # Check what output returns
 ```
 
 
@@ -522,8 +523,9 @@ The JSON has four main elements: "count", "next", "previous", and "results". The
 
 ```{r}
 # Make the API call and show the raw JSON text
-raw_json <- GET(paste0(baseurl, query)) |>
-  content(as = 'text')  # Get raw JSON as text
+raw_json <- request(paste0(baseurl, query))  |>
+  req_perform() |>
+  resp_body_string()  # Get raw JSON as text
 
 # Print the raw JSON to see the structure
 cat(substr(prettify(raw_json), 1, 2000))
@@ -536,9 +538,9 @@ cat(substr(prettify(raw_json), 1, 2000))
 
 ```{r}
 # Parse the JSON
-parsed_data <- GET(paste0(baseurl, query)) |>
-  content(as = 'text') |>
-  fromJSON()
+parsed_data <- request(paste0(baseurl, query)) |>
+  req_perform() |>
+  resp_body_json()
 
 # Extract the "results" element (4th position) and display
 parsed_data |>
@@ -557,62 +559,69 @@ parsed_data |>
 
 For many APIs, you will need to obtain an api key to retrieve data. Once you received your api key (or token), you will also need to adapt your GET query. How you need to do this depends a lot on the API. Let's take a look at how to do this with the API for the [US congress](https://api.congress.gov/). The API is actually valid across a number of [US government institutions](https://api.data.gov/). 
 
-We can sign up for an API key [here](https://api.data.gov/signup/). The API website, gives us detailed information on how to build our queries. But how do we actually authenticate ourselves with the API key? The [documentation](https://api.data.gov/docs/api-key/) tells us that there are multiple ways to go about this. We can either do adapt the use HTTP basic authentication, the GET query parameter, or the HTTP header.
+We can sign up for an API key [here](https://api.data.gov/signup/). The API website, gives us detailed information on how to build our queries. But how do we actually authenticate ourselves with the API key? The [documentation](https://api.data.gov/docs/api-key/) tells us that there are multiple ways to go about this. 
 
-Here's a quick overview of how to implement these with `httr`:
+Here's a quick overview of how to implement this with `httr2`:
 
 ```r
 # sign up for API key: https://api.data.gov/signup/
-#Sys.setenv(MY_API_KEY = "[YOUR API KEY GOES HERE]") # store your personal API key in R environment
+# Sys.setenv(MY_API_KEY = "[YOUR API KEY GOES HERE]")
+
+baseurl <- "https://api.congress.gov/v3/"
+api_key <- Sys.getenv("MY_API_KEY")
+
+# Reusable request builder: sets base URL and API key once
+congress_req <- function(path, ...) {
+  request(baseurl) |>
+    req_url_path_append(path) |>
+    req_url_query(..., api_key = api_key)
+}
 
 # US Congress: Bills
-baseurl <- "https://api.congress.gov/v3/" # base url (remains consistent across queries)
-api_key <- glue::glue("api_key={Sys.getenv('MY_API_KEY')}") # your personal API key
-query <- "bill" # query
-
-try2 <- GET(glue(baseurl, query, "?", api_key)) |> 
-  content(as = "text") |> 
-  fromJSON() |> 
-  pluck(1) |> 
+try2 <- congress_req("bill") |>
+  req_perform() |>
+  resp_body_json(simplifyVector = TRUE) |>
+  pluck(1) |>
   as.data.frame()
 ```
 
 
 ```r
 # US Congress: Actions on a specific nomination
-query <- "nomination/115/2259/actions"
-
-GET(glue(baseurl, query, "?", api_key)) |> 
-  content(as = "text") |> 
-  fromJSON() |> 
-  pluck(1) |> 
+congress_req("nomination/115/2259/actions") |>
+  req_perform() |>
+  resp_body_json(simplifyVector = TRUE) |>
+  pluck(1) |>
   as.data.frame()
-```
+  ```
 
 ```r
 # US Congress: Summaries filtered by congress and bill type
-query <- "summaries/117/hr?fromDateTime=2022-04-01T00:00:00Z&toDateTime=2022-04-03T00:00:00Z&sort=updateDate+desc"
-
-GET(glue("{baseurl}{query}&{api_key}")) |> # another way of using glue()
-  content(as = 'text') |>
-  fromJSON() |>
+congress_req(
+  "summaries/117/hr",
+  fromDateTime = "2022-04-01T00:00:00Z",
+  toDateTime   = "2022-04-03T00:00:00Z",
+  sort         = "updateDate desc"   # httr2 encodes the space for you
+) |>
+  req_perform() |>
+  resp_body_json(simplifyVector = TRUE) |>
   pluck(3) |>
   as.data.frame()
 ```
 
 ```r
-# US Congress: Legislation sponsored by a specific congress member
-query <- "member/L000174/sponsored-legislation.xml" # data can be formatted as xml too
-
-GET(glue(baseurl, query, "?", api_key),
-    add_headers("X-Api-Key" = Sys.getenv("MY_API_KEY"))) |>
-  content(as = "text") |>
-  read_xml() |>
-  xml_find_all("//sponsoredLegislation//title") |> 
+# US Congress: Legislation sponsored by a specific member (XML)
+congress_req("member/L000174/sponsored-legislation.xml") |>
+  req_headers("X-Api-Key" = api_key) |>
+  req_perform() |>
+  resp_body_xml() |>
+  xml_find_all("//sponsoredLegislation//title") |>
   xml_text()
 ```
 
-Retrieving data from API's using `httr` can at times be quite tiresome. Luckily, there are many R libraries that make it much easier to retrieve data from APIs. Here is a [list of ready-made R bindings to web-APIs](https://ropensci.org/packages/data-access/). Actually, even the Star Wars API we queried earlier has its own R package, `rwars`!
+Remember that any API Key that you generate and use should be kept private. You should not share your API key with anyone, and you should not include it in any public code repositories. If you believe your API key has been compromised, you should regenerate it immediately. A good practice is to set the key as an environment variable in your `.Renviron` file, which is not shared publicly. You can then access it in your R code using `Sys.getenv("MY_API_KEY")`. More on this in the [R Studio User Guide](https://docs.posit.co/ide/user/ide/guide/environments/r/managing-r.html#renviron).
+
+Retrieving data from API's using `httr2` can at times be quite tiresome. Luckily, there are many R libraries that make it much easier to retrieve data from APIs. Here is a [list of ready-made R bindings to web-APIs](https://ropensci.org/packages/data-access/). Actually, even the Star Wars API we queried earlier has its own R package, `rwars`!
 
 ---
 
