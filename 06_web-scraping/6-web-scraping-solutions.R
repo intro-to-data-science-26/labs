@@ -7,13 +7,12 @@ library(rvest)
 # Precise XPath copied from Firefox
 parsed_url |> 
   html_elements(xpath = '//*[@id="mwAdU"]') |> 
-  html_text()
-
-# More flexible, getting the second paragraph of the header Roman Cologne
-parsed_url |> 
-  html_element(xpath = '//*[@aria-labelledby="Riots"]/following::p[2]') |> 
   html_text2()
 
+# More flexible, getting the second paragraph of the header Riots
+parsed_url |> 
+  html_element(xpath = '//*[@id="Riots"]/following::p[2]') |> 
+  html_text2()
 
 
 # Exercise 2

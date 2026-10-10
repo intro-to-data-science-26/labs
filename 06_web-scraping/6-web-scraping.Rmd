@@ -66,7 +66,7 @@ What we will cover:
 * scraping static webpages
 * scraping multiple static webpages 
 * API calls
-* building up and maintaining you own original sets of web-based data
+* building up and maintaining your own original sets of web-based data
 
 What we will not cover (today): 
 
@@ -128,7 +128,7 @@ library(here)
 library(janitor)
 ```
 
-**Step 2.** Parse the page source. If encoding is necessary, you can add it in the reading html step.
+**Step 2.** Parse the page source. If encoding is necessary, you can add it in `read_html`.
 
 ```{r}
 parsed_url <- read_html("https://en.wikipedia.org/wiki/Stonewall_riots", 
@@ -189,18 +189,18 @@ knitr::include_graphics("pics/inspect_stonewall.png")
 ```{r}
 parsed_url |> 
   html_elements(xpath = '//div[@class="infobox-caption"]') |> 
-  html_text()
+  html_text() # or html_text2
 ```
 
 ---
 
-**Option 2.** `SelectorGadget`. You can download the [Chrome Extension](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb?hl=de)  (it is not available for Firefox) and activate it while browsing the page you'd like to scrape from. You will see a selection box moving with your cursor. You select an element by clicking on it. It turns green - and so does all other content that would be selected with the current XPath.
+**Option 2.** `SelectorGadget`. You can download the [Chrome Extension](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb?hl=de) (or use **[the bookmarklet](https://selectorgadget.com/)** with Firefox) and activate it while browsing the page you'd like to scrape from. You will see a selection box moving with your cursor. You select an element by clicking on it. It turns green - and all other content that would be selected with the current XPath gets highlighted as well.
 
 ```{r, fig.align='center', echo=F, out.width = "90%"}
 knitr::include_graphics("pics/selector.png")
 ```
 
-Now click on any irrelevant elements to deselect them (they'll turn red when deselected). Scroll through the entire page to make sure you're only selecting what you actually want. Once you're happy with your selection, click the XPath button at the bottom of the `SelectorGadget` window to get the XPath expression. Important: Use single quotation marks when you paste this XPath into your R code, since the XPath itself contains double quotes.
+Now click on any irrelevant elements to deselect them (they'll turn red when deselected). Scroll through the entire page to make sure you're only selecting what you actually want. Once you're happy with your selection, click the XPath button at the bottom of the `SelectorGadget` window to get the XPath expression. **Important: Use single quotation marks when you paste this XPath into your R code, since the XPath itself contains double quotes.**
 
 ```{r, fig.align='center', echo=F, out.width = "90%"}
 knitr::include_graphics("pics/selector2.png")
@@ -214,7 +214,7 @@ knitr::include_graphics("pics/selector2.png")
 knitr::include_graphics("pics/selenium_ide_example.gif")
 ```
 
-Selenium IDE can be particulary useful as it also shows how to interact with an interactive website. For example, if you want to scrape a table that is only shown after clicking on a button, Selenium IDE will record this action and you can then export the query. We do not cover dynamic web scraping in this tutorial, but the Selenium is the tool used to do so. You can read more on that [here](https://medium.com/@alfredo-hs/web-scraping-dynamic-pages-in-r-with-selenium-b106850ddd4a) and [here](https://github.com/ropensci/RSelenium). 
+Selenium IDE can be particulary useful as it also shows how to interact with an interactive website. For example, if you want to scrape a table that is only shown after clicking on a button, Selenium IDE will record this action and you can then export the query. We do not cover dynamic web scraping in this tutorial, but Selenium is the tool used to do so. You can read more on that [here](https://medium.com/@alfredo-hs/web-scraping-dynamic-pages-in-r-with-selenium-b106850ddd4a) and [here](https://github.com/ropensci/RSelenium). 
 
 
 
@@ -222,16 +222,12 @@ Selenium IDE can be particulary useful as it also shows how to interact with an 
 
 **Exercise 1** 🏋 
 
-Your task is to extract the second paragraph from the "Inspect Police Raid" section of the Wikipedia page on Stonewall Riots any way you like. Use the `parsed_url` object we created earlier. 
+Your task is to extract the second paragraph from the "Police Raid" section of the Wikipedia page on Stonewall Riots any way you like. Use the `parsed_url` object we created earlier. 
 ::: 
 
 ```{r}
 # YOUR ANSWER HERE
-
 ```
-
-
-
 
 ---
 
@@ -280,12 +276,6 @@ Can you tell us:
 a) What does it take to be within the top-100 most streamed songs on Spotify? (i.e., how many streams?)
 b) Which artists have the highest number of most streamed songs? (Note that the `artist_s` string might contain multiple unique artists)
 
-```{r}
-# YOUR ANSWER HERE
-
-```
-
-
 *Bonus at home 🏠*
 
 c) Which artists have the most cumulative streams?
@@ -299,7 +289,7 @@ c) Which artists have the most cumulative streams?
 
 # Scraping multiple pages `r emo::ji("robot")`
 
-Whenever you want to really understand what's going on within the functions of a new R package, it is very likely that there is a relevant article published in the [Journal of Statistical Software](https://www.jstatsoft.org/index). Let's say you are interested in how the journal was doing over the past years [2023-2024].
+Whenever you want to really understand what's going on within the functions of a new R package, it is very likely that there is a relevant article published in the [Journal of Statistical Software](https://www.jstatsoft.org/index). Let's say you are interested in how the journal was doing from 2023-2024.
 
 **Step 1.** Inspect the source. Basically, follow steps to extract the XPath information.
 ```{r, eval=F}
@@ -315,7 +305,7 @@ browseURL("http://www.jstatsoft.org/issue/archive")
 baseurl <- "http://www.jstatsoft.org/article/view/v"
 
 # volume number
-volurl <- as.character(105:110) # volumes 105 to 110
+volurl <- as.character(105:111) # volumes 105 to 110
 
 # issue number
 issueurl <- c(paste0("0", 1:9), 10:12) # 01 to 12 maximum number of issues in a volume
@@ -339,7 +329,7 @@ names_for_files <- combinations |>
 
 ```{r, eval=F}
 here()
-tempwd <- here::here("session-05-web-scraping/data/jstatsoftStats")
+tempwd <- here::here("06_web-scraping/data/jstatsoftStats")
 #here from here package creates a character string that represents a path to a directory
 
 dir.create(tempwd, recursive = TRUE)
@@ -380,14 +370,14 @@ knitr::include_graphics("pics/html_files.png")
 ```
 
 Check whether it worked.
-```{r, eval=F}
+```{r, eval=FALSE}
 list_files <- list.files(folder, pattern = "0.*") #list of file names that match the regex
 list_files_path <- list.files(folder, pattern = "0.*", full.names = TRUE) #full file paths including directory paths of matched files
 
 length(list_files)
 ```
 
-Yay! Apparently, we scraped the HTML pages of 60 articles. 
+Yay! Apparently, we scraped the HTML pages of 70 articles. 
 
 ---
 
@@ -441,7 +431,7 @@ You see, scraping data from multiple pages is no problem in R. Most of the brain
 
 In case you scraping project is linked to GitHub (as it will be in your assignment!), it can be useful to **.gitignore** the folder of downloaded files. This means that the folder can be stored in your local directory of the project but will not be synced with the remote (main) repository. To do this from your RStudio environment, you can go to the "Git" tab, right-click on the folder you want to ignore, and select "Ignore". This will add the folder to your .gitignore file.
 
-Or you can access the .gitignore file in your file explorer `command + shift + .` in macOS. For Windows, you can use `Ctrl + H` to show hidden files. Then, you can add the folder name to the .gitignore file.
+Or you can access the .gitignore file in your file explorer `command + shift + .` in macOS. For Windows, you can use `Ctrl + H` to show hidden files. RStudio will also display it in your Files tab Then, you can add the folder name to the .gitignore file.
 
 ---
 
@@ -487,7 +477,6 @@ Let's start by querying the films resource:
 ```{r}
 baseurl <- "https://swapi.dev/api/"
 
-
 query <- 'films'
 
 request(paste0(baseurl, query)) |>   # Build the request
@@ -495,7 +484,6 @@ request(paste0(baseurl, query)) |>   # Build the request
   resp_body_json() |>                # Parse the JSON body (uses jsonlite internally)
   pluck(4) |>
   head(1)
-
 ```
 
 
@@ -508,8 +496,10 @@ Now let's query the API for people matching "Skywalker". We'll go through this s
 ```{r}
 query <- 'people/?search=skywalker'
 
-request(paste0(baseurl, query)) |>
-  req_perform() |> 
+response <- request(paste0(baseurl, query)) |>
+  req_perform()
+
+response |> 
   resp_content_type()  # Check what output returns
 ```
 
@@ -522,9 +512,8 @@ request(paste0(baseurl, query)) |>
 The JSON has four main elements: "count", "next", "previous", and "results". The actual data we want is in "results", the 4th element.
 
 ```{r}
-# Make the API call and show the raw JSON text
-raw_json <- request(paste0(baseurl, query))  |>
-  req_perform() |>
+# Show the raw JSON text
+raw_json <- response |>
   resp_body_string()  # Get raw JSON as text
 
 # Print the raw JSON to see the structure
@@ -538,8 +527,7 @@ cat(substr(prettify(raw_json), 1, 2000))
 
 ```{r}
 # Parse the JSON
-parsed_data <- request(paste0(baseurl, query)) |>
-  req_perform() |>
+parsed_data <- response |>
   resp_body_json()
 
 # Extract the "results" element (4th position) and display
@@ -548,8 +536,7 @@ parsed_data |>
   head(3)
 
 # Alternatively, you could parse by name
-# parsed_data$results |> 
-#   head(3)
+# parsed_data$results |> head(3)
 ```
 
 
@@ -563,7 +550,7 @@ We can sign up for an API key [here](https://api.data.gov/signup/). The API webs
 
 Here's a quick overview of how to implement this with `httr2`:
 
-```r
+```{r, eval=FALSE}
 # sign up for API key: https://api.data.gov/signup/
 # Sys.setenv(MY_API_KEY = "[YOUR API KEY GOES HERE]")
 
@@ -586,16 +573,16 @@ try2 <- congress_req("bill") |>
 ```
 
 
-```r
+```{r, eval=FALSE}
 # US Congress: Actions on a specific nomination
 congress_req("nomination/115/2259/actions") |>
   req_perform() |>
   resp_body_json(simplifyVector = TRUE) |>
   pluck(1) |>
   as.data.frame()
-  ```
+```
 
-```r
+```{r, eval=FALSE}
 # US Congress: Summaries filtered by congress and bill type
 congress_req(
   "summaries/117/hr",
@@ -609,13 +596,13 @@ congress_req(
   as.data.frame()
 ```
 
-```r
+```{r, eval=FALSE}
 # US Congress: Legislation sponsored by a specific member (XML)
 congress_req("member/L000174/sponsored-legislation.xml") |>
   req_headers("X-Api-Key" = api_key) |>
   req_perform() |>
   resp_body_xml() |>
-  xml_find_all("//sponsoredLegislation//title") |>
+  xml_find_all(".//sponsoredLegislation//url") |>
   xml_text()
 ```
 
@@ -624,8 +611,6 @@ Remember that any API Key that you generate and use should be kept private. You 
 Retrieving data from API's using `httr2` can at times be quite tiresome. Luckily, there are many R libraries that make it much easier to retrieve data from APIs. Here is a [list of ready-made R bindings to web-APIs](https://ropensci.org/packages/data-access/). Actually, even the Star Wars API we queried earlier has its own R package, `rwars`!
 
 ---
-
-
 
 # A note on good scraping practice
 
@@ -674,7 +659,7 @@ Furthermore, downloading massive amounts of data may arouse attention from serve
 
 **Option 2**: Use HTTP header fields `From` and `User-Agent` to provide information about yourself.
 
-```r
+```{r, eval=FALSE}
 url <- "http://a-totally-random-website.com"
 
 #rvest's session() creates a session object that responds to HTTP and HTML methods.
@@ -699,6 +684,3 @@ This will pop up in the server logs: The webpage administrator has the chance to
 This tutorial drew heavily on Simon Munzert's book [Automated Data Collection with R](http://r-datacollection.com/) and related [course materials](https://github.com/simonmunzert/web-scraping-with-r-extended-edition). We also used an [example](https://keith-mcnulty.medium.com/how-to-scrape-the-web-in-r-d77b11fca40d) from Keith McNulty's blog post on tidy web scraping in R. For the regex part, we used examples from the string manipulation section in Hadley Wickham's [R for Data Science](https://r4ds.hadley.nz/strings) book.
 
 This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), [Linus Hagemann](https://linushagemann.de/) and [Laia Domenech Burin.](https://github.com/ldmnch)
-
-
-
