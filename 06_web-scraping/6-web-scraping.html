@@ -1542,6 +1542,8 @@ margin-left: 0 !important;
           🐌</a></li>
           <li><a href="#how-can-i-stay-identifiable" id="toc-how-can-i-stay-identifiable">How can I stay
           identifiable? 👤</a></li>
+          <li><a href="#scraping-in-the-age-of-intellectual-property-theft" id="toc-scraping-in-the-age-of-intellectual-property-theft">Scraping
+          in the age of intellectual property theft</a></li>
           </ul></li>
           <li><a href="#acknowledgements" id="toc-acknowledgements"><b style="color:#2f1a61">Acknowledgements</b></a></li>
           </ul>
@@ -2617,6 +2619,22 @@ to HTTP and HTML methods. Here, we provide our email address and the
 current R version as User-Agent information. This will pop up in the
 server logs: The webpage administrator has the chance to easily get in
 touch with you.</p>
+</div>
+<div id="scraping-in-the-age-of-intellectual-property-theft" class="section level2">
+<h2>Scraping in the age of intellectual property theft</h2>
+<p>As mentioned in the beginning, scraping websites is a great source of
+data for many different use-cases in (social) science. Scrapig websites
+is also a great source of training material for LLMs. More and more
+sites have thus begun implementing anti-scraper mechanisms. Many
+websites will work with exactly the tools we covered in this lab - many
+other won’t, though. In some cases, you for example get back a page only
+containing some blocker warning, and not the content you were looking
+for. Depending on what you are doing, circumventing these measures might
+be ethically and legally okay (it might not be though - check that!).
+One of the tricks you will need to employ is running your requests
+through an actual browser - the same as you’d need to do when scraping
+dynamic pages! In addition to the links above, <a href="https://github.com/ashbythorpe/selenider">this</a> package might
+also be helpful.</p>
 </div>
 </div>
 <div id="acknowledgements" class="section level1 unnumbered">

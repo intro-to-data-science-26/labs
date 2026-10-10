@@ -679,6 +679,11 @@ rvest's `session()` creates a session object that responds to HTTP and HTML meth
 Here, we provide our email address and the current R version as User-Agent information.
 This will pop up in the server logs: The webpage administrator has the chance to easily get in touch with you.
 
+## Scraping in the age of intellectual property theft
+
+As mentioned in the beginning, scraping websites is a great source of data for many different use-cases in (social) science. Scrapig websites is also a great source of training material for LLMs. More and more sites have thus begun implementing anti-scraper mechanisms. Many websites will work with exactly the tools we covered in this lab - many other won't, though. In some cases, you for example get back a page only containing some blocker warning, and not the content you were looking for. Depending on what you are doing, circumventing these measures might be ethically and legally okay (it might not be though - check that!). One of the tricks you will need to employ is running your requests through an actual browser - the same as you'd need to do when scraping dynamic pages! In addition to the links above, [this](https://github.com/ashbythorpe/selenider) package might also be helpful.
+
+
 # <b style="color:#2f1a61">Acknowledgements</b> {.unnumbered}
 
 This tutorial drew heavily on Simon Munzert's book [Automated Data Collection with R](http://r-datacollection.com/) and related [course materials](https://github.com/simonmunzert/web-scraping-with-r-extended-edition). We also used an [example](https://keith-mcnulty.medium.com/how-to-scrape-the-web-in-r-d77b11fca40d) from Keith McNulty's blog post on tidy web scraping in R. For the regex part, we used examples from the string manipulation section in Hadley Wickham's [R for Data Science](https://r4ds.hadley.nz/strings) book.
