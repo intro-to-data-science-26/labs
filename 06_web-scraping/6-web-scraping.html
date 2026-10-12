@@ -1514,7 +1514,7 @@ margin-left: 0 !important;
         <nav role="navigation" id="toc">
           <ul>
           <li><a href="#why-webscrape-with-r" id="toc-why-webscrape-with-r">Why webscrape with R?
-          🌎</a></li>
+          🌍</a></li>
           <li><a href="#scraping-static-sites-with-rvest" id="toc-scraping-static-sites-with-rvest">Scraping static
           sites with <code>rvest</code> 🚜</a>
           <ul>
@@ -1620,7 +1620,7 @@ data</li>
 </ul>
 <hr />
 <div id="why-webscrape-with-r" class="section level1">
-<h1>Why webscrape with R? 🌎</h1>
+<h1>Why webscrape with R? 🌍</h1>
 <p>Web scraping broadly includes:</p>
 <ul>
 <li>getting (unstructured) data from the web, and</li>
@@ -1784,22 +1784,22 @@ of Spotify streaming records</a> Wikipedia entry.</p>
 <pre><code>## # A tibble: 6 × 6
 ##   rank  song                  artist_s       streams_billions release_date ref  
 ##   &lt;chr&gt; &lt;chr&gt;                 &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;
-## 1 1     &quot;\&quot;Blinding Lights\&quot;&quot; The Weeknd     5.625            29 November… [1]  
-## 2 2     &quot;\&quot;Shape Of You\&quot;&quot;    Ed Sheeran     5.133            6 January 2… [2]  
-## 3 3     &quot;\&quot;Sweater Weather\&quot;&quot; The Neighbour… 4.935            3 December … [3]  
-## 4 4     &quot;\&quot;Starboy\&quot;&quot;         The Weeknd an… 4.799            21 Septembe… [4]  
-## 5 5     &quot;\&quot;As It Was\&quot;&quot;       Harry Styles   4.661            1 April 2022 [5]  
-## 6 6     &quot;\&quot;One Dance\&quot;&quot;       Drake, Wizkid… 4.505            5 April 2016 [6]</code></pre>
+## 1 1     &quot;\&quot;Blinding Lights\&quot;&quot; The Weeknd     5.628            29 November… [1]  
+## 2 2     &quot;\&quot;Shape Of You\&quot;&quot;    Ed Sheeran     5.136            6 January 2… [2]  
+## 3 3     &quot;\&quot;Sweater Weather\&quot;&quot; The Neighbour… 4.941            3 December … [3]  
+## 4 4     &quot;\&quot;Starboy\&quot;&quot;         The Weeknd an… 4.803            21 Septembe… [4]  
+## 5 5     &quot;\&quot;As It Was\&quot;&quot;       Harry Styles   4.664            1 April 2022 [5]  
+## 6 6     &quot;\&quot;One Dance\&quot;&quot;       Drake, Wizkid… 4.509            5 April 2016 [6]</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">tail</span>(spotify_table_raw)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 6
-##   rank                 song         artist_s streams_billions release_date ref  
-##   &lt;chr&gt;                &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;
-## 1 96                   &quot;\&quot;Uptown F… Mark Ro… 2.810            10 November… &quot;[95…
-## 2 97                   &quot;\&quot;One Kiss… Calvin … 2.805            6 April 2018 &quot;&quot;   
-## 3 98                   &quot;\&quot;Danza Ku… Don Oma… 2.793            15 August 2… &quot;[96…
-## 4 99                   &quot;\&quot;Don&#39;t St… Queen    2.789            26 January … &quot;&quot;   
-## 5 100                  &quot;\&quot;Africa\&quot;&quot; Toto     2.786            1 April 1982 &quot;&quot;   
-## 6 As of 8 October 2026 &quot;As of 8 Oc… As of 8… As of 8 October… As of 8 Oct… &quot;As …</code></pre>
+##   rank                  song        artist_s streams_billions release_date ref  
+##   &lt;chr&gt;                 &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;
+## 1 96                    &quot;\&quot;Uptown … Mark Ro… 2.813            10 November… &quot;[95…
+## 2 97                    &quot;\&quot;One Kis… Calvin … 2.806            6 April 2018 &quot;&quot;   
+## 3 98                    &quot;\&quot;Danza K… Don Oma… 2.795            15 August 2… &quot;[96…
+## 4 99                    &quot;\&quot;Don&#39;t S… Queen    2.791            26 January … &quot;&quot;   
+## 5 100                   &quot;\&quot;Africa\… Toto     2.788            1 April 1982 &quot;&quot;   
+## 6 As of 10 October 2026 &quot;As of 10 … As of 1… As of 10 Octobe… As of 10 Oc… &quot;As …</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># clean up table a bit </span></span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>spotify_table <span class="ot">&lt;-</span> spotify_table_raw <span class="sc">|&gt;</span></span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">song =</span> <span class="fu">str_remove_all</span>(song, <span class="st">&#39;</span><span class="sc">\&quot;</span><span class="st">&#39;</span>), <span class="co"># remove quotation marks from song titles</span></span>
@@ -1812,12 +1812,12 @@ of Spotify streaming records</a> Wikipedia entry.</p>
 <pre><code>## # A tibble: 6 × 5
 ##   rank  song            artist_s                 streams_billions release_date  
 ##   &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;                               &lt;dbl&gt; &lt;chr&gt;         
-## 1 1     Blinding Lights The Weeknd                           5.62 29 November 2…
-## 2 2     Shape Of You    Ed Sheeran                           5.13 6 January 2017
-## 3 3     Sweater Weather The Neighbourhood                    4.93 3 December 20…
+## 1 1     Blinding Lights The Weeknd                           5.63 29 November 2…
+## 2 2     Shape Of You    Ed Sheeran                           5.14 6 January 2017
+## 3 3     Sweater Weather The Neighbourhood                    4.94 3 December 20…
 ## 4 4     Starboy         The Weeknd and Daft Punk             4.80 21 September …
 ## 5 5     As It Was       Harry Styles                         4.66 1 April 2022  
-## 6 6     One Dance       Drake, Wizkid, and Kyla              4.50 5 April 2016</code></pre>
+## 6 6     One Dance       Drake, Wizkid, and Kyla              4.51 5 April 2016</code></pre>
 <div class="alert-info pad-box">
 <p><strong>Exercise 2</strong></p>
 <p>Can you tell us:</p>
@@ -1856,8 +1856,8 @@ and find the pattern. Then, construct the list of URLs from scratch.</p>
 <span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>baseurl <span class="ot">&lt;-</span> <span class="st">&quot;http://www.jstatsoft.org/article/view/v&quot;</span></span>
 <span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a></span>
 <span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co"># volume number</span></span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>volurl <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="dv">105</span><span class="sc">:</span><span class="dv">111</span>) <span class="co"># volumes 105 to 110</span></span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>volurl <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="dv">105</span><span class="sc">:</span><span class="dv">111</span>) <span class="co"># volumes 105 to 111</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co"># https://www.jstatsoft.org/article/view/v109i02</span></span>
 <span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co"># issue number</span></span>
 <span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>issueurl <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;0&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>), <span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>) <span class="co"># 01 to 12 maximum number of issues in a volume</span></span>
 <span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a><span class="co"># (there is a more efficient way of dealing with the inconsistency, but</span></span>

@@ -305,8 +305,8 @@ browseURL("http://www.jstatsoft.org/issue/archive")
 baseurl <- "http://www.jstatsoft.org/article/view/v"
 
 # volume number
-volurl <- as.character(105:111) # volumes 105 to 110
-
+volurl <- as.character(105:111) # volumes 105 to 111
+# https://www.jstatsoft.org/article/view/v109i02
 # issue number
 issueurl <- c(paste0("0", 1:9), 10:12) # 01 to 12 maximum number of issues in a volume
 # (there is a more efficient way of dealing with the inconsistency, but
