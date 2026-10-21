@@ -1,17 +1,23 @@
 library(tidyverse)
+library(nycflights13)
 
 # Exercise 1
+# Inspect the tables and identify matching columns
+dplyr::glimpse(flights)
+dplyr::glimpse(airlines)
 
-# a) How many flights have missing plane data?
+# a) Add airline names, keeping every flight
 flights |>
-  dplyr::anti_join(planes, by = "tailnum") |>
-  dplyr::count()
+  dplyr::left_join(airlines, by = "carrier")
 
-# b) Which airline has the most flights with unregistered planes?
+# b) Find the airline with the most flights operated by planes missing from the registry
+dplyr::glimpse(planes)
+
 flights |>
   dplyr::anti_join(planes, by = "tailnum") |>
   dplyr::count(carrier, sort = TRUE) |>
-  dplyr::left_join(airlines, by = "carrier")
+  dplyr::left_join(airlines, by = "carrier") |>
+  dplyr::slice_max(n, n = 5)
 
 
 # Exercise 2

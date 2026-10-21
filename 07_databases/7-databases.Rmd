@@ -1,7 +1,7 @@
 ---
 title: "Databases"
 subtitle: "Functions, `dbplyr` and working with SQL in R"
-author: "Killian Conyngham & Carol Sobral"
+author: "Linus Hagemann, Carol Sobral & Laia Domenech Burin"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
@@ -48,9 +48,9 @@ background-color: #2f1a61;
 
 </style>
 ```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
-
 pacman::p_load(tidyverse, purrr, dp)
 ```
 
@@ -62,110 +62,75 @@ Databases can exist either locally or remotely, as well as in-memory or on-disk.
 
 ------------------------------------------------------------------------
 
-# Joins and Databases `r emo::ji("telescope")`
+# Joins and Databases 🔭
 
 Although this week's session is nominally about databases - and we will spend the majority of this session on them - we believe that joins in R are a key skill. Therefore, we will split the session in two. First we will cover joins as implemented by the tidyverse. In that section you will learn to:
 
--   join together different datasets
--   differentiate between types of joins
+- join different datasets
+- differentiate between types of joins
 
 The second part of the session will deal with databases and SQL. Here you will learn to:
 
--   connect to remote databases with R
--   generate SQL queries in R with `dbplyr`
--   manipulate and transform data in a remote database
--   collect hosted data and store it locally
+- connect to remote databases with R
+- generate SQL queries in R with `dbplyr`
+- manipulate and transform data in a remote database
+- collect hosted data and store it locally
 
 ------------------------------------------------------------------------
 
 # Joins with `dplyr`
 
-One of the mainstays of the dplyr package is merging data with the family [join operations](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html).
+Why would you want to combine two (or more) tables?
 
--   `dplyr::inner_join(df1, df2)`
--   `dplyr::left_join(df1, df2)`
--   `dplyr::right_join(df1, df2)`
--   `dplyr::full_join(df1, df2)`
--   `dplyr::semi_join(df1, df2)`
--   `dplyr::anti_join(df1, df2)`
+The information you need is often spread across tables. For example, a flight record may contain an airline code, while another table stores the airline's name. The `dplyr` package provides [join operations](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html) to add information or filter rows by matching values across tables:
 
-(You might find it helpful to to see visual depictions of the different join operations [here](https://r4ds.had.co.nz/relational-data.html).)
+- `dplyr::inner_join(df1, df2)`
+- `dplyr::left_join(df1, df2)`
+- `dplyr::right_join(df1, df2)`
+- `dplyr::full_join(df1, df2)`
+- `dplyr::semi_join(df1, df2)`
+- `dplyr::anti_join(df1, df2)`
+
+The diagram below shows which rows each join keeps.
+
+[![r4ds-joins](pics/join-outer.png)](https://r4ds.had.co.nz/relational-data.html)
+
 
 ------------------------------------------------------------------------
 
-For the simple examples that we will see here, we'll need some data sets that come bundled with the [**nycflights13**](http://github.com/hadley/nycflights13) package.
-
--   Load it now and then inspect these data frames in your own console.
+We will use two tables from [**nycflights13**](http://github.com/hadley/nycflights13) to illustrate how to perform joins. `flights` contains flight records, and `planes` contains aircraft details. Both have a `tailnum` column identifying the aircraft. We can use it to add aircraft details to each flight.
 
 ```{r, echo = F}
 library(nycflights13)
-# flights 
-# planes
-# airlines
+glimpse(flights)
+glimpse(planes)
 ```
 
-Let's perform a [left join](https://stat545.com/bit001_dplyr-cheatsheet.html#left_joinsuperheroes-publishers) on the flights and planes datasets. - *Note*: I'm going subset columns after the join, but only to keep text on the slide.
+Use `left_join()` to keep every flight and add matching aircraft details. Set `by = "tailnum"` to specify the column used to match rows (join key).
+
+With joins, you have to be careful with shared column names. `year` means flight year in `flights` but construction year in `planes`. Without `by`, `dplyr` would match on both `tailnum` and `year`. We specify `tailnum` and rename the aircraft's `year` to `year_built`:
 
 ```{r}
-dplyr::left_join(flights, planes) |>
-  dplyr::select(year, month, day, dep_time, arr_time, carrier, flight, tailnum, type, model) |>
-  head(3) ## Just to save vertical space in output
-```
-
-Note that dplyr made a reasonable guess about which columns to join on (i.e. columns that share the same name). It also told us its choices:
-
-```         
-## Joining, by = c("year", "tailnum")
-```
-
-However, there's an obvious problem here: the variable "year" does not have a consistent meaning across our joining datasets! - In one it refers to the *year of flight*, in the other it refers to *year of construction*.
-
-Luckily, there's an easy way to avoid this problem. - Try `?dplyr::join`.
-
-You just need to be more explicit in your join call by using the `by =` argument. - You can also rename any ambiguous columns to avoid confusion.
-
-```{r}
-dplyr::left_join(
-  flights,
-  planes |> dplyr::rename(year_built = year), ## Not necessary w/ below line, but helpful
-  by = "tailnum" ## Be specific about the joining column
-) |>
-  dplyr::select(year, month, day, dep_time, arr_time, carrier, flight, tailnum, year_built, type, model) |>
-  head(3) 
-```
-
-Last thing I'll mention for now; note what happens if we again specify the join column... but don't rename the ambiguous "year" column in at least one of the given data frames.
-
-```{r join3}
-dplyr::left_join(
-  flights,
-  planes, ## Not renaming "year" to "year_built" this time
-  by = "tailnum"
-) |>
-  dplyr::select(dplyr::contains("year"), month, day, dep_time, arr_time, carrier, flight, tailnum, type, model) |>
+flights |>
+  dplyr::left_join(
+    planes |> dplyr::rename(year_built = year),
+    by = "tailnum"
+  ) |>
+  dplyr::select(year, flight, tailnum, year_built, type, model) |>
   head(3)
 ```
 
-Make sure you know what "year.x" and "year.y" are. Again, it pays to be specific.
+
+What happens if we keep `by = "tailnum"` but do not rename `year`? Try modifying the code above and see for yourself.
 
 ------------------------------------------------------------------------
 
+::: {.alert-info .pad-box}
+**Exercise 1** 🏋
 
-:::{.alert-info .pad-box}
-**Exercise 1** 🏋 
+a)  Use the `airlines` table to add airline names to `flights`. Inspect the tables to identify the matching columns and choose the appropriate join.
 
-You need to identify flights operated by planes that **aren't in the registration database**. This could indicate:
-- Data entry errors (wrong tail numbers)
-- Foreign-registered aircraft
-- Missing records that need to be added to the system
-
-**Your task:** 
-
-a) Find all flights where the plane's `tailnum` doesn't appear in the `planes` registry. How many flights were operated by unregistered aircraft?
-
-b) Which airline has the most flights with unregistered planes? 
-
-*Hint: Think about which type of join keeps rows from the first table that DON'T have a match in the second table.*
+b)  Find flights made with planes that **aren't in the `planes` registry**. Then identify which airline has the most of these flights. Use the `airlines` table to include the airline's name in your answer.
 
 :::
 
@@ -174,17 +139,13 @@ b) Which airline has the most flights with unregistered planes?
 ```
 
 
-
-
 ------------------------------------------------------------------------
 
-# Working with databases `r emo::ji("floppy_disk")`
+# Working with databases 💾
 
 So far, we have dealt with small datasets that easily fit into your computer's memory. But what about datasets when we work with data that are **too large** for our computers to handle as a whole?
 
 In this case, storing the data outside of R and **organizing it in a database is helpful**. Connecting to the database allows you to retrieve only the parts needed for your current analysis.
-
-Even better, many large datasets are already available in public or private databases. You can query them without having to download the data first.
 
 ------------------------------------------------------------------------
 
@@ -192,16 +153,17 @@ Even better, many large datasets are already available in public or private data
 
 Accessing databases in R requires a few packages:
 
--   `dbplyr` is the database backend for `dplyr`. It makes use of the `dplyr`, but works with remote data stored in databases.
+- `dbplyr` is the database backend for `dplyr`. It makes use of the `dplyr`, but works with remote data stored in databases.
 
--   `DBI` is a package that allows R to connect easily to a DBMS (**D**ata**B**ase **M**anagement **S**ystem)
+- `DBI` is a package that allows R to connect easily to a DBMS (**D**ata**B**ase **M**anagement **S**ystem)
 
--   Some package to interact with the back-end of the remote database such as `RSQLite`, other options might be:
-    -   `RMariaDB::MariaDB()` for RMariaDB,
-    -   `RPostgres::Postgres()` for RPostgres,
-    -   `odbc::odbc()` for odbc,
-    -   `mongolite::mongo` for MongoDB,
-    -   and `bigrquery::bigquery()` for BigQuery.
+- Some package to interact with the back-end of the remote database such as `RSQLite`, other options might be:
+
+  - `RMariaDB::MariaDB()` for RMariaDB,
+  - `RPostgres::Postgres()` for RPostgres,
+  - `odbc::odbc()` for odbc,
+  - `mongolite::mongo` for MongoDB,
+  - and `bigrquery::bigquery()` for BigQuery.
 
 ```{r, include=FALSE}
 pacman::p_load(RSQLite, DBI, bigrquery, dbplyr) # getting packages we might need
@@ -293,7 +255,7 @@ As you can see there is only one table for now (flights). The other objects that
 
 # Queries
 
-A query is a request for data or information from a database table or combination of tables. `r emo::ji("book")`
+A query is a request for data or information from a database table or combination of tables. 📖
 
 ## Reference Table
 
@@ -393,25 +355,21 @@ dplyr::copy_to(
 )
 ```
 
-
-:::{.alert-info .pad-box}
-**Exercise 2** 🏋 
-
+::: {.alert-info .pad-box}
+**Exercise 2** 🏋
 
 Now it's your turn! Let's now add the `airports` table to our database.
 
 **Your task:**
 
-a) Inspect the `nycflights13::airports` dataset (use `head()`, `glimpse()`, or `View()`). Which column uniquely identifies each airport?
+a)  Inspect the `nycflights13::airports` dataset (use `head()`, `glimpse()`, or `View()`). Which column uniquely identifies each airport?
 
-b) Add the `airports` table to the database with the appropriate index. 
+b)  Add the `airports` table to the database with the appropriate index.
 :::
 
 ```{r}
 
 ```
-
-
 
 Now let us call `DBI::dbListTables()` again on our "con" database connection. As you can see, there are several more tables now.
 
@@ -437,7 +395,7 @@ dplyr::left_join(
          year_built, type, model) 
 ```
 
-This should all feel very **familiar** right? `r emo::ji("grin")`
+This should all feel very **familiar** right? 😁
 
 ------------------------------------------------------------------------
 
@@ -449,10 +407,10 @@ Unfortunately, there are however **some differences** between **ordinary data fr
 
 The most important among these is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine.
 
-This has the following implications. When working with databases, `dplyr` tries to be as **lazy as possible** `r emo::ji("sleep")`:
+This has the following implications. When working with databases, `dplyr` tries to be as **lazy as possible** 😴:
 
--   It never pulls data into R unless you explicitly ask for it.
--   It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.
+- It never pulls data into R unless you explicitly ask for it.
+- It delays doing any work until the last possible moment: it collects everything you want to do and then sends it to the database in one step.
 
 This even applies when you assign the output of a database query to an object:
 
@@ -467,7 +425,7 @@ tailnum_delay_db <- flights_db |>
   dplyr::filter(n > 100)
 ```
 
-This leads to some **unexpected behaviour**:
+This leads to some **unexpected behavior**:
 
 **Exhibit A:** Because there's generally no way to determine how many rows a query will return unless you actually run it, `nrow()` is always `NA`.
 
@@ -506,27 +464,23 @@ tailnum_delay <- tailnum_delay_db |> dplyr::collect()
 tailnum_delay
 ```
 
-
 ------------------------------------------------------------------------
 
-
-:::{.alert-info .pad-box}
-** (Optional) Exercise 3** 🏋 
+::: {.alert-info .pad-box}
+\*\* Exercise 3\*\* 🏋
 
 You want to find the full airline names (not just the carrier codes) for all flights on January 1st.
 
 **Your task:**
 
-a) Join `flights_db` with `airlines_db` and filter for flights on January 1st. Select the carrier code, airline name, and flight number. 
+a)  Join `flights_db` with `airlines_db` and filter for flights on January 1st. Select the carrier code, airline name, and flight number.
 
-b) Collect the results into a local dataframe.
+b)  Collect the results into a local dataframe.
 :::
 
 ```{r}
 
 ```
-
-
 
 ------------------------------------------------------------------------
 
@@ -559,25 +513,8 @@ If you want to practice accessing databases going forward, have a look at the pr
 
 ------------------------------------------------------------------------
 
-# (Advanced) BigQuery
-
-If you are still curious about databases and SQL and wonder how you might scale all this up in for the purposes of a real project, you might be interested to look into [Google's BigQuery](https://cloud.google.com/bigquery) service. You can register for a free Google Cloud account [here](https://cloud.google.com/bigquery/?utm_source=google&utm_medium=cpc&utm_campaign=emea-gb-all-en-dr-bkws-all-solutions-trial-b-gcp-1010042&utm_content=text-ad-none-any-DEV_c-CRE_502351626221-ADGP_Hybrid%20%7C%20BKWS%20-%20BMM%20%7C%20Txt%20~%20Data%20Analytics%20~%20BigQuery%23v1-KWID_43700053279048301-aud-606988877734%3Akwd-41385121591-userloc_1003853&utm_term=KW_%2Bgoogle%20%2Bbigquery-NET_g-PLAC_&ds_rl=1242853&ds_rl=1245734&ds_rl=1242853&ds_rl=1245734&gclid=EAIaIQobChMI9MCA2tKw8wIVgtKyCh33uAdiEAAYASAAEgJRbfD_BwE&gclsrc=aw.ds). Be aware that you only have a certain amount of free queries (1 TB / month) before you are charged. BigQuery is the most widely used service to interact with online databses and it has a number of [public datasets](https://cloud.google.com/bigquery/public-data) that you can easily practice with. Everything we saw above applies, with the exception that you need to specify the backend `bigrquery::bigquery()`.
-
-Here is an example of how it would look:
-
-``` r
-con <- DBI::dbConnect(
-  bigrquery::bigquery(),
-  project = "publicdata",
-  dataset = "samples",
-  billing = google_cloud_project_name # This will tell Google whom to charge
-)
-```
-
-------------------------------------------------------------------------
-
-# <b style="color:#2f1a61">Acknowledgements</b> {.unnumbered}
+<b style="color:#2f1a61">Acknowledgements</b> {.unnumbered}
 
 The section on databases and SQL relies on the vignette from the [*dbplyr package*](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html), [*RStudio Tutorial on databases*](https://db.rstudio.com/getting-started/connect-to-database) as well as the [*Databases Session*](https://github.com/uo-ec607/lectures/blob/master/16-databases/16-databases.html) in McDermott's Data Science for Economists by Grant McDermott.
 
-This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral).
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), [Linus Hagemann](https://linushagemann.de/) and [Laia Domenech Burin.](https://github.com/ldmnch)
