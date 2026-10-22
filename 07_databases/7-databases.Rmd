@@ -82,7 +82,7 @@ The information you need for an analysis is often spread across several tables. 
 
 We will use the [**nycflights13**](http://github.com/hadley/nycflights13) package. It contains data on flights departing from New York City in 2013, along with information about airlines, airports, planes and weather. Here's how the tables are connected:
 
-![nycflights tables. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/relational-nycflights.png){width="650"}
+![nycflights tables. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/relational-nycflights.png){width="650" style="display: block; margin-left: auto; margin-right: auto;"}
 
 As a first example, let's say we want to know more about the plane used for each flight. Let's look at the columns in `flights`:
 
@@ -131,7 +131,7 @@ What happens if we keep `by = "tailnum"` but do not rename `year`? Try modifying
 
 `left_join()` is one way to combine tables. Other [joins](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html) keep different rows, depending on what you need. The diagram below shows how they differ.
 
-![Joins. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/join-outer.png){width="500"}
+![Joins. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/join-outer.png){width="500" style="display: block; margin-left: auto; margin-right: auto;"}
 
 ------------------------------------------------------------------------
 
