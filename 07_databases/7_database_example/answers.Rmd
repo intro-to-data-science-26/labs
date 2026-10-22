@@ -1,7 +1,7 @@
 ---
-title: "Assignment 2. Databasing"
-author: "Introduction to Data Science"
-date: "9/24/2020"
+title: "Database Example"
+author: "IDS 2026"
+date: ""
 output: html_document
 ---
 
@@ -174,9 +174,3 @@ prediction in governments around the world. And now we can do it too.
 dbDisconnect(con)
 ```
 
-## Handing it all in
-
-This time around, just compile this document with code and answers and upload 
-it to moodle. Specifically, I'll be looking for a single knitted pdf, Word, or 
-html file. I think that's probably fancy enough, while we get used to the 
-cloud business. 

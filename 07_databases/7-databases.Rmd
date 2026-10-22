@@ -1,6 +1,6 @@
 ---
 title: "Databases"
-subtitle: "Functions, `dbplyr` and working with SQL in R"
+subtitle: "Joins, `dbplyr` and working with SQL in R"
 author: "Linus Hagemann, Carol Sobral & Laia Domenech Burin"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
@@ -51,23 +51,21 @@ background-color: #2f1a61;
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
-pacman::p_load(tidyverse, purrr, dp)
+library(tidyverse)
 ```
 
 # Introduction
 
-Many "big data" problems are actually "small data problems in disguise". That is, we only really need a subset of the data, or maybe we want to aggregate the data into some larger dataset. For example, we might want to access Census data, but only for a handful of municipalities. Or, we might want to analyse climate data collected from a large number of weather stations, but aggregated up to the national or monthly level. In such cases, the underlying bottleneck is interacting with the original data, which is too big to fit into memory. How do we store data of this magnitude and and then access it effectively? The answer is through a database.
+Many "big data" problems are actually "small data problems in disguise". That is, we only really need a subset of the data. For example, we might want to access Census data, but only for a handful of municipalities. Or, we might want to analyze climate data collected from a large number of weather stations, but aggregated up to the national or monthly level. In such cases, the underlying bottleneck is interacting with the original data, which is too big to fit into memory. How do we store data of this magnitude and then access it effectively? The answer is through a database.
 
-Databases can exist either locally or remotely, as well as in-memory or on-disk. Regardless of where a database is located, the key point is that information is stored in a way that allows for very quick extraction and/or aggregation. More often than not, you will probably need to extract several subsets and harmonize or transform them. To facilitate and automate this task, you will need to write your own functions and know to iterate them over the relevant subsets of data. This week's session thus ties in well with the sections on functions and iteration that we quickly touched upon during the last lab.
+Databases can exist either locally or remotely, as well as in-memory or on-disk. Regardless of where a database is located, the key point is that information is stored in a way that allows for very quick extraction and/or aggregation. More often than not, you will probably need to extract several subsets and harmonize or transform them.
 
 ------------------------------------------------------------------------
 
-# Joins and Databases 🔭
+Although this week's session is nominally about databases we believe that joins in R are a key skill. Therefore, we will split the session in two. First we will cover joins as implemented by the tidyverse. In that section you will learn to:
 
-Although this week's session is nominally about databases - and we will spend the majority of this session on them - we believe that joins in R are a key skill. Therefore, we will split the session in two. First we will cover joins as implemented by the tidyverse. In that section you will learn to:
-
-- join different datasets
 - differentiate between types of joins
+- join different datasets
 
 The second part of the session will deal with databases and SQL. Here you will learn to:
 
@@ -80,35 +78,42 @@ The second part of the session will deal with databases and SQL. Here you will l
 
 # Joins with `dplyr`
 
-Why would you want to combine two (or more) tables?
+The information you need for an analysis is often spread across several tables. For example, you might want to add country names to a table of country codes. Or you might combine survey responses with information about respondents, or check which records appear in both sources. To do these things, we can use joins.
 
-The information you need is often spread across tables. For example, a flight record may contain an airline code, while another table stores the airline's name. The `dplyr` package provides [join operations](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html) to add information or filter rows by matching values across tables:
+We will use the [**nycflights13**](http://github.com/hadley/nycflights13) package. It contains data on flights departing from New York City in 2013, along with information about airlines, airports, planes and weather. Here's how the tables are connected:
 
-- `dplyr::inner_join(df1, df2)`
-- `dplyr::left_join(df1, df2)`
-- `dplyr::right_join(df1, df2)`
-- `dplyr::full_join(df1, df2)`
-- `dplyr::semi_join(df1, df2)`
-- `dplyr::anti_join(df1, df2)`
+![nycflights tables. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/relational-nycflights.png){width="650"}
 
-The diagram below shows which rows each join keeps.
+As a first example, let's say we want to know more about the plane used for each flight. Let's look at the columns in `flights`:
 
-[![r4ds-joins](pics/join-outer.png)](https://r4ds.had.co.nz/relational-data.html)
-
-
-------------------------------------------------------------------------
-
-We will use two tables from [**nycflights13**](http://github.com/hadley/nycflights13) to illustrate how to perform joins. `flights` contains flight records, and `planes` contains aircraft details. Both have a `tailnum` column identifying the aircraft. We can use it to add aircraft details to each flight.
-
-```{r, echo = F}
+```{r}
 library(nycflights13)
 glimpse(flights)
+```
+
+`flights` tells us when and where each flight took place and identifies the plane in the `tailnum` column. But what if we want to know the plane's model or when it was built? That information is in `planes`:
+
+```{r}
 glimpse(planes)
 ```
 
-Use `left_join()` to keep every flight and add matching aircraft details. Set `by = "tailnum"` to specify the column used to match rows (join key).
+Both tables have a `tailnum` column, which identifies the plane. We can use it to add the model and construction year from `planes` to each flight.
 
-With joins, you have to be careful with shared column names. `year` means flight year in `flights` but construction year in `planes`. Without `by`, `dplyr` would match on both `tailnum` and `year`. We specify `tailnum` and rename the aircraft's `year` to `year_built`:
+For this, we'll use `left_join()` from `dplyr`. The basic syntax is `left_join(table1, table2)`: it keeps every row in `table1` and adds matching information from `table2`. Here, `table1` is `flights` and `table2` is `planes`. With the pipe, we write `flights |> left_join(planes)`. Let's try it. 
+
+```{r, message=TRUE}
+flights |>
+  dplyr::left_join(
+    planes
+  ) |>
+  dplyr::select(year, flight, tailnum, type, model) |>
+  head(3)
+```
+
+Why are `type` and `model` missing for these flights? R tells us: ``Joining with `by = join_by(year, tailnum)` ``. What does `year` mean in each table? 
+
+
+With joins, you have to be careful with shared column names. `year` means flight year in `flights` but construction year in `planes`. Without `by`, `dplyr` matches on both `tailnum` and `year`. We specify `tailnum` and rename the aircraft's `year` to `year_built`:
 
 ```{r}
 flights |>
@@ -120,17 +125,20 @@ flights |>
   head(3)
 ```
 
-
 What happens if we keep `by = "tailnum"` but do not rename `year`? Try modifying the code above and see for yourself.
+
+------------------------------------------------------------------------
+
+`left_join()` is one way to combine tables. Other [joins](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html) keep different rows, depending on what you need. The diagram below shows how they differ.
+
+![Joins. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/join-outer.png){width="500"}
 
 ------------------------------------------------------------------------
 
 ::: {.alert-info .pad-box}
 **Exercise 1** 🏋
 
-a)  Use the `airlines` table to add airline names to `flights`. Inspect the tables to identify the matching columns and choose the appropriate join.
-
-b)  Find flights made with planes that **aren't in the `planes` registry**. Then identify which airline has the most of these flights. Use the `airlines` table to include the airline's name in your answer.
+Use the `airlines` table to add airline names to `flights`. Inspect the tables to identify the matching columns and choose the appropriate join.
 
 :::
 
@@ -138,12 +146,45 @@ b)  Find flights made with planes that **aren't in the `planes` registry**. Then
 
 ```
 
+------------------------------------------------------------------------
+
+## Filtering joins
+
+What if we only want to keep flights whose planes show up in `planes`, without adding any aircraft details? For this, we can use a [filtering join](https://dplyr.tidyverse.org/reference/filter-joins.html). Filtering joins select rows based on matches in another table, leaving the rest of the dataset unchanged. 
+
+`semi_join()` keeps rows that have a match. Here, it keeps flights whose `tailnum` appears in `planes`:
+
+```{r}
+flights |>
+  dplyr::semi_join(planes, by = "tailnum") |>
+  head(3)
+```
+
+`anti_join()` keeps rows that have no match. Here, it keeps flights whose `tailnum` does not appear in `planes`:
+
+```{r}
+flights |>
+  dplyr::anti_join(planes, by = "tailnum") |>
+  head(3)
+```
+
+
+
+::: {.alert-info .pad-box}
+**Exercise 2** 🏋
+
+Which airports in `airports` do not appear as destinations in `flights`? Show their names and airport codes.
+:::
+
+```{r}
+
+```
 
 ------------------------------------------------------------------------
 
 # Working with databases 💾
 
-So far, we have dealt with small datasets that easily fit into your computer's memory. But what about datasets when we work with data that are **too large** for our computers to handle as a whole?
+So far, we have dealt with small datasets that easily fit into your computer's memory. But what about datasets that are **too large** for our computers to handle as a whole?
 
 In this case, storing the data outside of R and **organizing it in a database is helpful**. Connecting to the database allows you to retrieve only the parts needed for your current analysis.
 
@@ -153,7 +194,7 @@ In this case, storing the data outside of R and **organizing it in a database is
 
 Accessing databases in R requires a few packages:
 
-- `dbplyr` is the database backend for `dplyr`. It makes use of the `dplyr`, but works with remote data stored in databases.
+- `dbplyr` is the database backend for `dplyr`. It makes use of `dplyr`, but works with remote data stored in databases.
 
 - `DBI` is a package that allows R to connect easily to a DBMS (**D**ata**B**ase **M**anagement **S**ystem)
 
@@ -165,9 +206,6 @@ Accessing databases in R requires a few packages:
   - `mongolite::mongo` for MongoDB,
   - and `bigrquery::bigquery()` for BigQuery.
 
-```{r, include=FALSE}
-pacman::p_load(RSQLite, DBI, bigrquery, dbplyr) # getting packages we might need
-```
 
 ------------------------------------------------------------------------
 
@@ -187,69 +225,38 @@ con <- DBI::dbConnect(RSQLite::SQLite(),  # driver
 
 ------------------------------------------------------------------------
 
-For the purposes of this lab however, we are connecting to an **in-memory database**. That way we can avoid potential issues with the registration for access to a database, creation and caching of credentials, as well as defining safe ports and other boring details.
+For this lab, we created a SQLite database containing all five datasets from `nycflights13`: `flights`, `airlines`, `airports`, `planes` and `weather`. We saved it as `nycflights13.sqlite`. That way we can avoid registration, credentials and other connection details.
 
-To avoid all this hassle, we will create and host our own (small) database in our local memory. Luckily, the code to do so is **the same as in the general case above**. But, SQLite only needs a path to the database. (Here, `":memory:"` is a special path that creates an in-memory database.)
+The database is stored in a local file. We still use `DBI::dbConnect()` to connect to it, but SQLite only needs the path to the database file.
 
-We then **save** the database connection and store it in the object `con` for further use in exploring and querying data.
+We then save the database connection in the object `con` to use when exploring and querying the data.
 
 ```{r}
-# set up connection with DBI and RSQLite
-con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+# install.packages(c("RSQLite", "DBI", "dbplyr"))
+library(RSQLite)
+library(DBI)
+library(dbplyr)
+
+# Set up connection with DBI and RSQLite
+con <- DBI::dbConnect(RSQLite::SQLite(), "nycflights13.sqlite")
 ```
 
-Next, let us get a quick summary of the database connection using `summary()`. It shows **"SQLiteConnection" under class** and we can ignore the other details for the time being. Great!
+Use `summary()` to inspect the connection. The class **"SQLiteConnection"** confirms that it is a SQLite connection.
 
 ```{r}
 summary(con)
-```
-
-If you were to connect to a real online database that someone else generated, you could now call `DBI::dbListTables(con)` to see a list of the tables present in the database. Our local database is however still devoid of content.
-
-**We need to populate our database**. We will copy some data from `nycflights13` to our database connection. In **real life**, this step would probably be taken care of by the responsible **database maintainer**.
-
-```{r}
-# upload local data frame into remote data source; here: database
-dplyr::copy_to(
-  dest = con, 
-  df = nycflights13::flights, 
-  name = "flights"
-)
-```
-
-------------------------------------------------------------------------
-
-## Indexing
-
-Unfortunately, it is not enough to just copy data to our database. We also need to pass a list of **indexes** to the function. In this example, we set up indexes that will allow us to **quickly process the data by** time, carrier, plane, and destination. Creating the right indices is key to good database performance. Again, in applications where we don't set up the database, this will be taken care of by the database maintainer.
-
-```{r}
-dplyr::copy_to(
-  dest = con, 
-  df = nycflights13::flights, 
-  name = "flights",
-  temporary = FALSE, 
-  indexes = list(
-    c("year", "month", "day"), 
-    "carrier", 
-    "tailnum",
-    "dest"
-  ),
-  overwrite = T # if set to FALSE and the table already exists (as it is the case now), it will prevent this from overwriting performing the changes
-)
 ```
 
 ------------------------------------------------------------------------
 
 ## List Existing Tables in a Database
 
-Now that we are connected to a database, let us list all the tables present in it using `DBI::dbListTables()`.
+Now that we are connected to a database, let us list all the tables available in it using `DBI::dbListTables()`.
 
 ```{r}
 DBI::dbListTables(con)
 ```
 
-As you can see there is only one table for now (flights). The other objects that show up are infrastructure specificities for SQLite that you can safely ignore. Usually you would **find many different tables** in a relational database.
 
 ------------------------------------------------------------------------
 
@@ -261,15 +268,15 @@ A query is a request for data or information from a database table or combinatio
 
 So how do you query a table in a database?
 
-It is actually fairly straightforward. You use the `dplyr::tbl()`function where you indicate the **connection** and the **name of the table** you want to interact with.
+It is actually fairly straightforward. You use the `dplyr::tbl()` function where you indicate the **connection** and the **name of the table** you want to interact with.
 
 ```{r}
-# generate reference table from the database
+# Generate reference table from the database
 flights_db <- dplyr::tbl(con, "flights")
 flights_db 
-
-## You will notice that there are some slight differences from our <tibble> or <data.frame> types (see "Source:" and "Database:")
 ```
+
+Notice how the output differs from a regular data frame. The header `# A query: ?? x 19` shows 19 columns, but `??` means R has not calculated the number of rows.
 
 The console output shows that this is a **remote source**; the table is not stored in our RStudio environment. Nor should you need to transfer the entire table to your RStudio environment. You can perform operations directly on the remote source. What is more, you can rely on the `dplyr` syntax to formulate your queries. R will automatically translate it into SQL (more on that below).
 
@@ -280,7 +287,6 @@ The console output shows that this is a **remote source**; the table is not stor
 You can select specific columns:
 
 ```{r}
-# perform various queries
 flights_db |> dplyr::select(year:day, dep_delay, arr_delay)
 ```
 
@@ -296,14 +302,14 @@ flights_db |> dplyr::filter(dep_delay > 240)
 
 ------------------------------------------------------------------------
 
-## Summary Statisitics
+## Summary Statistics
 
 Or immediately generate summary statistics for different groups:
 
 ```{r}
 flights_db |> 
   dplyr::group_by(dest) |>
-  dplyr::summarize(delay = mean(dep_time))
+  dplyr::summarize(delay = mean(dep_delay))
 ```
 
 ------------------------------------------------------------------------
@@ -321,61 +327,6 @@ flights_db |>
   geom_line() 
 ```
 
-------------------------------------------------------------------------
-
-## Joins
-
-Databases become more exciting with more tables. So let's add a couple more:
-
-```{r}
-dplyr::copy_to(
-  dest = con, 
-  df = nycflights13::planes, 
-  name = "planes", # we create the "planes" table
-  temporary = FALSE, 
-  indexes = "tailnum"
-)
-
-dplyr::copy_to(
-  dest = con, 
-  df = nycflights13::airlines, 
-  name = "airlines", # we create the "airlines" table
-  temporary = FALSE, 
-  indexes = "carrier" 
-)
-
-dplyr::copy_to(
-  dest = con, 
-  df = nycflights13::weather, 
-  name = "weather", # we create the "weather" table
-  temporary = FALSE, 
-  indexes = list(
-    c("year", "month", "day", "hour", "origin")
-  )
-)
-```
-
-::: {.alert-info .pad-box}
-**Exercise 2** 🏋
-
-Now it's your turn! Let's now add the `airports` table to our database.
-
-**Your task:**
-
-a)  Inspect the `nycflights13::airports` dataset (use `head()`, `glimpse()`, or `View()`). Which column uniquely identifies each airport?
-
-b)  Add the `airports` table to the database with the appropriate index.
-:::
-
-```{r}
-
-```
-
-Now let us call `DBI::dbListTables()` again on our "con" database connection. As you can see, there are several more tables now.
-
-```{r}
-DBI::dbListTables(con)
-```
 
 ------------------------------------------------------------------------
 
@@ -388,24 +339,24 @@ planes_db <-  dplyr::tbl(con, 'planes')
 
 dplyr::left_join(
   flights_db,
-  planes_db |> dplyr::rename(year_built = year), # taking care of name ambiguity
-  by = "tailnum" ## Important: Be specific about the joining column
+  planes_db |> dplyr::rename(year_built = year), 
+  by = "tailnum" 
 ) |>
-  dplyr::select(year, month, day, dep_time, arr_time, carrier, flight, tailnum,
-         year_built, type, model) 
+  dplyr::select(year, month, day, carrier, flight, tailnum,
+         year_built, model) 
 ```
 
 This should all feel very **familiar** right? 😁
 
 ------------------------------------------------------------------------
 
-# A look under the Hood
+# A look under the hood
 
 As you saw, you can conduct your analyses in a database, the same way you are **used to** do it in R. All that without your data having to be stored on your own device.
 
-Unfortunately, there are however **some differences** between **ordinary data frames and remote database queries** that are worth pointing out.
+There are nonetheless **some differences** between **ordinary data frames and remote database queries** that are worth pointing out.
 
-The most important among these is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine.
+Your R code is translated into SQL and executed by the database. In this lab, the database runs on your computer; it could also run on a remote server.
 
 This has the following implications. When working with databases, `dplyr` tries to be as **lazy as possible** 😴:
 
@@ -467,15 +418,15 @@ tailnum_delay
 ------------------------------------------------------------------------
 
 ::: {.alert-info .pad-box}
-\*\* Exercise 3\*\* 🏋
+**Exercise 3** 🏋
 
-You want to find the full airline names (not just the carrier codes) for all flights on January 1st.
+Find the 10 destinations with the most flights and include their airport names.
 
-**Your task:**
+a) Create `airports_db` as a reference to the database's `airports` table. 
 
-a)  Join `flights_db` with `airlines_db` and filter for flights on January 1st. Select the carrier code, airline name, and flight number.
+b) Count flights by destination in `flights_db`, then join the results to `airports_db` to add airport names. Which columns should you match on?
 
-b)  Collect the results into a local dataframe.
+c) Sort by flight count and keep the top 10 destinations **before** using `collect()` to save the results in a local data frame.
 :::
 
 ```{r}
@@ -513,7 +464,9 @@ If you want to practice accessing databases going forward, have a look at the pr
 
 ------------------------------------------------------------------------
 
-<b style="color:#2f1a61">Acknowledgements</b> {.unnumbered}
+<b style="color:#2f1a61">Acknowledgements</b>
+
+The section on joins draws on the [Relational data chapter](https://r4ds.had.co.nz/relational-data.html) in *R for Data Science*. 
 
 The section on databases and SQL relies on the vignette from the [*dbplyr package*](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html), [*RStudio Tutorial on databases*](https://db.rstudio.com/getting-started/connect-to-database) as well as the [*Databases Session*](https://github.com/uo-ec607/lectures/blob/master/16-databases/16-databases.html) in McDermott's Data Science for Economists by Grant McDermott.
 
