@@ -129,6 +129,8 @@ What happens if we keep `by = "tailnum"` but do not rename `year`? Try modifying
 
 ------------------------------------------------------------------------
 
+## Types of joins
+
 `left_join()` is one way to combine tables. Other [joins](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html) keep different rows, depending on what you need. The diagram below shows how they differ.
 
 ![Joins. Source: [R for Data Science](https://r4ds.had.co.nz/relational-data.html).](pics/join-outer.png){width="500" style="display: block; margin-left: auto; margin-right: auto;"}
@@ -198,10 +200,10 @@ Accessing databases in R requires a few packages:
 
 - `DBI` is a package that allows R to connect easily to a DBMS (**D**ata**B**ase **M**anagement **S**ystem)
 
-- Some package to interact with the back-end of the remote database such as `RSQLite`, other options might be:
+- Some package to interact with the back-end of the remote database such as `RSQLite` (for SQLite), other options might be:
 
-  - `RMariaDB::MariaDB()` for RMariaDB,
-  - `RPostgres::Postgres()` for RPostgres,
+  - `RMariaDB::MariaDB()` for MariaDB,
+  - `RPostgres::Postgres()` for Postgres,
   - `odbc::odbc()` for odbc,
   - `mongolite::mongo` for MongoDB,
   - and `bigrquery::bigquery()` for BigQuery.
@@ -215,7 +217,7 @@ To connect to the database, we will use `DBI::dbConnect()` from the `DBI` packag
 
 Most existing databases don't live in a file, but instead live on a server. In addition to the two arguments above, database drivers will therefore also require details like user, password, host, port, etc. That means your code will often look more like this:
 
-``` r
+```{r, eval=FALSE}
 con <- DBI::dbConnect(RSQLite::SQLite(),  # driver
   host = "database.rstudio.com",
   user = "your_username",
@@ -278,7 +280,7 @@ flights_db
 
 Notice how the output differs from a regular data frame. The header `# A query: ?? x 19` shows 19 columns, but `??` means R has not calculated the number of rows.
 
-The console output shows that this is a **remote source**; the table is not stored in our RStudio environment. Nor should you need to transfer the entire table to your RStudio environment. You can perform operations directly on the remote source. What is more, you can rely on the `dplyr` syntax to formulate your queries. R will automatically translate it into SQL (more on that below).
+The console output shows that this is a **remote source**; the table is not stored in our RStudio environment. Nor should you need to transfer the entire table to your RStudio environment. You can perform operations directly on the remote source. What is more, you can rely on the already familiar `dplyr` syntax to formulate your queries. R will automatically translate it into SQL (more on that below).
 
 ------------------------------------------------------------------------
 
