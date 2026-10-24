@@ -190,6 +190,13 @@ So far, we have dealt with small datasets that easily fit into your computer's m
 
 In this case, storing the data outside of R and **organizing it in a database is helpful**. Connecting to the database allows you to retrieve only the parts needed for your current analysis.
 
+Even when working with smaller amounts of data, using a database can be helpful. Using a (relational) database might help you if:
+
+- your data has a complex structure, that does not easily fit into a 2D spreadsheet/dataframe
+- you don't want to worry about keeping IDs,... unique (the DBMS will handle that for you)
+- you and others need to write into the database at the same time, in which case the DBMS will deal with concurrency
+- specific people should only have specific rights (read, write,...) on (some) parts of the data.
+
 ------------------------------------------------------------------------
 
 ## Necessary packages
