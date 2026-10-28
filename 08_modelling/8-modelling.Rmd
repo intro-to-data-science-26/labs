@@ -1,0 +1,562 @@
+---
+title: "Modelling"
+subtitle: "A practical introduction with tidymodels"
+author: "Laia Domenech Burin, Carol Sobral & Linus Hagemann"
+date: "(Fall 2026) Introduction to Data Science"
+output: 
+    rmdformats::robobook:
+    toc: TRUE
+    df_print: paged
+    number_sections: FALSE
+    highlight: tango
+    toc_depth: 3
+    toc_float: true
+    self_contained: false
+---
+
+```{=html}
+<style>
+.h1,h2,h3 {
+  color:#2f1a61;
+}
+
+.subtitle, section.normal {
+  color:#291854;
+}
+
+.title {
+  color:#cc0065;
+}
+
+.nav-pills>li>a, .nav-tabs>li>a {
+  color: #2f1a61;
+}
+
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:hover,
+.nav-pills>li.active>a:focus,
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+  color: #fff;
+  background-color: #2f1a61;
+}
+
+.pad-box {
+  padding: 1em;
+}
+</style>
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+options(digits = 3)
+```
+
+Last session we talked a bit about how you might scrape data from the web. Collecting data is not an end in itself, rather the first step in answering your research question. When it comes to analyzing trends, testing hypotheses, and predicting outcomes, modelling enters the picture.
+
+In general, remember that your basic workflow for evaluating and reporting models is as follows:
+
+![](pics/data-science-communicate.png)
+Today we will mostly deal with the “Model” and “Communicate” steps shown in the graph.
+
+In the lecture, you saw how to specify models, the main ideas behind the `tidymodels` workflow, and how to report results. This lab puts those pieces into practice. We will also see how to run and compare multiple models efficiently.
+
+:::{.alert-warning .pad-box}
+This lab focuses on the "mechanics" of modelling. In practice, justifying which model to use (and interpreting the model) is arguably much more important than what we cover today. These aspects will be discussed at length in your future Machine Learning and Causal Inference courses, and in a lot of electives. Those of you who took Statistics II will already be familiar with some of these considerations.
+:::
+------------------------------------------------------------------------
+
+# Setup
+
+We use country-year [data on life expectancy from the World Health Organization](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who).
+The packages below cover data wrangling, modelling, and reporting.
+
+```{r packages}
+library(tidyverse)
+library(tidymodels)
+library(modelsummary)
+library(janitor)
+```
+
+Let's read the data and perform some basic data cleaning, using the usual `tidyverse` and `janitor` functions you are already familiar with:
+
+```{r data}
+life_expec_dat <- readr::read_csv(
+  "life_expectancy.csv",
+  show_col_types = FALSE
+) |>
+  janitor::clean_names() |>
+  dplyr::select(
+    life_expectancy, country, year, status, gdp,
+    alcohol, bmi, schooling, hiv_aids
+  ) |>
+  dplyr::filter(!is.na(life_expectancy)) |>
+  dplyr::mutate(
+    country = factor(country),
+    status = factor(status)
+  )
+
+dplyr::glimpse(life_expec_dat)
+```
+
+For the first part of the lab, we will be interested in the following question:
+
+> How well can a small set of country characteristics predict life expectancy
+> in a specific country for a specific year?
+
+Notice that this is a **prediction** question. Whatever we find will not be a claim that changing
+GDP, alcohol consumption, or any other predictor will cause life expectancy to
+change.
+
+# A complete `tidymodels` workflow
+
+`tidymodels` is a collection of packages, similar to the `tidyverse`. **Very similar** actually: It contains many packages that follow the same ideas as the `tidyverse`, that are focused on all things modelling - from specifying the structure of the model, to preparing the data, actually fitting the model, all the way to evaluation and reporting of models.
+
+This week's lab will introduce you to **a lot** of new packages. Try not to stress to much about it, and focus on the concepts - once you have them down, finding a specific package or function again will be easy. Also there are, again, [cheat-sheets](https://www.tidymodels.org/cheatsheets/) for the most important parts.
+
+The workflow of modelling with `tidymodels` will always follow these same steps:
+
+1. **Split** the data.
+2. **Describe preprocessing** with a recipe.
+1. **Specify** a model.
+4. **Bundle** recipe and model in a workflow.
+5. **Fit and evaluate** your model. Potentially **tune** the model and repeat.
+
+## 1. Split first
+
+When we do modelling **to predict** a value, we are trying to learn a function that approximated the data generating process of the data we are working with.
+
+As we do not **know** this precise function, it is important that we think about how to evaluate our model from the very beginning: We keep some data for the evaluation only. During training, the model will never see that data. This way, we have some real data to later compare to the predictions our model makes. If we we would train our models on all data we have, we would have no data to compare to - the model could have just "memorized" our data set, and we would have no way of catching it. 
+
+We reserve 20% of the observations as a test set, using the `rsample` package.
+
+The split is random. Setting a `seed` for the randomness keeps your analysis reproducible.
+
+```{r split}
+set.seed(2026) 
+life_split <- rsample::initial_split(
+  life_expec_dat,
+  prop = 0.80,
+  strata = life_expectancy # keep the outcome balanced in train and test
+)
+
+life_train <- rsample::training(life_split)
+life_test  <- rsample::testing(life_split)
+
+tibble::tibble(
+  partition = c("training", "test"),
+  rows = c(nrow(life_train), nrow(life_test))
+)
+```
+
+For the next steps, we leave `life_test` alone. It is not for choosing variables, preprocessing
+steps, or training models. We will only use it for the final evaluation.
+
+## 2. Describe preprocessing with a recipe
+
+A recipe records what should happen to the predictors. It is estimated using
+training data and then applies the same learned transformations to assessment or
+test data.
+
+```{r recipe}
+life_recipe <- recipes::recipe(
+  life_expectancy ~ ., # formula our model will use, basically the function it should learn
+  data = life_train
+) |>
+  recipes::update_role(country, new_role = "ID") |>
+  recipes::step_log(gdp, offset = 1) |>
+  recipes::step_impute_median(recipes::all_numeric_predictors()) |>
+  recipes::step_dummy(recipes::all_nominal_predictors()) |>
+  recipes::step_zv(recipes::all_predictors())
+
+life_recipe
+```
+
+Read the recipe from top to bottom. It:
+
+- keeps `country` for identification but does not use it as a predictor;
+- replaces `gdp` with `log(gdp + 1)`;
+- imputes missing numeric predictor values in the training-set with the appropriate medians;
+- creates indicator variables for nominal predictors such as `status`; and
+- removes predictors with no variation.
+
+Once you specified your recipe, use `recipes::prep()` on `life_recipe`, then use `recipes::bake()` with
+`new_data = NULL` to inspect the processed training data:
+
+- What happened to `status`?
+- Is `country` still present? Is it a predictor?
+- Are any predictor values missing after preprocessing?
+
+```{r}
+prepared_recipe <- recipes::prep(life_recipe)
+processed_train <- recipes::bake(prepared_recipe, new_data = NULL)
+
+processed_train |>
+  dplyr::glimpse()
+anyNA(processed_train)
+```
+
+## 3. Specify a model, then create a workflow
+
+With `parsnip`, model type and computational engine are declared before the
+model sees any data. Here we setup linear regression estimated with `lm()`.
+`parsnip` allows us to use many different models without learning many different functions - instead, `parsnip` provides a single interface in which many different models can be plugged in.
+
+```{r linear-workflow}
+linear_spec <- parsnip::linear_reg() |>
+  parsnip::set_engine("lm")
+
+linear_workflow <- workflows::workflow() |>
+  workflows::add_recipe(life_recipe) |>
+  workflows::add_model(linear_spec)
+
+linear_workflow
+```
+
+The workflow keeps the recipe and model together. This makes it much harder to
+forget a preprocessing step when fitting or predicting with new data. The `workflow` package also takes care of preparing and baking our preprocessing recipe for us - very kind.
+
+```{r fit-linear}
+linear_fit <- linear_workflow |>
+  parsnip::fit(data = life_train)
+
+linear_fit |>
+  workflows::extract_fit_parsnip() |>
+  broom::glance()
+```
+
+`fit()` trains (fits) the model on the training data. It does **not** yet
+tell us how well the workflow predicts new observations. For that, we use
+resampling:
+
+# Comparing several workflows
+
+The lecture introduced resampling conceptually. Here we use it to compare a
+linear model with a decision tree. This is the useful pattern:
+
+> make model specifications → turn each into a workflow → apply the same
+> resamples and metrics to every workflow → compare the results
+
+## 1. Make the model candidates
+
+The decision tree below uses the `rpart` engine. We choose modest complexity
+settings in advance; tuning hyperparameters is beyond today's scope.
+
+```{r model-candidates}
+tree_spec <- parsnip::decision_tree(
+  cost_complexity = 0.01,
+  min_n = 20
+) |>
+  parsnip::set_engine("rpart") |>
+  parsnip::set_mode("regression")
+
+model_specs <- list(
+  linear = linear_spec,
+  tree = tree_spec
+)
+```
+
+## 2. Turn each specification into a workflow
+
+Because the steps are stored as objects, `purrr::map()` can create both
+workflows without duplicated code.
+
+```{r candidate-workflows}
+candidate_workflows <- model_specs |>
+  purrr::map(
+    ~ workflows::workflow() |>
+      workflows::add_recipe(life_recipe) |>
+      workflows::add_model(.x)
+  )
+
+candidate_workflows
+```
+
+## 3. Apply the same resamples to every workflow
+
+Five-fold cross-validation makes five assessment sets *within the training
+data*. Each observation is used for assessment once, while the test set remains
+untouched.
+
+We compare models using:
+
+- **RMSE**, the typical prediction error in years (smaller is better); and
+- **R-squared**, the share of outcome variation accounted for (larger is
+  better).
+
+```{r resamples}
+set.seed(2026)
+life_folds <- rsample::vfold_cv(
+  life_train,
+  v = 5,
+  strata = life_expectancy
+)
+
+regression_metrics <- yardstick::metric_set(
+  yardstick::rmse,
+  yardstick::rsq
+)
+```
+
+```{r compare-workflows}
+resample_results <- candidate_workflows |>
+  purrr::map(
+    ~ tune::fit_resamples(
+      .x,
+      resamples = life_folds,
+      metrics = regression_metrics
+    )
+  )
+
+cv_metrics <- resample_results |>
+  purrr::map_dfr(tune::collect_metrics, .id = "model")
+
+cv_metrics |>
+  dplyr::select(model, .metric, mean, std_err)
+```
+
+:::{.alert-danger .pad-box}
+**Exercise 2 (15 minutes)**
+
+1. Which workflow has the lower cross-validated RMSE? Interpret that RMSE in
+   the units of the outcome.
+2. Add a second tree with `cost_complexity = 0.001` and `min_n = 10` to
+   `model_specs`. Re-run the workflow and resampling code. Does a more flexible
+   tree improve out-of-sample performance?
+3. Why would choosing the model with the best training-set R-squared give a
+   misleading comparison?
+
+```{r exercise-2, eval=FALSE}
+flexible_tree_spec <- parsnip::decision_tree(
+  cost_complexity = ____,
+  min_n = ____
+) |>
+  parsnip::set_engine("____") |>
+  parsnip::set_mode("____")
+
+model_specs <- list(
+  linear = linear_spec,
+  tree = tree_spec,
+  flexible_tree = ____
+)
+```
+:::
+
+## 4. Finalize once on the test set
+
+We choose the workflow with the smallest mean cross-validated RMSE. Only now do
+we fit on all training observations and evaluate once on the test observations
+with `last_fit()`.
+
+```{r final-fit}
+best_model_name <- cv_metrics |>
+  dplyr::filter(.metric == "rmse") |>
+  dplyr::slice_min(mean, n = 1, with_ties = FALSE) |>
+  dplyr::pull(model)
+
+best_workflow <- candidate_workflows[[best_model_name]]
+
+final_fit <- tune::last_fit(
+  best_workflow,
+  split = life_split,
+  metrics = regression_metrics
+)
+
+best_model_name
+tune::collect_metrics(final_fit)
+```
+
+```{r prediction-plot, fig.height=4.5}
+final_fit |>
+  tune::collect_predictions() |>
+  ggplot2::ggplot(ggplot2::aes(x = life_expectancy, y = .pred)) +
+  ggplot2::geom_abline(
+    slope = 1,
+    intercept = 0,
+    linetype = "dashed",
+    colour = "grey50"
+  ) +
+  ggplot2::geom_point(alpha = 0.45, colour = "#2f1a61") +
+  ggplot2::coord_equal() +
+  ggplot2::labs(
+    x = "Observed life expectancy (years)",
+    y = "Predicted life expectancy (years)",
+    title = paste("Held-out predictions from the", best_model_name, "workflow")
+  ) +
+  ggplot2::theme_minimal()
+```
+
+:::{.alert-info .pad-box}
+**Discuss with a neighbour (5 minutes)**
+
+Look for structure around the diagonal. Where does the model make its largest
+errors? Does it tend to over-predict low life expectancy or under-predict high
+life expectancy? What extra predictors or model changes might help?
+:::
+
+------------------------------------------------------------------------
+
+# Running many related specifications
+
+Sometimes “many models” means comparing model families, as above. Sometimes it
+means fitting a deliberate sequence of specifications to see how one estimate
+changes as controls are added. The formula tools from the lecture and
+`purrr::map()` make this concise.
+
+For this section our goal shifts from prediction to describing the association
+between GDP and life expectancy. We use one common complete-case dataset so
+that changes across specifications do not arise merely because different rows
+were used.
+
+```{r specification-data}
+report_data <- life_train |>
+  tidyr::drop_na(gdp, schooling, alcohol, bmi)
+
+control_sets <- list(
+  "GDP only" = character(0),
+  "+ schooling" = "schooling",
+  "+ health indicators" = c("schooling", "alcohol", "bmi")
+)
+
+model_formulas <- control_sets |>
+  purrr::map(
+    ~ stats::reformulate(
+      termlabels = c("log(gdp)", .x),
+      response = "life_expectancy"
+    )
+  )
+
+model_formulas
+```
+
+```{r fit-specifications}
+specification_models <- model_formulas |>
+  purrr::map(stats::lm, data = report_data)
+
+gdp_results <- specification_models |>
+  purrr::map_dfr(
+    broom::tidy,
+    conf.int = TRUE,
+    .id = "specification"
+  ) |>
+  dplyr::filter(term == "log(gdp)")
+
+gdp_results
+```
+
+This pattern scales: change the list of model ingredients, not a pile of copied
+and pasted `lm()` calls. However, more models are not automatically better.
+Each reported specification should have a defensible reason to exist, ideally
+decided before looking at the results.
+
+------------------------------------------------------------------------
+
+# Reporting model results
+
+## Tidy model output with `broom`
+
+The three main `broom` verbs answer different questions:
+
+- `tidy()` returns component-level information such as coefficients;
+- `glance()` returns one row of model-level summaries; and
+- `augment()` returns observation-level values such as fitted values and
+  residuals.
+
+```{r broom-verbs}
+broom::tidy(specification_models[[3]], conf.int = TRUE)
+broom::glance(specification_models[[3]])
+
+specification_models[[3]] |>
+  broom::augment() |>
+  dplyr::select(life_expectancy, .fitted, .resid) |>
+  dplyr::slice_head(n = 6)
+```
+
+## A regression table
+
+`modelsummary()` accepts the named list of models directly. The names become
+column headings, so a well-named model list is already part of good reporting.
+
+```{r regression-table}
+modelsummary::modelsummary(
+  specification_models,
+  estimate = "{estimate} [{conf.low}, {conf.high}]",
+  statistic = NULL,
+  coef_omit = "Intercept",
+  coef_rename = c(
+    "log(gdp)" = "Log GDP",
+    "schooling" = "Schooling",
+    "alcohol" = "Alcohol consumption",
+    "bmi" = "BMI"
+  ),
+  gof_omit = "DF|Deviance|Log.Lik|AIC|BIC|RMSE",
+  title = "Linear models of life expectancy",
+  notes = "Estimates with 95% confidence intervals. WHO country-year data.",
+  output = "markdown"
+)
+```
+
+## A coefficient plot
+
+Plots make comparisons across estimates and models easier, but coefficients on
+very different scales may not be meaningfully comparable. Here we focus on the
+same GDP term across models.
+
+```{r coefficient-plot, fig.height=3.5}
+modelsummary::modelplot(
+  specification_models,
+  coef_map = c("log(gdp)" = "Log GDP")
+) +
+  ggplot2::geom_vline(
+    xintercept = 0,
+    linetype = "dashed",
+    colour = "grey50"
+  ) +
+  ggplot2::labs(
+    x = "Estimated coefficient (95% CI)",
+    y = NULL,
+    title = "Association between log GDP and life expectancy"
+  ) +
+  ggplot2::theme_minimal()
+```
+
+:::{.alert-warning .pad-box}
+Before publishing either display, add the information a reader needs: the
+outcome and unit of analysis, definitions and units of key variables, which
+controls are included, the uncertainty measure, sample restrictions, and the
+data source. Never rely on stars alone to communicate importance or
+uncertainty.
+:::
+
+------------------------------------------------------------------------
+
+# Wrap-up
+
+The important distinction from today is between two modelling goals:
+
+- For **prediction**, compare complete workflows on common resamples, choose a
+  model without consulting the test set, and use the test set once.
+- For **description or inference**, fit theory-driven specifications and report
+  estimates and uncertainty clearly. A coefficient's stability across selected
+  controls can be informative, but it does not establish causality.
+
+In both cases, storing recipes, specifications, workflows, and model lists as R
+objects lets you update the analysis without copying, pasting, or manually
+transcribing results.
+
+# Further reading
+
+- [Get Started with tidymodels](https://www.tidymodels.org/start/)
+- [*Tidy Modeling with R*](https://www.tmwr.org/)
+- [`broom` documentation](https://broom.tidymodels.org/)
+- [`modelsummary` documentation](https://modelsummary.com/)
+- [Specification curve analysis with `specr`](https://masurp.github.io/specr/)
+  for a more advanced treatment of many defensible specifications
+
+
