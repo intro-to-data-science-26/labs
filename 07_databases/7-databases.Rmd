@@ -176,6 +176,8 @@ flights |>
 **Exercise 2** 🏋
 
 Which airports in `airports` do not appear as destinations in `flights`? Show their names and airport codes.
+
+*Hint:* You can join on columns that do not have the same name by supplying the `join_by` function to the `by` argument of the join: `join_by(col_a == col_b)` will match on the same data in `col_a` and `col_b`, for example.
 :::
 
 ```{r}

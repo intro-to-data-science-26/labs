@@ -17,7 +17,7 @@ flights |>
 # Exercise 2
 # Find airports with no matching destination in flights
 airports |>
-  dplyr::anti_join(flights, by = c("faa" = "dest")) |>
+  dplyr::anti_join(flights, by = join_by(faa == dest)) |>
   dplyr::select(name, faa)
 
 

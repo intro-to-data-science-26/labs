@@ -1806,6 +1806,11 @@ keeps flights whose <code>tailnum</code> does not appear in
 <p><strong>Exercise 2</strong> 🏋</p>
 <p>Which airports in <code>airports</code> do not appear as destinations
 in <code>flights</code>? Show their names and airport codes.</p>
+<p><em>Hint:</em> You can join on columns that do not have the same name
+by supplying the <code>join_by</code> function to the <code>by</code>
+argument of the join: <code>join_by(col_a == col_b)</code> will match on
+the same data in <code>col_a</code> and <code>col_b</code>, for
+example.</p>
 </div>
 <hr />
 </div>
