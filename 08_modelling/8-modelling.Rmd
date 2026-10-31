@@ -123,7 +123,7 @@ All models we build during this lab are intended to be examples in order to get 
 
 # Modelling with usual R functions
 
-First, we build the complete prediction pipeline with the tools that come with R and the `tidyverse` data-wrangling functions you already know. Once we build an intuition of the basic worklflow, we will see how we can make our lives easier using the packages bundled in `tidymodels`.
+First, we build the complete prediction pipeline with the tools that come with R and the `tidyverse` data-wrangling functions you already know. Once we build an intuition of the basic workflow, we will see how we can make our lives easier using the packages bundled in `tidymodels`.
 
 A prediction model learns a rule that maps a set of **predictors** to an
 **outcome**. Here, the outcome is `arr_delay` - it is was we want to predict.
@@ -367,13 +367,13 @@ The `glance` function gives you a single row of measures for how well our model 
 broom::glance(tidymodels_fit)
 ```
 
-Finally, `augment` lets you see row-level informations for your predictions, such as the prediction error (redisual) for each prediction on your test data.
+Finally, `augment` lets you see row-level information for your predictions, such as the prediction error (residual) for each prediction on your test data.
 
 ```{r}
 broom::augment(tidymodels_fit, new_data = flights_test)
 ```
 
-Under the hood, it of course needs to calculate the predictions to show you that information - let's take a look at how to predict ourselfes using `tidymodels` next!
+Under the hood, it of course needs to calculate the predictions to show you that information - let's take a look at how to predict ourselves using `tidymodels` next!
 
 
 ## 3. Evaluate on the test set
@@ -489,7 +489,7 @@ In theory, you do not need `tidymodels` to perform modeling in R - and as we hav
 
 Additionally, `broom` makes it easier to inspect properties of a fitted model and `yardstick` can help you calculate many different type of evaluation metrics, without worrying about implementing the math yourself.
 
-For more complex models, `tidymodels` also includes packages for tuning hyperparameters and lots of other things...
+For more complex models, `tidymodels` also includes packages for tuning hyper-parameters and lots of other things...
 
 # Further reading
 
