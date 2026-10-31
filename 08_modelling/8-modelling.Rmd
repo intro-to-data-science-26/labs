@@ -1,6 +1,6 @@
 ---
 title: "Modelling"
-subtitle: "A practical introduction with tidymodels"
+subtitle: "Applied introduction with `tidymodels`"
 author: "Laia Domenech Burin, Carol Sobral & Linus Hagemann"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
@@ -65,7 +65,12 @@ In general, remember that your basic workflow for evaluating and reporting model
 ![](pics/data-science-communicate.png)
 Today we will mostly deal with the “Model” and “Communicate” steps shown in the graph.
 
-In the lecture, you saw how to specify models, the main ideas behind the `tidymodels` workflow, and how to report results. This lab puts those pieces into practice. We will also see how to run and compare multiple models efficiently.
+To that end, we will cover:
+
+- the basic intuition of how prediction models are set up and trained,
+- how to train and evaluate a prediction model in `R`,
+- how `tidymodels` can be used to make this process more efficient and robust,
+- how to report models, using regression tables and plots.
 
 :::{.alert-warning .pad-box}
 This lab focuses on the "mechanics" of modelling. In practice, justifying which model to use (and interpreting the model) is arguably much more important than what we cover today. These aspects will be discussed at length in your future Machine Learning and Causal Inference courses, and in a lot of electives. Those of you who took Statistics II will already be familiar with some of these considerations.
@@ -74,146 +79,258 @@ This lab focuses on the "mechanics" of modelling. In practice, justifying which 
 
 # Setup
 
-We use country-year [data on life expectancy from the World Health Organization](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who).
-The packages below cover data wrangling, modelling, and reporting.
+We again use the `flights` data from the [`nycflights13`](https://nycflights13.tidyverse.org/)
+package, containing flights that departed from New York City in 2013.
 
 ```{r packages}
 library(tidyverse)
-library(tidymodels)
-library(modelsummary)
-library(janitor)
+library(nycflights13)
 ```
 
-Let's read the data and perform some basic data cleaning, using the usual `tidyverse` and `janitor` functions you are already familiar with:
+The full dataset contains more than 300,000 flights. To minimize the time our models run, we take a sample of 20,000 flights with a recorded arrival delay and retain a small set of possible predictors.
+
+`slice_sample` samples randomly from the input dataframe. Whenever your code involves randomness, it is important to explicitly set a `seed` - the concrete value does not matter, just that it's constant. This will keep your code reproducible for you and your colleagues.
 
 ```{r data}
-life_expec_dat <- readr::read_csv(
-  "life_expectancy.csv",
-  show_col_types = FALSE
-) |>
-  janitor::clean_names() |>
-  dplyr::select(
-    life_expectancy, country, year, status, gdp,
-    alcohol, bmi, schooling, hiv_aids
-  ) |>
-  dplyr::filter(!is.na(life_expectancy)) |>
-  dplyr::mutate(
-    country = factor(country),
-    status = factor(status)
-  )
+set.seed(2026)
 
-dplyr::glimpse(life_expec_dat)
+flights_dat <- nycflights13::flights |>
+  dplyr::filter(!is.na(arr_delay)) |>
+  dplyr::select(
+    arr_delay, dep_delay, distance, origin, carrier
+  ) |>
+  tidyr::drop_na() |>
+  dplyr::mutate(
+    origin = factor(origin),
+    carrier = factor(carrier)
+  ) |>
+  dplyr::slice_sample(n = 20000)
+
+dplyr::glimpse(flights_dat)
 ```
 
-For the first part of the lab, we will be interested in the following question:
+In general, we can use models in two different ways: 
 
-> How well can a small set of country characteristics predict life expectancy
-> in a specific country for a specific year?
+- to test hypothesis, aka answering causal questions about our data
+- to create predictions from the data, aka to learn the underlying data generating process.
 
-Notice that this is a **prediction** question. Whatever we find will not be a claim that changing
-GDP, alcohol consumption, or any other predictor will cause life expectancy to
-change.
+Today, we will exclusively focus on the latter aspect of modeling, trying to **predict a flights arrival delay**.
 
-# A complete `tidymodels` workflow
+:::{.alert-primary .pad-box}
+All models we build during this lab are intended to be examples in order to get used to the workflow - we are not too concerned with building the best possible model or even models suitable for real-world use.
+:::
 
-`tidymodels` is a collection of packages, similar to the `tidyverse`. **Very similar** actually: It contains many packages that follow the same ideas as the `tidyverse`, that are focused on all things modelling - from specifying the structure of the model, to preparing the data, actually fitting the model, all the way to evaluation and reporting of models.
 
-This week's lab will introduce you to **a lot** of new packages. Try not to stress to much about it, and focus on the concepts - once you have them down, finding a specific package or function again will be easy. Also there are, again, [cheat-sheets](https://www.tidymodels.org/cheatsheets/) for the most important parts.
+# Modelling with usual R functions
 
-The workflow of modelling with `tidymodels` will always follow these same steps:
+First, we build the complete prediction pipeline with the tools that come with R and the `tidyverse` data-wrangling functions you already know. Once we build an intuition of the basic worklflow, we will see how we can make our lives easier using the packages bundled in `tidymodels`.
 
-1. **Split** the data.
-2. **Describe preprocessing** with a recipe.
-1. **Specify** a model.
-4. **Bundle** recipe and model in a workflow.
-5. **Fit and evaluate** your model. Potentially **tune** the model and repeat.
+A prediction model learns a rule that maps a set of **predictors** to an
+**outcome**. Here, the outcome is `arr_delay` - it is was we want to predict.
+The predictors are what the model can use to predict the outcome.
 
-## 1. Split first
+Building a prediction model generally has two phases:
 
-When we do modelling **to predict** a value, we are trying to learn a function that approximated the data generating process of the data we are working with.
+1. **Fitting** or **training** the model: Here, the model learns how to calculate the outcome based on the predictors. This usually means solving an optimization problem. For example, in OLS-regression, the model will calculate the set of regression coefficients that minimize the squared error. The prediction error is the difference between the value a model predicts and the true (known) outcome value.  
 
-As we do not **know** this precise function, it is important that we think about how to evaluate our model from the very beginning: We keep some data for the evaluation only. During training, the model will never see that data. This way, we have some real data to later compare to the predictions our model makes. If we we would train our models on all data we have, we would have no data to compare to - the model could have just "memorized" our data set, and we would have no way of catching it. 
+2. **Testing** or **evaluating** the model: Here, we present the trained model some data that it has not yet seen and again check how close our predictions are to the true outcome value. 
 
-We reserve 20% of the observations as a test set, using the `rsample` package.
+When building prediction models, we want to make sure that our model actually learned the *general idea* of the function connecting the predictors to the outcome. **We don't want our model to just memorize all the data** - instead, it should also give reasonable predictions when presented with data it has never seen before.
 
-The split is random. Setting a `seed` for the randomness keeps your analysis reproducible.
+## 1. Split the data
+
+We must evaluate predictions on observations that were not used to estimate the
+model. We therefore randomly assign 80% of the flights to a training set and
+reserve 20% as a test set. 80/20 is a common ratio between training and testing data.
 
 ```{r split}
-set.seed(2026) 
-life_split <- rsample::initial_split(
-  life_expec_dat,
-  prop = 0.80,
-  strata = life_expectancy # keep the outcome balanced in train and test
+# Get indices representing 80% of the data.
+train_rows <- sample(
+  seq_len(nrow(flights_dat)),
+  size = floor(0.80 * nrow(flights_dat))
 )
 
-life_train <- rsample::training(life_split)
-life_test  <- rsample::testing(life_split)
+# Lookup train and test set based on the indices
+flights_train <- flights_dat |>
+  dplyr::slice(train_rows)
 
-tibble::tibble(
-  partition = c("training", "test"),
-  rows = c(nrow(life_train), nrow(life_test))
-)
+flights_test <- flights_dat |>
+  dplyr::slice(-train_rows)
 ```
 
-For the next steps, we leave `life_test` alone. It is not for choosing variables, preprocessing
-steps, or training models. We will only use it for the final evaluation.
+From this point onward, the test set is not used train the model. It is only used to evaluate the finished prediction rule, aka the fitted model.
 
-## 2. Describe preprocessing with a recipe
+## 2. Specify and fit the model
+
+Specifying a model involves writing down what relationship you expect between your outcome and your predictors. In R, we use **formulas** to specify these relationships.
+
+The basic structure of a formula looks like this: `y ~ x`.
+
+On the left side, we denote our outcome. On the right side come the predictors. In the simple case above, the formula says: Calculate `y` on basis of `x`. In OLS-regression, this calculation involves one regression coefficient for each predictor on the right side, and an intercept.
+
+To fit a linear regression (OLS) model in R, we use the `lm` function. It takes the formula for our model and the data it should fit as parameters:
+
+```{r usual-formula}
+flight_formula <-
+  arr_delay ~ dep_delay + distance + origin + carrier
+
+lm_fit <- stats::lm(
+  formula = flight_formula,
+  data = flights_train # We fit the model only on the training data!
+)
+
+lm_fit
+```
+
+The fitted coefficients describe the prediction rule. For a new flight, R
+multiplies each predictor by its fitted coefficient and adds the intercept.
+
+For `carrier` and `origin`, our model has more than one coefficient - to be precise, it has one coefficient **for each individual value** that these columns have in our data. To utilize a **categorical** variable in a model, they need to be converted into numbers. R will take care of that for us, as we converted our categorical values into *factors* above.
+
+## 3. Predict new observations
+
+`predict()` applies the fitted rule to the predictors in `flights_test`. We keep
+the observed arrival delay alongside each prediction so that we can calculate the
+prediction errors: As already mentioned, that is the **difference between the true outcome and our prediction**.
+
+```{r usual-predictions}
+test_predictions <- flights_test |>
+  dplyr::select(arr_delay) |>
+  dplyr::mutate(
+    .pred = stats::predict(
+      lm_fit, # Fitted Model
+      newdata = flights_test # Attention: for predicting, use the test data!
+    ),
+    .error = arr_delay - .pred # Specify how to calculate prediction error
+  )
+
+dplyr::slice_head(test_predictions, n = 6)
+```
+
+The model nearly perfectly predicted some values! For others, it predicted values either too small or too large. Next, we will see how to systematically assess how good our model was, taking into account all of the data in our test set.
+
+## 4. Evaluate the predictions
+
+There are many different metrics on which you can evaluate how good a model is. Which ones to use depends on the precise task the model should solve. We will use three metrics which are very common for numerical prediction problems:
+
+- **MAE**, the **mean absolute error**: Calculates the average distance between the prediction and the true value. Lower values are better.
+- **RMSE**, the **root-mean-square-error**: Calculates the root of the average of the squared errors. It is more sensitive to outliers, as larger errors have a higher impact due to the squaring. Lower values are better.   
+- **R-squared** describes how much of the variance in the true outcome value is captured by our model. Values are between 0 (the model captures no variance) and 1 (perfect, the model captures all variance).
+
+```{r usual-metrics}
+metrics <- tibble::tibble(
+  .metric = c("mae", "rmse", "rsq"),
+  .estimate = c(
+    mean(abs(test_predictions$.error)),
+    sqrt(mean(test_predictions$.error^2)),
+    cor(
+      test_predictions$arr_delay,
+      test_predictions$.pred
+    )^2
+  )
+)
+
+metrics
+```
+
+Whether for example 12 for the MAE is high or not requires us to know the scale of the original data. If the maximum value of the outcome in the data is 5, an MAE of 12 would be quite bad. If most values would be in the thousands, 12 is a pretty small error. 
+
+Let's take a look at a plot common to evaluate this, plotting our predictions against the true values:
+
+```{r usual-prediction-plot, fig.height=4.5}
+test_predictions |>
+  ggplot2::ggplot(ggplot2::aes(x = arr_delay, y = .pred)) +
+  ggplot2::geom_abline(
+    slope = 1,
+    intercept = 0,
+    linetype = "dashed",
+    colour = "grey50"
+  ) +
+  ggplot2::geom_point(alpha = 0.35, colour = "#2f1a61") +
+  ggplot2::coord_equal() +
+  ggplot2::labs(
+    x = "Observed arrival delay (minutes)",
+    y = "Predicted arrival delay (minutes)",
+    title = "Held-out predictions from the linear model"
+  ) +
+  ggplot2::theme_minimal()
+```
+
+A perfect model would have all point directly on the diagonal - our model didn't do too bad! But we can also see that, especially for the flights with lower or no delays, the model was often off. 
+
+------------------------------------------------------------------------
+
+# The same model with `tidymodels`
+
+Now we repeat the analysis using the **same training rows, test rows, formula,
+and linear-regression engine**. This lets us see what `tidymodels` changes - and
+what it does not change.
+
+```{r}
+library(tidymodels)
+```
+
+`tidymodels` is a collection of packages that apply tidyverse design principles
+to modelling. **Recipes** can be used to describe preprocessing, `parsnip` provides a common model interface, and workflows keep preprocessing and the model together. The
+[tidymodels cheat sheets](https://www.tidymodels.org/cheatsheets/) are useful
+references after this session.
+
+The tidymodels version follows four steps:
+
+1. **Describe preprocessing** with a recipe.
+2. **Specify** a model.
+3. **Bundle** recipe and model in a workflow.
+4. **Fit and evaluate** the workflow using the existing split.
+
+## 1. Describe preprocessing with a recipe
 
 A recipe records what should happen to the predictors. It is estimated using
-training data and then applies the same learned transformations to assessment or
-test data.
+training data and then applies the same learned transformations to new data - remember, we don't want any part of the modeling process to **see** any of the test data before the final prediction and evaluation.
 
 ```{r recipe}
-life_recipe <- recipes::recipe(
-  life_expectancy ~ ., # formula our model will use, basically the function it should learn
-  data = life_train
+flights_recipe <- recipes::recipe(
+  flight_formula,
+  data = flights_train
 ) |>
-  recipes::update_role(country, new_role = "ID") |>
-  recipes::step_log(gdp, offset = 1) |>
-  recipes::step_impute_median(recipes::all_numeric_predictors()) |>
   recipes::step_dummy(recipes::all_nominal_predictors()) |>
   recipes::step_zv(recipes::all_predictors())
 
-life_recipe
+flights_recipe
 ```
 
 Read the recipe from top to bottom. It:
 
-- keeps `country` for identification but does not use it as a predictor;
-- replaces `gdp` with `log(gdp + 1)`;
-- imputes missing numeric predictor values in the training-set with the appropriate medians;
-- creates indicator variables for nominal predictors such as `status`; and
+- uses exactly the same formula as the first R model;
+- creates indicator variables for categorical predictors such as `origin` and
+  `carrier`; and
 - removes predictors with no variation.
 
-Once you specified your recipe, use `recipes::prep()` on `life_recipe`, then use `recipes::bake()` with
-`new_data = NULL` to inspect the processed training data:
+Once you specified your recipe, use `recipes::prep()` on `flights_recipe`, then use `recipes::bake()` with `new_data = NULL` to inspect the processed training data:
 
-- What happened to `status`?
-- Is `country` still present? Is it a predictor?
-- Are any predictor values missing after preprocessing?
+- What happened to `origin` and `carrier`?
+- How many predictor columns does the prepared dataset contain?
 
 ```{r}
-prepared_recipe <- recipes::prep(life_recipe)
+prepared_recipe <- recipes::prep(flights_recipe)
 processed_train <- recipes::bake(prepared_recipe, new_data = NULL)
 
 processed_train |>
   dplyr::glimpse()
-anyNA(processed_train)
 ```
+Until now, you could argue that we did not gain much from using the recipe - we got the conversion for the categorical variables earlier for free as well, and we did not have any constant (zero variance) predictors in our data. However, there are many more preprocessing steps you might want to take for a more complex model, such as scaling or transforming variables. In these cases, using a recipe, and the many preprocessing functions the package provides is very useful to ensure you apply all the steps all the time and there is one canonical place for all of your preprocessing steps.
 
-## 3. Specify a model, then create a workflow
+## 2. Specify a model, then create a workflow
 
-With `parsnip`, model type and computational engine are declared before the
-model sees any data. Here we setup linear regression estimated with `lm()`.
-`parsnip` allows us to use many different models without learning many different functions - instead, `parsnip` provides a single interface in which many different models can be plugged in.
+`parsnip` provides a unified interface to **many different models**. This is nice because you only need to learn how to use `parsnip`, and not one new function per model - for example when comparing different prediction models for a specific prediction task for your thesis.
+
+We again setup linear regression estimated with `lm()`:
 
 ```{r linear-workflow}
 linear_spec <- parsnip::linear_reg() |>
   parsnip::set_engine("lm")
 
 linear_workflow <- workflows::workflow() |>
-  workflows::add_recipe(life_recipe) |>
+  workflows::add_recipe(flights_recipe) |>
   workflows::add_model(linear_spec)
 
 linear_workflow
@@ -223,295 +340,131 @@ The workflow keeps the recipe and model together. This makes it much harder to
 forget a preprocessing step when fitting or predicting with new data. The `workflow` package also takes care of preparing and baking our preprocessing recipe for us - very kind.
 
 ```{r fit-linear}
-linear_fit <- linear_workflow |>
-  parsnip::fit(data = life_train)
+tidymodels_fit <- linear_workflow |>
+  parsnip::fit(data = flights_train)
 
-linear_fit |>
-  workflows::extract_fit_parsnip() |>
-  broom::glance()
+tidymodels_fit |>
+  workflows::extract_fit_parsnip()
 ```
 
-`fit()` trains (fits) the model on the training data. It does **not** yet
-tell us how well the workflow predicts new observations. For that, we use
-resampling:
+`fit()` trains the model on the training data. To see how well the workflow
+predicts new observations, we now apply it once to the held-out test data.
 
-# Comparing several workflows
+Compare the regression coefficient with the ones we got without `tidymodels` above - they are exactly the same! `tidymodels` makes the modeling workflow easier to scale, but the underlying concepts (and math!) stays exactly the same.
 
-The lecture introduced resampling conceptually. Here we use it to compare a
-linear model with a decision tree. This is the useful pattern:
+### Inspecting Models with `broom`
 
-> make model specifications → turn each into a workflow → apply the same
-> resamples and metrics to every workflow → compare the results
+`broom` is another package from the `tidymodels` family that makes inspecting coefficients, etc. more pleasant - and again works for a wide variety of different models:
 
-## 1. Make the model candidates
+The `tidy` function gives you information about the different predictors in our fitted model. It returns a tibble, so it is easy to use the information returned by `tidy` for example to create a custom visualization.
 
-The decision tree below uses the `rpart` engine. We choose modest complexity
-settings in advance; tuning hyperparameters is beyond today's scope.
+```{r}
+broom::tidy(tidymodels_fit)
+```
+The `glance` function gives you a single row of measures for how well our model fit the data - you can see R-squared there, that we already saw above. This is handy if you want to compare many different models. Again, you get the information in a tibble, so you can row-bind many of them.
 
-```{r model-candidates}
-tree_spec <- parsnip::decision_tree(
-  cost_complexity = 0.01,
-  min_n = 20
+```{r}
+broom::glance(tidymodels_fit)
+```
+
+Finally, `augment` lets you see row-level informations for your predictions, such as the prediction error (redisual) for each prediction on your test data.
+
+```{r}
+broom::augment(tidymodels_fit, new_data = flights_test)
+```
+
+Under the hood, it of course needs to calculate the predictions to show you that information - let's take a look at how to predict ourselfes using `tidymodels` next!
+
+
+## 3. Evaluate on the test set
+
+`predict()` automatically applies the trained recipe before generating the
+predictions. This is especially important if you have more complex preprocessing steps, as you need to ensure that, for example, the scales of variables stay the same in your train and test data.
+
+We then combine the predictions with the observed outcomes and calculate three common regression metrics.
+
+```{r test-predictions}
+tidymodels_test_predictions <- predict(
+  tidymodels_fit,
+  new_data = flights_test
 ) |>
-  parsnip::set_engine("rpart") |>
-  parsnip::set_mode("regression")
-
-model_specs <- list(
-  linear = linear_spec,
-  tree = tree_spec
-)
-```
-
-## 2. Turn each specification into a workflow
-
-Because the steps are stored as objects, `purrr::map()` can create both
-workflows without duplicated code.
-
-```{r candidate-workflows}
-candidate_workflows <- model_specs |>
-  purrr::map(
-    ~ workflows::workflow() |>
-      workflows::add_recipe(life_recipe) |>
-      workflows::add_model(.x)
+  dplyr::bind_cols(
+    flights_test |>
+      dplyr::select(arr_delay)
   )
 
-candidate_workflows
-```
-
-## 3. Apply the same resamples to every workflow
-
-Five-fold cross-validation makes five assessment sets *within the training
-data*. Each observation is used for assessment once, while the test set remains
-untouched.
-
-We compare models using:
-
-- **RMSE**, the typical prediction error in years (smaller is better); and
-- **R-squared**, the share of outcome variation accounted for (larger is
-  better).
-
-```{r resamples}
-set.seed(2026)
-life_folds <- rsample::vfold_cv(
-  life_train,
-  v = 5,
-  strata = life_expectancy
-)
-
-regression_metrics <- yardstick::metric_set(
-  yardstick::rmse,
-  yardstick::rsq
-)
-```
-
-```{r compare-workflows}
-resample_results <- candidate_workflows |>
-  purrr::map(
-    ~ tune::fit_resamples(
-      .x,
-      resamples = life_folds,
-      metrics = regression_metrics
-    )
+tidymodels_metrics <- tidymodels_test_predictions |>
+  yardstick::metrics(
+    truth = arr_delay,
+    estimate = .pred
   )
 
-cv_metrics <- resample_results |>
-  purrr::map_dfr(tune::collect_metrics, .id = "model")
-
-cv_metrics |>
-  dplyr::select(model, .metric, mean, std_err)
+tidymodels_metrics
 ```
 
-:::{.alert-danger .pad-box}
-**Exercise 2 (15 minutes)**
+It should come as no surprise, that we get the same predictions, errors, and metrics as before - again, the model is exactly the same. We just took a different approach to building it.
 
-1. Which workflow has the lower cross-validated RMSE? Interpret that RMSE in
-   the units of the outcome.
-2. Add a second tree with `cost_complexity = 0.001` and `min_n = 10` to
-   `model_specs`. Re-run the workflow and resampling code. Does a more flexible
-   tree improve out-of-sample performance?
-3. Why would choosing the model with the best training-set R-squared give a
-   misleading comparison?
-
-```{r exercise-2, eval=FALSE}
-flexible_tree_spec <- parsnip::decision_tree(
-  cost_complexity = ____,
-  min_n = ____
+```{r compare-approaches}
+tibble::tibble(
+  r = test_predictions$.pred,
+  tidymodels = tidymodels_test_predictions$.pred
 ) |>
-  parsnip::set_engine("____") |>
-  parsnip::set_mode("____")
-
-model_specs <- list(
-  linear = linear_spec,
-  tree = tree_spec,
-  flexible_tree = ____
-)
-```
-:::
-
-## 4. Finalize once on the test set
-
-We choose the workflow with the smallest mean cross-validated RMSE. Only now do
-we fit on all training observations and evaluate once on the test observations
-with `last_fit()`.
-
-```{r final-fit}
-best_model_name <- cv_metrics |>
-  dplyr::filter(.metric == "rmse") |>
-  dplyr::slice_min(mean, n = 1, with_ties = FALSE) |>
-  dplyr::pull(model)
-
-best_workflow <- candidate_workflows[[best_model_name]]
-
-final_fit <- tune::last_fit(
-  best_workflow,
-  split = life_split,
-  metrics = regression_metrics
-)
-
-best_model_name
-tune::collect_metrics(final_fit)
-```
-
-```{r prediction-plot, fig.height=4.5}
-final_fit |>
-  tune::collect_predictions() |>
-  ggplot2::ggplot(ggplot2::aes(x = life_expectancy, y = .pred)) +
-  ggplot2::geom_abline(
-    slope = 1,
-    intercept = 0,
-    linetype = "dashed",
-    colour = "grey50"
-  ) +
-  ggplot2::geom_point(alpha = 0.45, colour = "#2f1a61") +
-  ggplot2::coord_equal() +
-  ggplot2::labs(
-    x = "Observed life expectancy (years)",
-    y = "Predicted life expectancy (years)",
-    title = paste("Held-out predictions from the", best_model_name, "workflow")
-  ) +
-  ggplot2::theme_minimal()
-```
-
-:::{.alert-info .pad-box}
-**Discuss with a neighbour (5 minutes)**
-
-Look for structure around the diagonal. Where does the model make its largest
-errors? Does it tend to over-predict low life expectancy or under-predict high
-life expectancy? What extra predictors or model changes might help?
-:::
-
-------------------------------------------------------------------------
-
-# Running many related specifications
-
-Sometimes “many models” means comparing model families, as above. Sometimes it
-means fitting a deliberate sequence of specifications to see how one estimate
-changes as controls are added. The formula tools from the lecture and
-`purrr::map()` make this concise.
-
-For this section our goal shifts from prediction to describing the association
-between GDP and life expectancy. We use one common complete-case dataset so
-that changes across specifications do not arise merely because different rows
-were used.
-
-```{r specification-data}
-report_data <- life_train |>
-  tidyr::drop_na(gdp, schooling, alcohol, bmi)
-
-control_sets <- list(
-  "GDP only" = character(0),
-  "+ schooling" = "schooling",
-  "+ health indicators" = c("schooling", "alcohol", "bmi")
-)
-
-model_formulas <- control_sets |>
-  purrr::map(
-    ~ stats::reformulate(
-      termlabels = c("log(gdp)", .x),
-      response = "life_expectancy"
-    )
+  dplyr::summarise(
+    largest_prediction_difference = max(abs(r - tidymodels))
   )
 
-model_formulas
+dplyr::bind_rows(
+  "R" = metrics,
+  "tidymodels" = tidymodels_metrics,
+  .id = "approach"
+)
 ```
 
-```{r fit-specifications}
-specification_models <- model_formulas |>
-  purrr::map(stats::lm, data = report_data)
+The result is the same, but the recipe and model are now stored together in one
+workflow. `predict()` applies the recipe automatically, and `yardstick` computes
+the metrics with a consistent interface - and we didn't need to implement their math ourselves. 
 
-gdp_results <- specification_models |>
-  purrr::map_dfr(
-    broom::tidy,
-    conf.int = TRUE,
-    .id = "specification"
-  ) |>
-  dplyr::filter(term == "log(gdp)")
-
-gdp_results
-```
-
-This pattern scales: change the list of model ingredients, not a pile of copied
-and pasted `lm()` calls. However, more models are not automatically better.
-Each reported specification should have a defensible reason to exist, ideally
-decided before looking at the results.
+Those advantages become more valuable as preprocessing and modelling pipelines grow.
 
 ------------------------------------------------------------------------
 
 # Reporting model results
 
-## Tidy model output with `broom`
+An important part of modeling is **communicating** your model to others.
 
-The three main `broom` verbs answer different questions:
-
-- `tidy()` returns component-level information such as coefficients;
-- `glance()` returns one row of model-level summaries; and
-- `augment()` returns observation-level values such as fitted values and
-  residuals.
-
-```{r broom-verbs}
-broom::tidy(specification_models[[3]], conf.int = TRUE)
-broom::glance(specification_models[[3]])
-
-specification_models[[3]] |>
-  broom::augment() |>
-  dplyr::select(life_expectancy, .fitted, .resid) |>
-  dplyr::slice_head(n = 6)
-```
+Two of the most common ways to do that for regression models are regression tables and coefficient plots. Both can be easily generated using the `modelsummary` package.
 
 ## A regression table
 
-`modelsummary()` accepts the named list of models directly. The names become
-column headings, so a well-named model list is already part of good reporting.
-
 ```{r regression-table}
 modelsummary::modelsummary(
-  specification_models,
-  estimate = "{estimate} [{conf.low}, {conf.high}]",
+  tidymodels_fit,
+  estimate = "{estimate}",
   statistic = NULL,
   coef_omit = "Intercept",
   coef_rename = c(
-    "log(gdp)" = "Log GDP",
-    "schooling" = "Schooling",
-    "alcohol" = "Alcohol consumption",
-    "bmi" = "BMI"
+    "dep_delay" = "Departure delay",
+    "distance" = "Distance"
   ),
-  gof_omit = "DF|Deviance|Log.Lik|AIC|BIC|RMSE",
-  title = "Linear models of life expectancy",
-  notes = "Estimates with 95% confidence intervals. WHO country-year data.",
-  output = "markdown"
+  gof_omit = "DF|Deviance|Log.Lik|AIC|BIC",
+  title = "Linear models of arrival delay",
+  notes = "Estimates with 95% confidence intervals. Training data from a sample of 20,000 NYC flights departing in 2013.",
+  #output = "markdown"
 )
 ```
+As you can tell from the code above, `modelsummary` allows us to customize many different aspects of our regression table - for example, try to: 
+
+- Include the intercept in the table above
+- Change the output format of the table to markdown or LaTeX (very handy for your thesis!).
 
 ## A coefficient plot
 
-Plots make comparisons across estimates and models easier, but coefficients on
-very different scales may not be meaningfully comparable. Here we focus on the
-same GDP term across models.
+Visualizations are usually a good way to making information easier to understand - and this is true for models as well! One common visualization is a coefficient plot, that we can also easily generate using `modelsummary` and `ggplot`: 
 
 ```{r coefficient-plot, fig.height=3.5}
 modelsummary::modelplot(
-  specification_models,
-  coef_map = c("log(gdp)" = "Log GDP")
+  tidymodels_fit,
+  coef_map = c("dep_delay" = "Departure delay")
 ) +
   ggplot2::geom_vline(
     xintercept = 0,
@@ -521,34 +474,22 @@ modelsummary::modelplot(
   ggplot2::labs(
     x = "Estimated coefficient (95% CI)",
     y = NULL,
-    title = "Association between log GDP and life expectancy"
+    title = "Association between departure and arrival delay"
   ) +
   ggplot2::theme_minimal()
 ```
 
-:::{.alert-warning .pad-box}
-Before publishing either display, add the information a reader needs: the
-outcome and unit of analysis, definitions and units of key variables, which
-controls are included, the uncertainty measure, sample restrictions, and the
-data source. Never rely on stars alone to communicate importance or
-uncertainty.
-:::
+What does this tell us? The model uses a multiple of the departure delay when predicting the arrival delay - indicating that a plane usually gets a bit more delayed during travel, although not by much.
 
-------------------------------------------------------------------------
+Coefficient plots become even more useful when you you include multiple predictors or even use them to compare multiple models. Let's try to include `distance` in our plot as well!
 
 # Wrap-up
 
-The important distinction from today is between two modelling goals:
+In theory, you do not need `tidymodels` to perform modeling in R - and as we have seen, the models do not care **how** they are fitted. However, the `tidymodels` collection of packages contains many packages that are especially useful when fitting more complex models including a lot of preprocessing (`recipes`), or running models on different data (`workflows`). 
 
-- For **prediction**, compare complete workflows on common resamples, choose a
-  model without consulting the test set, and use the test set once.
-- For **description or inference**, fit theory-driven specifications and report
-  estimates and uncertainty clearly. A coefficient's stability across selected
-  controls can be informative, but it does not establish causality.
+Additionally, `broom` makes it easier to inspect properties of a fitted model and `yardstick` can help you calculate many different type of evaluation metrics, without worrying about implementing the math yourself.
 
-In both cases, storing recipes, specifications, workflows, and model lists as R
-objects lets you update the analysis without copying, pasting, or manually
-transcribing results.
+For more complex models, `tidymodels` also includes packages for tuning hyperparameters and lots of other things...
 
 # Further reading
 
@@ -556,7 +497,7 @@ transcribing results.
 - [*Tidy Modeling with R*](https://www.tmwr.org/)
 - [`broom` documentation](https://broom.tidymodels.org/)
 - [`modelsummary` documentation](https://modelsummary.com/)
-- [Specification curve analysis with `specr`](https://masurp.github.io/specr/)
-  for a more advanced treatment of many defensible specifications
 
+--- 
 
+This script was drafted by [Linus Hagemann](https://linushagemann.de). Generative AI was used to scaffold an initial draft that was comprehensively checked and edited. The script was improved by [Carol Sobral](https://github.com/cbsobral) and [Laia Domenech Burin](https://github.com/ldmnch).
