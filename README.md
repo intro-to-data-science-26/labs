@@ -12,7 +12,7 @@
 5. (Week 41) Regular Expressions, XPath, & Webdata  \[[**.html**](https://raw.githack.com/intro-to-data-science-26/labs/main/05_webdata/5-webdata.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/05_webdata/5-webdata.Rmd)\]
 6. (Week 42) Web Scraping \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/06_web-scraping/6-web-scraping.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/06_web-scraping/6-web-scraping.Rmd)\]
 7. (Week 44) Databases \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/07_databases/7-databases.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/07_databases/7-databases.Rmd)\]
-8. (Week 45) Modeling \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/08_modelling/8-modelling.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/08_modelling/8-modelling.html.Rmd)\]
+8. (Week 45) Modeling \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/08_modelling/8-modelling.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/08_modelling/8-modelling.Rmd)\]
 9. (Week 46) Visualizations \[[**.html**]()) | [**.Rmd**]()\]
 10. (Week 47) Data Analysis Practice \[[**.html**]() | [**.Rmd**]()\]
 11. (Week 48) Dashboards with `Shiny` \[[**.html**]() | [**.Rmd**]()\]
