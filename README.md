@@ -12,10 +12,11 @@
 5. (Week 41) Regular Expressions, XPath, & Webdata  \[[**.html**](https://raw.githack.com/intro-to-data-science-26/labs/main/05_webdata/5-webdata.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/05_webdata/5-webdata.Rmd)\]
 6. (Week 42) Web Scraping \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/06_web-scraping/6-web-scraping.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/06_web-scraping/6-web-scraping.Rmd)\]
 7. (Week 44) Databases \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/07_databases/7-databases.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/07_databases/7-databases.Rmd)\]
-8. Visualization \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-08-visualization/8-visualization.html#) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-08-visualization/8-visualization.Rmd)\]
-9. Shiny and Dashboards \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-25/labs/05019768d9e44e439c8814924370705ec9dca7a9/session-09-shiny/9-shiny.html)) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-09-shiny/9-shiny.Rmd)\]
-10. Flexdashboards \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-10-flexdash/10-flex.html) | [**.Rmd**](https://github.com/intro-to-data-science-24/labs/blob/main/session-09-packaging/09-packaging.Rmd)\]
-12. Review \[[**.html**](https://raw.githack.com/intro-to-data-science-25/labs/main/session-12/session-12-review.html) | [**.Rmd**](https://github.com/intro-to-data-science-25/labs/blob/main/session-12/session-12-review.Rmd)\]
+8. (Week 45) Modeling \[[**.html**]() | [**.Rmd**]()\]
+9. (Week 46) Visualizations \[[**.html**]()) | [**.Rmd**]()\]
+10. (Week 47) Data Analysis Practice \[[**.html**]() | [**.Rmd**]()\]
+11. (Week 48) Dashboards with `Shiny` \[[**.html**]() | [**.Rmd**]()\]
+12. (Week 49) Review \[[**.html**]() | [**.Rmd**]()\]
 
 ## Instructors
 
