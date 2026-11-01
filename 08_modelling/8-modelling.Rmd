@@ -503,12 +503,15 @@ Additionally, `broom` makes it easier to inspect properties of a fitted model an
 
 For more complex models, `tidymodels` also includes packages for tuning hyper-parameters and lots of other things...
 
-# Further reading
+# Further readings and materials
 
+- Various editions of past "Introduction to Data Science" Workshops ([2021](https://intro-to-data-science-21-workshop.github.io/),[2023](https://intro-to-data-science-23-workshop.github.io/), [2024](https://intro-to-data-science-24-workshop.github.io/)) include tidymodels sessions and materials
 - [Get Started with tidymodels](https://www.tidymodels.org/start/)
 - [*Tidy Modeling with R*](https://www.tmwr.org/)
 - [`broom` documentation](https://broom.tidymodels.org/)
 - [`modelsummary` documentation](https://modelsummary.com/)
+
+Past lab materials put more focus on crafting formulas and performing specification curve analysis. You can still find them in the `archive/08_modelling` folder of this repository or online as [.html](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/archive/08_modelling/7-modelling.html) or [.Rmd](https://github.com/intro-to-data-science-26/labs/blob/mainarchive/08_modelling/7-modelling.Rmd).
 
 --- 
 
