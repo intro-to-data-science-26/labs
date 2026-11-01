@@ -45,6 +45,18 @@ output:
 .pad-box {
   padding: 1em;
 }
+<!-- GPTs take on fixing CSS conflict resulting in cut-off regression table -->
+#a-regression-table .container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  overflow-x: auto;
+}
+
+#a-regression-table table {
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>
 ```
 
@@ -116,7 +128,7 @@ In general, we can use models in two different ways:
 
 Today, we will exclusively focus on the latter aspect of modeling, trying to **predict a flights arrival delay**.
 
-:::{.alert-primary .pad-box}
+:::{.alert-info .pad-box}
 All models we build during this lab are intended to be examples in order to get used to the workflow - we are not too concerned with building the best possible model or even models suitable for real-world use.
 :::
 
