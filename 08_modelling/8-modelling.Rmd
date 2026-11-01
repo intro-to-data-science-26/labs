@@ -70,7 +70,7 @@ To that end, we will cover:
 - the basic intuition of how prediction models are set up and trained,
 - how to train and evaluate a prediction model in `R`,
 - how `tidymodels` can be used to make this process more efficient and robust,
-- how to report models, using regression tables and plots.
+- how to report results, using regression tables and plots.
 
 :::{.alert-warning .pad-box}
 This lab focuses on the "mechanics" of modelling. In practice, justifying which model to use (and interpreting the model) is arguably much more important than what we cover today. These aspects will be discussed at length in your future Machine Learning and Causal Inference courses, and in a lot of electives. Those of you who took Statistics II will already be familiar with some of these considerations.
@@ -95,7 +95,7 @@ The full dataset contains more than 300,000 flights. To minimize the time our mo
 set.seed(2026)
 
 flights_dat <- nycflights13::flights |>
-  dplyr::filter(!is.na(arr_delay)) |>
+  dplyr::filter(!is.na(arr_delay)) |> 
   dplyr::select(
     arr_delay, dep_delay, distance, origin, carrier
   ) |>
@@ -256,7 +256,7 @@ test_predictions |>
   ggplot2::theme_minimal()
 ```
 
-A perfect model would have all point directly on the diagonal - our model didn't do too bad! But we can also see that, especially for the flights with lower or no delays, the model was often off. 
+A perfect model would have all points directly on the diagonal - our model didn't do too bad! But we can also see that, especially for the flights with lower or no delays, the model was often off. 
 
 ------------------------------------------------------------------------
 
@@ -449,7 +449,7 @@ modelsummary::modelsummary(
   gof_omit = "DF|Deviance|Log.Lik|AIC|BIC",
   title = "Linear models of arrival delay",
   notes = "Estimates with 95% confidence intervals. Training data from a sample of 20,000 NYC flights departing in 2013.",
-  #output = "markdown"
+  # output = "markdown"
 )
 ```
 As you can tell from the code above, `modelsummary` allows us to customize many different aspects of our regression table - for example, try to: 
