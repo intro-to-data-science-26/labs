@@ -481,7 +481,7 @@ modelsummary::modelplot(
 
 What does this tell us? The model uses a multiple of the departure delay when predicting the arrival delay - indicating that a plane usually gets a bit more delayed during travel, although not by much.
 
-Coefficient plots become even more useful when you you include multiple predictors or even use them to compare multiple models. Let's try to include `distance` in our plot as well!
+Coefficient plots become even more useful when you you include multiple predictors or even use them to compare multiple models. As an exercise, try to include `distance` in the plot above as well!
 
 # Wrap-up
 
