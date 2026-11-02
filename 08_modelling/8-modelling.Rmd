@@ -45,17 +45,28 @@ output:
 .pad-box {
   padding: 1em;
 }
-<!-- GPTs take on fixing CSS conflict resulting in cut-off regression table -->
-#a-regression-table .container {
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-  overflow-x: auto;
+
+#a-regression-table > div.container {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-#a-regression-table table {
-  margin-left: auto;
-  margin-right: auto;
+#a-regression-table > div.container > table.tinytable {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  margin: 0 auto !important;
+}
+
+#a-regression-table table.tinytable th,
+#a-regression-table table.tinytable td {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
 }
 </style>
 ```
