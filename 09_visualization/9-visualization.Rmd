@@ -238,7 +238,6 @@ ggplot(df,
 
 > What conclusions might you draw from the histogram above about the distribution of life expectancy worldwide?
 
-
 The default number of bins is 30, which means that the entire range of the variable (here 23.60 to 82.60) is split into 30 equally spaced bins. We can change the number of bins manually. Below, we specify 60 bins to approximate a bin width of 1 year, **taking into account the range of the variable** `lifeExp`.
 
 ```{r,  warning = F, message = F, fig.height = 3}
@@ -254,8 +253,6 @@ What would happen if we specified 5 bins? Try it out.
 ```{r}
 # YOUR CODE HERE
 ```
-
-
 
 
 ---
@@ -405,7 +402,7 @@ log10_via_scale_plot <- ggplot(df,
   scale_x_log10() +
   geom_vline(xintercept = av, color = "red")
 
-# Bonus: alternatively could also use scale_x_continuous(trans = "log10")
+# Bonus: alternatively you could also use scale_x_continuous(trans = "log10")
 
 gridExtra::grid.arrange(log10_direct_plot, log10_via_scale_plot, ncol = 2)
 ```
@@ -972,21 +969,21 @@ Create a plot to compare the GDP per capita development of the BRICS countries (
 
 We can output your plots to many different format using the `ggsave()` function, including but not limited to `.pdf`, `.jpeg`, `.bmp`, `.tiff`, or `.eps`. Here, we output the graph as a Portable Network Graphics (.png) file. We can specify the size of the output graph as well as the resolution in dots per inch (dpi). If no graph is specified, `ggsave()` will save the last graph that was executed. If we do not specify the complete file path, the plot will be saved to your working directory.
 
-```{r, warning = F, message = F}
-# ggsave("panel_lifeexp_continent.png", width = 6, height = 3, dpi = 400)
+```{r, warning = F, message = F, eval=FALSE}
+ggsave("panel_lifeexp_continent.png", width = 6, height = 3, dpi = 400)
 ```
 
 Alternatively, we could save the plot as an `R` object and pass the object name to `ggsave()`. Also, remember our project folder structure we discussed in one of the first weeks. You might have an image or output folder in your project directory.
 
-```{r, warning = F, message = F, fig.height = 2, fig.width = 3}
+```{r, warning = F, message = F, fig.height = 2, fig.width = 3, eval=FALSE}
 p1 <- ggplot(df,
        aes(x = lifeExp)) +
   geom_density()
 
-#ggsave("lifeexp_dens.png", width = 3, height = 2, dpi = 300, p1)
+ggsave("lifeexp_dens.png", width = 3, height = 2, dpi = 300, p1)
 
 # or with a more precise folder structure:
-#ggsave("output/images/lifeexp_dens.png", width = 3, height = 2, dpi = 300, p1)
+# ggsave("output/images/lifeexp_dens.png", width = 3, height = 2, dpi = 300, p1)
 ```
 
 Manually, you could also visit the `Plots` pane in the RStudio interface and export the graph as image or pdf.
@@ -1002,7 +999,6 @@ p2 <- ggplot(df,aes(x = lifeExp)) +
 
 p3 <- grid.arrange(p1, p2, nrow = 1)
 p3
-#ggsave("lifeexp_double.png", width = 6, height = 2, dpi = 300, p3)
 ```
 
 ------------------------------------------------------------------------
