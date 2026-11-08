@@ -13,7 +13,7 @@
 6. (Week 42) Web Scraping \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/06_web-scraping/6-web-scraping.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/06_web-scraping/6-web-scraping.Rmd)\]
 7. (Week 44) Databases \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/07_databases/7-databases.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/07_databases/7-databases.Rmd)\]
 8. (Week 45) Modeling \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/08_modelling/8-modelling.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/08_modelling/8-modelling.Rmd)\]
-9. (Week 46) Visualizations \[[**.html**]()) | [**.Rmd**]()\]
+9. (Week 46) Visualizations \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/09_visualization/9-visualization.html)) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/09_visualization/9-visualization.Rmd)\]
 10. (Week 47) Data Analysis Practice \[[**.html**]() | [**.Rmd**]()\]
 11. (Week 48) Dashboards with `Shiny` \[[**.html**]() | [**.Rmd**]()\]
 12. (Week 49) Review \[[**.html**]() | [**.Rmd**]()\]
