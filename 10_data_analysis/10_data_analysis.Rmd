@@ -251,9 +251,8 @@ Then add region colors to your scatter plot from Exercise 5. What patterns can y
 # YOUR CODE HERE
 ```
 
-# Extra - Prediction Model
 
-## Exercise 7 - Prediction
+## Bonus - Exercise 7 - Prediction Model
 
 Can GDP per capita predict CO2 emissions per capita? Let's use `tidymodels` and the workflow from Lab 8 to answer that.
 
