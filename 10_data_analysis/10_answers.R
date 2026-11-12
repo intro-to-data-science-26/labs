@@ -1,7 +1,6 @@
 # 10_answers.R
 # Run from the labs project root
 
-
 # -- EXERCISE 1 --
 # 1A
 library(tidyverse)
@@ -33,7 +32,6 @@ emissions <- emissions |>
 nrow(emissions)
 # ANSWER: 42,480 rows
 
-
 # -- EXERCISE 2 --
 # 2A
 library(readxl)
@@ -62,7 +60,6 @@ nrow(co2_gdp)
 # ANSWER: 42,480 rows after the join; the row count did not change
 # ANSWER: it shouldn't; a left join keeps every row of emissions, and each
 # iso_code and year pair appears only once in gdp_pop
-
 
 # -- EXERCISE 3 --
 # 3A
@@ -102,7 +99,6 @@ missing_countries |>
 # Sudan, South Sudan, Eritrea)
 # ANSWER: the remaining countries are mostly larger and more stable. Results may
 # not apply to small islands, territories or countries in conflict
-
 
 # -- EXERCISE 4 --
 # 4A
@@ -169,7 +165,6 @@ country_data |>
 # ANSWER: both distributions are right-skewed: most countries have low values
 # and a few have very high ones
 
-
 # -- EXERCISE 5 --
 # 5A
 ggplot(country_data, aes(gdp_per_capita, co2_per_capita)) +
@@ -204,7 +199,6 @@ ggplot(country_data, aes(gdp_per_capita, co2_per_capita)) +
 # ANSWER: the points spread out, and the relationship looks close to a
 # straight line
 
-
 # -- EXERCISE 6 --
 regions <- read_csv(
   "10_data_analysis/data/owid_regions.csv",
@@ -233,7 +227,6 @@ ggplot(country_data, aes(gdp_per_capita, co2_per_capita, color = region)) +
 # ANSWER: many African countries are in the lower left (low income, low emissions)
 # ANSWER: European countries generally have higher incomes and emissions per person
 # ANSWER: regions overlap; region alone does not determine emissions
-
 
 # -- EXERCISE 7 --
 # 7A

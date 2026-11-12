@@ -36,7 +36,6 @@ options(digits=2)
 library(tidyverse)
 ```
 
-
 Welcome back! This week you'll use what you learned in the previous labs in a data analysis exercise. Our question: how are income and CO2 emissions related across countries? We'll answer it with data from [Our World in Data](https://ourworldindata.org/).
 
 We will:
@@ -47,7 +46,6 @@ We will:
 - make plots with `ggplot2` (Lab 9)
 - reshape data with `pivot_longer()` (new)
 - fit and test a prediction model with `tidymodels` (Lab 8)
-
 
 # The data
 
@@ -99,7 +97,7 @@ We want to compare countries, but the data also include totals for regions and i
 
 ### 2A. GDP and population data
 
-Load `readxl`. Import `owid_gdp_population.xlsx` and call it `gdp_pop`. Select the country code, year, GDP and population. After that, use `glimpse()` to inspect cols/rows. 
+Load `readxl`. Import `owid_gdp_population.xlsx` and call it `gdp_pop`. Select the country code, year, GDP and population. After that, use `glimpse()` to inspect cols/rows.
 
 ```{r}
 # YOUR CODE HERE
@@ -124,7 +122,7 @@ After you join, check the row count again. Did the number of rows change? Should
 
 ### 3A. Missing values by column
 
-Before you remove rows, check how much data is missing. Count the missing values in each column of `co2_gdp`. 
+Before you remove rows, check how much data is missing. Count the missing values in each column of `co2_gdp`.
 
 - Which variable has the most missing values?
 
@@ -134,7 +132,7 @@ Before you remove rows, check how much data is missing. Count the missing values
 
 ### 3B. Complete cases in the latest year
 
-We want to compare countries in the same year. Remove rows with missing values. Then keep the latest year. Call the result `country_data`. 
+We want to compare countries in the same year. Remove rows with missing values. Then keep the latest year. Call the result `country_data`.
 
 - Which year is it, and how many countries does it have?
 
@@ -151,7 +149,6 @@ Compare the countries in the selected year before and after you removed missing 
 ```{r}
 # YOUR CODE HERE
 ```
-
 
 # Exploratory Data Analysis
 
@@ -233,7 +230,7 @@ Make a scatter plot with GDP per capita on the x-axis and CO2 emissions per capi
 
 Most countries are in the bottom-left corner. Should you transform the data? Why? Remember that some transformations (Lab 9) will not work if you have zero or negative values, so check for them first and remove those rows if necessary. Add a trend line with `geom_smooth(method = "loess")`.
 
-- How does the plot change? 
+- How does the plot change?
 
 ```{r}
 # YOUR CODE HERE
@@ -250,7 +247,6 @@ Then add region colors to your scatter plot from Exercise 5. What patterns can y
 ```{r}
 # YOUR CODE HERE
 ```
-
 
 ## Bonus - Exercise 7 - Prediction Model
 
@@ -282,7 +278,6 @@ Predict log emissions for the test countries and calculate the RMSE. Then plot o
 
 - Which countries have the largest prediction errors? Any guesses as to why?
 
-
 ```{r}
 # YOUR CODE HERE
 ```
@@ -296,7 +291,6 @@ The RMSE from 7C is in log units. Convert the observed and predicted values back
 ```{r}
 # YOUR CODE HERE
 ```
-
 
 # Acknowledgments
 
