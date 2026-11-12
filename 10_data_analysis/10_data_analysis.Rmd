@@ -1,0 +1,306 @@
+---
+title: "Data Analysis"
+subtitle: "Economic growth and CO2 emissions"
+author: "Carol Sobral, Linus Hagemann and Laia Domenech Burin"
+date: "(Fall 2026) Introduction to Data Science"
+output:
+  rmdformats::robobook:
+  toc: TRUE
+  df_print: paged
+  number_sections: FALSE
+  highlight: tango
+  toc_depth: 3
+  toc_float: true
+  self_contained: true
+---
+
+```{=html}
+<style>
+.h1,h2,h3 {
+color:#2f1a61;
+}
+
+.subtitle, section.normal {
+color:#291854;
+}
+
+.title {
+color:#cc0065;
+}
+</style>
+```
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits=2)
+library(tidyverse)
+```
+
+
+Welcome back! This week you'll use what you learned in the previous labs in a data analysis exercise. Our question: how are income and CO2 emissions related across countries? We'll answer it with data from [Our World in Data](https://ourworldindata.org/).
+
+We will:
+
+- import data, select variables and deal with missing values with `dplyr` (Lab 1)
+- join two datasets (Lab 7)
+- use a regular expression to keep only certain rows (Lab 5)
+- make plots with `ggplot2` (Lab 9)
+- reshape data with `pivot_longer()` (new)
+- fit and test a prediction model with `tidymodels` (Lab 8)
+
+
+# The data
+
+The datasets come from the [OWID CO2 repository](https://github.com/owid/co2-data) and its [world regions page](https://ourworldindata.org/world-region-map-definitions).
+
+The `data` folder contains:
+
+- `owid_emissions.csv`: emissions and energy data, plus many other variables
+- `owid_gdp_population.xlsx`: GDP and population
+- `owid_co2_codebook.csv`: variable definitions, units and sources
+- `owid_regions.csv`: a country-to-region lookup
+
+# Data Preparation
+
+## Exercise 1 - Emissions
+
+### 1A. Emissions data
+
+Load the `tidyverse` package. Import `owid_emissions.csv` from the `data` folder and call it `emissions`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 1B. CO2 per person
+
+Use the `owid_co2_codebook.csv` to find the variable for production-based CO2 emissions per person. If you're interested, read about [the differences between production- and consumption-based emissions here](https://ourworldindata.org/consumption-based-co2).
+
+Select the country name, country code, year and CO2 emissions per person. Then use `glimpse()` to look at a few rows.
+
+- Which columns make each row unique?
+- Are all locations countries? You can use `distinct()` to get a list of the unique names and codes.
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 1C. Sample
+
+We want to compare countries, but the data also include totals for regions and income groups, such as "World" or "Africa". These rows add up the countries below them, so keeping them would count the same emissions twice. Remove the rows for these other locations.
+
+> Tip: Look at the country codes. Do they follow a pattern? Use `str_detect()` to keep the rows that match it.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## Exercise 2 - GDP and population
+
+### 2A. GDP and population data
+
+Load `readxl`. Import `owid_gdp_population.xlsx` and call it `gdp_pop`. Select the country code, year, GDP and population. After that, use `glimpse()` to inspect cols/rows. 
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 2B. Combined dataset
+
+We want emissions, GDP and population in one dataset. Join `gdp_pop` to `emissions`. Use the columns that make each row unique (1B) as keys. Keep all rows from `emissions` and name the new combined dataset `co2_gdp`.
+
+Before you join:
+
+- How many rows does `emissions` have?
+- Do the key columns have the same names and types in both datasets? Fix any differences.
+
+After you join, check the row count again. Did the number of rows change? Should it?
+
+```{r}
+# YOUR CODE HERE
+```
+
+## Exercise 3 - Missing values
+
+### 3A. Missing values by column
+
+Before you remove rows, check how much data is missing. Count the missing values in each column of `co2_gdp`. 
+
+- Which variable has the most missing values?
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 3B. Complete cases in the latest year
+
+We want to compare countries in the same year. Remove rows with missing values. Then keep the latest year. Call the result `country_data`. 
+
+- Which year is it, and how many countries does it have?
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 3C. Dropped countries
+
+Compare the countries in the selected year before and after you removed missing values in 3B (i.e., find the countries that are in the first list but not in the second).
+
+- Which countries get dropped? In what ways could dropping them bias the analysis?
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+# Exploratory Data Analysis
+
+## Exercise 4 - Distributions
+
+### 4A. GDP per capita
+
+Total GDP grows with population, so we want income per person to compare countries of different sizes. Add GDP per capita to `country_data`. Call the new column `gdp_per_capita`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 4B. Summary statistics
+
+For GDP per capita and CO2 emissions per capita, calculate the mean, median, minimum and maximum. Check the codebook again and note the units of `gdp_per_capita` and `co2_per_capita`. You'll need them to report your results.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Sort the data to find the five countries with the highest values of each variable. How do these values help explain the difference between the mean and median?
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 4C. Distribution
+
+Now we want to plot both distributions side by side with `facet_wrap()` (Lab 9). `facet_wrap()` makes one panel for each value of a column. To use it with our data, we need both values, GDP and CO2, in one column.
+
+With `pivot_longer()` we can reshape our data frame. It makes the data longer, with more rows and fewer columns. It takes three arguments.
+
+- `cols` sets the columns to pivot, here `gdp_per_capita` and `co2_per_capita`.
+- `names_to` names the new column that stores the old column names.
+- `values_to` names the new column that stores their values.
+
+Here is an example with made-up data. Run it and compare the two tables.
+
+```{r}
+example <- tibble(
+  country = c("A", "B", "C"),
+  gdp_per_capita = c(1000, 1000, 1000000),
+  co2_per_capita = c(1, 3, 15)
+)
+
+example
+
+example |>
+  pivot_longer(
+    cols = c(gdp_per_capita, co2_per_capita),
+    names_to = "variable",
+    values_to = "value"
+  )
+```
+
+Each country now appears twice, once per variable. The old column names, `gdp_per_capita` and `co2_per_capita`, are now values in the new `variable` column. Their numbers are in the new `value` column. We could now use `facet_wrap()` to make one panel per variable. To learn more, see the [pivoting chapter in R for Data Science](https://r4ds.hadley.nz/data-tidy.html#sec-pivoting).
+
+Reshape the data with `pivot_longer()`. Make a density plot and use `facet_wrap()`.
+
+- Add `scales = "free"` to `facet_wrap()`. Compare the plot with and without it. Why is it needed here?
+- What shape do the distributions have?
+
+```{r}
+# YOUR CODE HERE
+```
+
+## Exercise 5 - Income and emissions
+
+### 5A. Scatter plot
+
+Make a scatter plot with GDP per capita on the x-axis and CO2 emissions per capita on the y-axis. How are they related?
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 5B. Transform
+
+Most countries are in the bottom-left corner. Should you transform the data? Why? Remember that some transformations (Lab 9) will not work if you have zero or negative values, so check for them first and remove those rows if necessary. Add a trend line with `geom_smooth(method = "loess")`.
+
+- How does the plot change? 
+
+```{r}
+# YOUR CODE HERE
+```
+
+## Exercise 6 - Regions
+
+Do countries in the same region follow similar patterns?
+
+Import `owid_regions.csv` and look at it with `glimpse()`. Join it to `country_data`. Rename the region column to `region`.
+
+Then add region colors to your scatter plot from Exercise 5. What patterns can you see?
+
+```{r}
+# YOUR CODE HERE
+```
+
+# Extra - Prediction Model
+
+## Exercise 7 - Prediction
+
+Can GDP per capita predict CO2 emissions per capita? Let's use `tidymodels` and the workflow from Lab 8 to answer that.
+
+### 7A. Training and test sets
+
+Start from `country_data`. Use `log()` to create the natural log of each variable. Set the seed to `21` and split the data: 80% for training and 20% for testing.
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 7B. Linear regression
+
+Fit a linear regression that predicts log emissions from log GDP per capita. Use a recipe and a workflow. Look at the slope with `tidy()`.
+
+- What does the slope mean?
+
+> Tip: With both variables in logs, the slope is an elasticity. For example, a slope of 0.8 means that countries with 1% higher GDP per capita have about 0.8% higher emissions per capita.
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 7C. Prediction error
+
+Predict log emissions for the test countries and calculate the RMSE. Then plot observed against predicted values and add a line with intercept 0 and slope 1.
+
+- Which countries have the largest prediction errors? Any guesses as to why?
+
+
+```{r}
+# YOUR CODE HERE
+```
+
+### 7D. Error in the original units
+
+The RMSE from 7C is in log units. Convert the observed and predicted values back to tonnes per person with `exp()`. Then calculate the RMSE again and compare it with mean emissions in the test set.
+
+- How large is the error compared with mean emissions?
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+# Acknowledgments
+
+Data: Hannah Ritchie, Pablo Rosado and Max Roser, [Our World in Data](https://ourworldindata.org/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).
+
+This script was written by [Carol Sobral](https://github.com/cbsobral), with contributions from [Linus Hagemann](https://linushagemann.de/) and [Laia Domenech Burin](https://github.com/ldmnch). The first draft was written with AI assistance (Claude - Anthropic).
