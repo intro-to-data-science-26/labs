@@ -39,7 +39,8 @@ We recommend that you clone this repository to your computer, following the step
 > [!TIP]
 > Usually, you will not need to *knit* the `.Rmd` files in this repository. In case you still want to do that, the following packages will need to be installed (+ special packages necessary for each weeks content): `rmarkdown`, `rmdformats`, `devtools`, and `emo` (needs to be installed with `devtools::install_github("hadley/emo")`.)
 
-
+> [!TIP]
+> For future years, we recommend adding the folders for each lab on a week-by-week basis, so that restructurings for future sessions do not lead to conflicts when students pull.
 
 ## Acknowledgements
 
