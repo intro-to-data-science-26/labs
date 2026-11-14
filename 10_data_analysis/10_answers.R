@@ -28,7 +28,9 @@ emissions |>
 # Country codes have three capital letters
 emissions <- emissions |>
   filter(str_detect(iso_code, "^[A-Z]{3}$"))
-
+# Alternatively: As the totals have no iso_code, you can also filter out NA values:
+emissions |>
+  filter(!is.na(iso_code)) # with the current version of dplyr: filter_out(is.na(iso_code))
 nrow(emissions)
 # ANSWER: 42,480 rows
 
