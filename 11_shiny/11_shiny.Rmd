@@ -128,10 +128,6 @@ The ability to easily see hierarchy through indentation is one of the reasons it
 
 While `page_sidebar()` creates a basic layout for your Shiny app, you can also choose from many different layouts. For example you can use `page_navbar()` to give your app a multi-page user interface that includes a navigation bar. Or you can use `layout_columns()` to place cards next to each other in a grid. If you'd like to learn more about these advanced options, have a look at the [Shiny layouts guide](https://shiny.posit.co/r/layouts/).
 
-```{r, echo = F, out.width = "100%"}
-knitr::include_graphics("pics/basic-layouts.png")
-```
-
 Within the different layout functions you can also customize your app further by italicizing or making your font bold and even including html elements.
 
 To learn more about how you can customize your UI see [here](https://shiny.posit.co/r/articles/build/html-tags/) and [here](https://shiny.posit.co/r/articles/build/tag-glossary/).
