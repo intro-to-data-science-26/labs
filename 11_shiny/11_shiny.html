@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="pandoc" />
+
+        <meta name="author" content="Carol Sobral, Linus Hagemann and Laia Domenech Burin" />
+    
+    
+    <title>Shiny Applications</title>
+
+        <script src="11_shiny_files/header-attrs-2.32/header-attrs.js"></script>
+        <script src="11_shiny_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="11_shiny_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="11_shiny_files/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+        <script src="11_shiny_files/navigation-1.1/tabsets.js"></script>
+        <link href="11_shiny_files/robobook-0.1/robobook.css" rel="stylesheet" />
+        <link href="11_shiny_files/robobook-0.1/robobook_fonts_embed.css" rel="stylesheet" />
+        <script src="11_shiny_files/robobook-0.1/robobook.js"></script>
+    
+    
+        <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+          background-color: #ffffff;
+          color: #a0a0a0;
+        }
+      pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+      div.sourceCode
+        { color: #1f1c1b; background-color: #ffffff; }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span { color: #1f1c1b; } /* Normal */
+      code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+      code span.an { color: #ca60ca; } /* Annotation */
+      code span.at { color: #0057ae; } /* Attribute */
+      code span.bn { color: #b08000; } /* BaseN */
+      code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+      code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #924c9d; } /* Char */
+      code span.cn { color: #aa5500; } /* Constant */
+      code span.co { color: #898887; } /* Comment */
+      code span.cv { color: #0095ff; } /* CommentVar */
+      code span.do { color: #607880; } /* Documentation */
+      code span.dt { color: #0057ae; } /* DataType */
+      code span.dv { color: #b08000; } /* DecVal */
+      code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+      code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+      code span.fl { color: #b08000; } /* Float */
+      code span.fu { color: #644a9b; } /* Function */
+      code span.im { color: #ff5500; } /* Import */
+      code span.in { color: #b08000; } /* Information */
+      code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+      code span.op { color: #1f1c1b; } /* Operator */
+      code span.ot { color: #006e28; } /* Other */
+      code span.pp { color: #006e28; } /* Preprocessor */
+      code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+      code span.sc { color: #3daee9; } /* SpecialChar */
+      code span.ss { color: #ff5500; } /* SpecialString */
+      code span.st { color: #bf0303; } /* String */
+      code span.va { color: #0057ae; } /* Variable */
+      code span.vs { color: #bf0303; } /* VerbatimString */
+      code span.wa { color: #bf0303; } /* Warning */
+    </style>
+    
+    
+    <!-- tabsets -->
+    <script>
+      $(document).ready(function () {
+	  window.buildTabsets("toc");
+      });
+      $(document).ready(function () {
+	  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+	      $(this).parent().toggleClass('nav-tabs-open')
+	  });
+      });
+    </script>
+
+    <!-- code folding -->
+    
+    <!-- code download -->
+    
+    <!-- tabsets dropdown -->
+
+    <style type="text/css">
+      .tabset-dropdown > .nav-tabs {
+	  display: inline-table;
+	  max-height: 500px;
+	  min-height: 44px;
+	  overflow-y: auto;
+	  background: white;
+	  border: 1px solid #ddd;
+	  border-radius: 4px;
+      }
+      
+      .tabset-dropdown > .nav-tabs > li.active:before {
+	  content: "";
+	  font-family: 'Glyphicons Halflings';
+	  display: inline-block;
+	  padding: 10px;
+	  border-right: 1px solid #ddd;
+      }
+      
+      .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+	  content: "&#xe258;";
+	  border: none;
+      }
+      
+      .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+	  content: "";
+	  font-family: 'Glyphicons Halflings';
+	  display: inline-block;
+	  padding: 10px;
+	  border-right: 1px solid #ddd;
+      }
+      
+      .tabset-dropdown > .nav-tabs > li.active {
+	  display: block;
+      }
+
+      .tabset-dropdown > .nav-tabs > li.active a {
+  	  padding: 0 15px !important;
+      }
+
+      .tabset-dropdown > .nav-tabs > li > a,
+      .tabset-dropdown > .nav-tabs > li > a:focus,
+      .tabset-dropdown > .nav-tabs > li > a:hover {
+	  border: none;
+	  display: inline-block;
+	  border-radius: 4px;
+	  background-color: transparent;
+      }
+      
+      .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+	  display: block;
+	  float: none;
+      }
+      
+      .tabset-dropdown > .nav-tabs > li {
+	  display: none;
+	  margin-left: 0 !important;
+      }
+    </style>
+    
+</head>
+
+<body class="preload">
+
+   	
+            <!-- robobook start -->   
+   <div class="book with-summary">
+      <div class="book-summary">
+        <ul>
+          <li class="title">Shiny Applications</li>
+          <li class="divider"></li>
+        </ul>
+        <nav role="navigation" id="toc">
+          <ul>
+          <li><a href="#shiny-applications-in-r"
+          id="toc-shiny-applications-in-r">Shiny Applications in R
+          💎</a>
+          <ul>
+          <li><a href="#what-is-shiny" id="toc-what-is-shiny">What is
+          Shiny?</a>
+          <ul>
+          <li><a href="#structure-of-a-shiny-app"
+          id="toc-structure-of-a-shiny-app">Structure of a Shiny
+          App</a></li>
+          <li><a href="#running-a-shiny-app"
+          id="toc-running-a-shiny-app">Running a Shiny App</a></li>
+          </ul></li>
+          <li><a href="#layout-functions-ui"
+          id="toc-layout-functions-ui">Layout functions / UI 🗺️</a></li>
+          <li><a href="#widgets" id="toc-widgets">Widgets 🖱️</a></li>
+          <li><a href="#display-reactive-output"
+          id="toc-display-reactive-output">Display Reactive Output</a>
+          <ul>
+          <li><a href="#step-1" id="toc-step-1">Step 1</a></li>
+          <li><a href="#step-2" id="toc-step-2">Step 2</a></li>
+          </ul></li>
+          <li><a href="#exercises" id="toc-exercises">Exercises</a></li>
+          <li><a href="#more-complex-apps"
+          id="toc-more-complex-apps">More complex apps ⚙️</a></li>
+          <li><a href="#share-your-apps" id="toc-share-your-apps">Share
+          your Apps</a></li>
+          </ul></li>
+          <li><a href="#dashboards-with-flexdashboard"
+          id="toc-dashboards-with-flexdashboard">Dashboards with
+          <code>flexdashboard</code></a>
+          <ul>
+          <li><a href="#flexdashboard-in-practice"
+          id="toc-flexdashboard-in-practice">Flexdashboard in
+          practice</a></li>
+          <li><a href="#columns-and-rows"
+          id="toc-columns-and-rows">Columns and rows</a></li>
+          <li><a href="#a-note-on-shiny-dashboards"
+          id="toc-a-note-on-shiny-dashboards">A note on shiny
+          dashboards</a></li>
+          <li><a href="#exercise" id="toc-exercise">Exercise</a></li>
+          </ul></li>
+          <li><a href="#acknowledgements"
+          id="toc-acknowledgements"><b style="color:#2f1a61">Acknowledgements</b></a></li>
+          </ul>
+        </nav>
+        <ul class="authors">
+          <li class="divider"></li>
+                                <li><span><i class="glyphicon glyphicon-user"></i> Carol
+Sobral, Linus Hagemann and Laia Domenech Burin</span></li>
+                                         <li><span><i class="glyphicon glyphicon-calendar"></i> (Fall
+2026) Introduction to Data Science</span></li>
+                  </ul>     
+      </div>
+      <div class="book-body fixed">
+        <div class="body-inner">
+            <a class="btn pull-left js-toolbar-action toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Sidebar" href="#">
+              <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </a>
+            <div class="page-inner">
+              <section id="content" class="normal">
+      
+   
+        
+      <h1 class="title">Shiny Applications</h1>
+         <h1 class="subtitle">Creating interactive Web applications with
+R</h1>
+   
+        
+
+   
+      
+   
+<!-- Don't indent these lines or it will mess pre blocks indentation --> 
+<style>
+h1, h2, h3 {
+color: #2f1a61;
+}
+
+.subtitle {
+color: #291854;
+}
+
+.title {
+color: #cc0065;
+}
+
+.pad-box {
+padding: 1em;
+}
+</style>
+<hr />
+<p>Welcome back! Today we will have a look at:</p>
+<ol style="list-style-type: decimal">
+<li>How to build Shiny apps in R</li>
+<li>A short introduction to flexdashboards</li>
+</ol>
+<hr />
+<div id="shiny-applications-in-r" class="section level1">
+<h1>Shiny Applications in R 💎</h1>
+<div id="what-is-shiny" class="section level2">
+<h2>What is Shiny?</h2>
+<p>Shiny is an R package that makes it easy to build interactive web
+applications (apps) straight from R. You need to install the package
+<code>shiny</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co">#install.packages(&quot;shiny&quot;)</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(bslib)</span></code></pre></div>
+<p>For a quick illustration of what you can do with Shiny head over to
+the interactive visualization tool for the <a
+href="https://gallery.shinyapps.io/freedom-press-index/">Freedom of
+Press Index</a></p>
+<p>Throughout the lab we will use a running example to illustrate the
+different aspects of creating a shiny app. You can find it in
+<code>shiny_app.R</code>. It uses the <code>penguins</code> data from
+the <code>palmerpenguins</code> package and shows the distribution of a
+penguin measurement by species, together with a table of the data.</p>
+<p>The app also uses the package <code>DT</code>, which makes
+interactive tables:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;DT&quot;</span>)</span></code></pre></div>
+<hr />
+<div id="structure-of-a-shiny-app" class="section level3">
+<h3>Structure of a Shiny App</h3>
+<p>A Shiny app can be contained in a single R script. By convention the
+script is called <code>app.R</code> and lives in its own directory (for
+example, <code>newdir/</code>), so the app can be run with
+<code>shiny::runApp("newdir")</code>.</p>
+<p>The file must have three core components:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>A user interface object</strong>: The (UI) object
+controls the layout and appearance of your app.</p></li>
+<li><p><strong>A server function</strong>: The <code>server</code>
+function contains the instructions that your computer needs to build
+your app.</p></li>
+<li><p><strong>A call to the <code>shiny::shinyApp()</code>
+function</strong>: The <code>shiny::shinyApp()</code> function creates
+Shiny app objects from an explicit UI/server pair.</p></li>
+</ol>
+<hr />
+</div>
+<div id="running-a-shiny-app" class="section level3">
+<h3>Running a Shiny App</h3>
+<p>To create a Shiny app, save a script that contains the three
+components outlined above. It is recommended to save each app as
+<code>app.R</code> in its own directory.</p>
+<p>You can run a Shiny app by giving the name of this directory to the
+function <code>shiny::runApp()</code>. For example, if your Shiny app is
+in a directory called <code>my_shiny_app</code>, run it with the
+following code:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">&quot;my_shiny_app&quot;</span>)</span></code></pre></div>
+<p>Our example is a single file called <code>shiny_app.R</code>. To run
+it, open the file in RStudio and click <strong>Run App</strong>, or run
+<code>shiny::runApp("shiny_app.R")</code>.</p>
+<hr />
+</div>
+</div>
+<div id="layout-functions-ui" class="section level2">
+<h2>Layout functions / UI 🗺️</h2>
+<p>Shiny uses <strong>layout functions</strong> to provide the
+high-level visual structure of an app. In this lab we use the layout
+functions from the <code>bslib</code> package, which is installed with
+<code>shiny</code>. For example, <code>page_sidebar()</code> creates a
+page with a title, a sidebar and a main area, and automatically adjusts
+to the dimensions of the user’s browser window. You can lay out the user
+interface of your app by placing elements in the
+<code>page_sidebar()</code> function.</p>
+<p>Older Shiny code often uses <code>fluidPage()</code> with
+<code>sidebarLayout()</code> for the same kind of layout, so you will
+still see it in many examples online. It works the same way.</p>
+<p>Layouts are created by a hierarchy of function calls, where the
+hierarchy in R matches the generated HTML. This means that you can get
+an intuitive idea of the app structure by assessing the layout. This is
+the <code>ui</code> of our running example:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">page_sidebar</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Palmer penguins&quot;</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">fillable =</span> <span class="cn">FALSE</span>, <span class="co"># let the page scroll so the table fits below the plot</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">sidebar =</span> <span class="fu">sidebar</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="fu">selectInput</span>(<span class="st">&quot;measurement&quot;</span>, <span class="st">&quot;Measurement&quot;</span>, <span class="at">choices =</span> measurements)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  ),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="fu">card</span>(<span class="fu">card_header</span>(<span class="st">&quot;Distribution&quot;</span>), <span class="fu">plotOutput</span>(<span class="st">&quot;distribution&quot;</span>)),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">card</span>(<span class="fu">card_header</span>(<span class="st">&quot;Data&quot;</span>), <span class="fu">DTOutput</span>(<span class="st">&quot;penguin_table&quot;</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>)</span></code></pre></div>
+<p>We can guess what is going on by reading the function names. This
+code will generate a classic app design: a title bar at top, a sidebar
+(containing a <code>selectInput()</code>, which creates a dropdown menu)
+and a main area with two cards (containing the plot and the table).</p>
+<div class="alert-info pad-box">
+<p>📝 <strong>Note</strong></p>
+<p>The ability to easily see hierarchy through indentation is one of the
+reasons it is a good idea to use a consistent style when building these
+apps.</p>
+</div>
+<hr />
+<p>While <code>page_sidebar()</code> creates a basic layout for your
+Shiny app, you can also choose from many different layouts. For example
+you can use <code>page_navbar()</code> to give your app a multi-page
+user interface that includes a navigation bar. Or you can use
+<code>layout_columns()</code> to place cards next to each other in a
+grid. If you’d like to learn more about these advanced options, have a
+look at the <a href="https://shiny.posit.co/r/layouts/">Shiny layouts
+guide</a>.</p>
+<p><img src="pics/basic-layouts.png" alt="" width="100%" /></p>
+<p>Within the different layout functions you can also customize your app
+further by italicizing or making your font bold and even including html
+elements.</p>
+<p>To learn more about how you can customize your UI see <a
+href="https://shiny.posit.co/r/articles/build/html-tags/">here</a> and
+<a
+href="https://shiny.posit.co/r/articles/build/tag-glossary/">here</a>.</p>
+<hr />
+</div>
+<div id="widgets" class="section level2">
+<h2>Widgets 🖱️</h2>
+<p>A widget is a web element that the users can interact with. In other
+words to make your app interactive, you need widgets. These provide a
+way for your users to send messages to the Shiny app, meaning that when
+a user changes the input in a widget, the value that is shown will
+change as well.</p>
+<p>Shiny comes with a family of pre-built widgets, each created with a
+clearly named R function. For example, Shiny provides a function named
+<code>actionButton()</code> that creates an Action Button and a function
+named <code>sliderInput()</code> that creates a slider bar.</p>
+<p>Check out the <a href="https://shiny.posit.co/r/components/">Shiny
+components</a> page for an overview of standard widgets:</p>
+<p><img src="pics/basic-widgets.png" alt="" width="434" /></p>
+<p>To add a widget to your app, you need to include a widget function in
+your <code>ui</code> object, usually inside <code>sidebar()</code>.</p>
+<p>Each widget function requires several arguments. The first two
+arguments for each widget are:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>A name for the widget</strong>: The user will not see
+this name, but you can use it to access the widget’s value. The name
+should be a character string.</p></li>
+<li><p><strong>A label</strong>: This label will appear with the widget
+in your app. It should be a character string, but it can be an empty
+string <code>""</code>.</p></li>
+</ol>
+<p>The remaining arguments vary from widget to widget, depending on what
+the widget needs to do its job. They include things like initial values,
+ranges, and increments. You can find the exact arguments needed by a
+widget on the widget function’s help page, (e.g.,
+<code>?selectInput</code>).</p>
+<p>In our example app we have one widget, a <code>selectInput()</code>
+that lets the user choose which penguin measurement to plot:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>measurements <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="st">&quot;Bill length (mm)&quot;</span> <span class="ot">=</span> <span class="st">&quot;bill_length_mm&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="st">&quot;Bill depth (mm)&quot;</span> <span class="ot">=</span> <span class="st">&quot;bill_depth_mm&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="st">&quot;Flipper length (mm)&quot;</span> <span class="ot">=</span> <span class="st">&quot;flipper_length_mm&quot;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="st">&quot;Body mass (g)&quot;</span> <span class="ot">=</span> <span class="st">&quot;body_mass_g&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">page_sidebar</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Palmer penguins&quot;</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">sidebar =</span> <span class="fu">sidebar</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>    <span class="fu">selectInput</span>(<span class="st">&quot;measurement&quot;</span>, <span class="st">&quot;Measurement&quot;</span>, <span class="at">choices =</span> measurements)</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  ),</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  ...</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>)</span></code></pre></div>
+<p>The names of <code>measurements</code> are shown in the dropdown, and
+the values are the column names. In the <code>server</code>,
+<code>input$measurement</code> holds the column name of the chosen
+measurement, for example <code>"body_mass_g"</code>.</p>
+<hr />
+</div>
+<div id="display-reactive-output" class="section level2">
+<h2>Display Reactive Output</h2>
+<p>To give your Shiny App a feeling of live interactiveness you need to
+include a way to display reactive output. Reactive output automatically
+responds when your user selects an option in a widget.</p>
+<p>There are two steps involved in making your widgets reactive:</p>
+<ol style="list-style-type: decimal">
+<li>Add the relevant output function to your <code>ui</code>
+function.</li>
+<li>Provide R code to build the object in your <code>server</code>
+function.</li>
+</ol>
+<div id="step-1" class="section level3">
+<h3>Step 1</h3>
+<p>Shiny provides a family of functions that turn R objects into output
+for your user interface. Each function creates a specific type of
+output.</p>
+<p>In our running example we used <code>plotOutput()</code> for the plot
+and <code>DTOutput()</code> from the <code>DT</code> package for an
+interactive table:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">page_sidebar</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Palmer penguins&quot;</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">sidebar =</span> <span class="fu">sidebar</span>( ... ),</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">card</span>(<span class="fu">card_header</span>(<span class="st">&quot;Distribution&quot;</span>), <span class="fu">plotOutput</span>(<span class="st">&quot;distribution&quot;</span>)),</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">card</span>(<span class="fu">card_header</span>(<span class="st">&quot;Data&quot;</span>), <span class="fu">DTOutput</span>(<span class="st">&quot;penguin_table&quot;</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="step-2" class="section level3">
+<h3>Step 2</h3>
+<p>Placing a function in <code>ui</code> tells Shiny where to display
+your object. Next, you need to tell Shiny how to build the object.</p>
+<p>We do this by providing the R code that builds the object in the
+<code>server</code> function. You do this by defining a new element for
+output within the <code>server</code> function. The element name should
+match the name of the reactive element that you created in the
+<code>ui</code>.</p>
+<p>If you created a <code>textOutput("selected_var")</code> in your
+<code>ui</code>, <code>output$selected_var</code> in the
+<code>server</code> function matches this.</p>
+<p>To illustrate this, let’s look at our example, where we used
+<code>plotOutput("distribution")</code> and
+<code>DTOutput("penguin_table")</code>. In the <code>server</code>
+function we state:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  output<span class="sc">$</span>distribution <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="co"># .data[[ ]] picks the column whose name is stored in input$measurement</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="fu">ggplot</span>(penguins_clean, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>measurement]], <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>      <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  })</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  output<span class="sc">$</span>penguin_table <span class="ot">&lt;-</span> <span class="fu">renderDT</span>({</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>    <span class="fu">datatable</span>(penguins_clean, <span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  })</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>}</span></code></pre></div>
+<div class="alert-info pad-box">
+<p>📝 <strong>Note</strong></p>
+<p><code>reactive()</code> creates data that updates when an input
+changes. For example, this holds the penguins from the chosen
+islands:</p>
+<pre><code>selected &lt;- reactive({
+  penguins_clean |&gt;
+    filter(island %in% input$island)
+})</code></pre>
+<p>When several outputs use <code>selected()</code>, the filter runs
+once for all of them. You call a reactive like a function, with
+brackets: <code>selected()</code>. You will need it in exercise 3.</p>
+</div>
+<p>Every <code>*Output()</code> function in <code>ui</code> has a
+corresponding <code>render*()</code> function in server for building
+reactive widgets.</p>
+<p>Each <code>render*</code> function takes a single argument: an R
+expression surrounded by braces, <code>{}</code>. The expression can be
+one simple line of code, or it can involve many lines of code.</p>
+<hr />
+</div>
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<div class="alert-info pad-box">
+<p>Now it is your turn, adapt the Shiny app by:</p>
+<ol style="list-style-type: decimal">
+<li>Putting the plot and the table in separate tabs.
+<ul>
+<li>Hint: replace the two <code>card()</code>s with
+<code>navset_card_underline()</code> and one <code>nav_panel()</code>
+per output. Only the <code>ui</code> changes.</li>
+<li>Resources: <a href="https://shiny.posit.co/r/layouts/tabs/">Shiny
+tabs</a>, <a
+href="https://rstudio.github.io/bslib/reference/navset.html">bslib
+navsets</a></li>
+</ul></li>
+<li>Adding a choice between a density plot and a histogram.
+<ul>
+<li>Hint: add <code>radioButtons()</code> to the sidebar. In
+<code>renderPlot()</code>, use <code>if</code>/<code>else</code> to add
+<code>geom_density()</code> or <code>geom_histogram()</code>, and change
+the y-axis label too.</li>
+<li>Resources: <a
+href="https://shiny.posit.co/r/reference/shiny/latest/radiobuttons.html">radioButtons()</a>,
+<a
+href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density()</a>,
+<a
+href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram()</a></li>
+</ul></li>
+<li>Adding a filter for the island.
+<ul>
+<li>Hint: add a <code>checkboxGroupInput()</code> with the islands to
+the sidebar. Filter the data once in a <code>reactive()</code> and use
+it in both outputs.</li>
+<li>Resources: <a
+href="https://shiny.posit.co/r/reference/shiny/latest/checkboxgroupinput.html">checkboxGroupInput()</a>,
+<a
+href="https://shiny.posit.co/r/reference/shiny/latest/reactive.html">reactive()</a>,
+<a href="https://mastering-shiny.org/basic-reactivity.html">Mastering
+Shiny: basic reactivity</a></li>
+</ul></li>
+</ol>
+</div>
+<hr />
+</div>
+<div id="more-complex-apps" class="section level2">
+<h2>More complex apps ⚙️</h2>
+<p>You can create more complex Shiny apps by loading R Scripts,
+packages, and data sets.</p>
+<p>What you need to know is that:</p>
+<ul>
+<li>The directory that <code>app.R</code> appears in will become the
+working directory of the Shiny app</li>
+<li>Shiny will run code placed at the start of <code>app.R</code>,
+before the <code>server</code> function, only once during the life of
+the app.</li>
+<li>Shiny will run code placed inside <code>server</code> function
+multiple times, which can slow down the app.</li>
+</ul>
+<p>In our example, this is used to load the data, drop rows with missing
+values and define the list of measurements. This only needs to be done
+once. Within the <code>server</code> function we then build the plot for
+the selected measurement; obviously this needs to be repeated every time
+the input changes. This is why we placed that code within the
+<code>server</code> function.</p>
+<hr />
+</div>
+<div id="share-your-apps" class="section level2">
+<h2>Share your Apps</h2>
+<p>You can now build a useful Shiny app, but can you share it with
+others? This lesson will show you several ways to share your Shiny
+apps.</p>
+<p>When it comes to sharing Shiny apps, you have two basic options:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Share your Shiny app as R scripts.</strong> This is the
+simplest way to share an app, but it only works if your users have R on
+their own computer (and know how to use it). Users can use these scripts
+to launch the app from their own R session, just like you’ve been
+launching the apps so far in this tutorial. All they need is a copy of
+your app directory including the <code>app.R</code> script.</p></li>
+<li><p><strong>Share your Shiny app as a web page.</strong> This is
+definitely the most user-friendly way to share a Shiny app. Your users
+can navigate to your app through the internet with a web browser. They
+will find your app fully rendered, up to date, and ready to go.</p></li>
+</ol>
+<p>If you prefer the second option, I propose that you have a look at
+shinyapps.io. It’s Posit’s hosting service for Shiny apps. shinyapps.io
+lets you upload your app straight from your R session to a server hosted
+by Posit. You have complete control over your app including server
+administration tools. You can find out more about shinyapps.io by
+visiting <a href="https://www.shinyapps.io/">shinyapps.io</a>.</p>
+<hr />
+</div>
+</div>
+<div id="dashboards-with-flexdashboard" class="section level1">
+<h1>Dashboards with <code>flexdashboard</code></h1>
+<p>The goal of flexdashboard is to make it easy to create interactive
+dashboards for R, using R Markdown. A flexdashboard can either be static
+(a standard web page) or dynamic (a Shiny interactive document). A wide
+variety of components can be included in flexdashboard layouts, for a
+full list see <a
+href="https://pkgs.rstudio.com/flexdashboard/articles/flexdashboard.html">the
+documentation</a>.</p>
+<p>As with Shiny apps, we are going to be working with an example:
+<code>flexdashboard.Rmd</code>. It is the same app as
+<code>shiny_app.R</code>, built as a flexdashboard, so you can compare
+the two. You need to install the package <code>flexdashboard</code> to
+run it.</p>
+<hr />
+<div id="flexdashboard-in-practice" class="section level2">
+<h2>Flexdashboard in practice</h2>
+<p>The big difference to Shiny apps is that the flexdashboard Rmd file
+will take over the function used to define the layout of the
+dashboard/app. In other words, the entire Rmd, now plays the role of
+<code>page_sidebar()</code>.</p>
+<p>So let’s have a closer look at how you can structure a
+flexdashboard.</p>
+<hr />
+</div>
+<div id="columns-and-rows" class="section level2">
+<h2>Columns and rows</h2>
+<p>Dashboards are divided into columns and rows, with output components
+delineated using level 3 markdown headers (<code>###</code>). By
+default, dashboards are laid out within a single column, with charts
+stacked vertically within a column and sized to fill available browser
+height.</p>
+<p>If you want to change the dashboard to include multiple columns you
+can introduce the following (<code>--------------</code>).</p>
+<p>If you want to change the dashboard to include multiple pages you can
+introduce the following (<code>=============</code>).</p>
+<p>In the YAML header of the Rmd you can specify a number of additional
+properties:</p>
+<ul>
+<li><code>vertical_layout: scroll</code></li>
+<li><code>orientation: rows</code></li>
+</ul>
+<p>Feeling overwhelmed? No need to come up with a fancy design all on
+your own. You can find a long list of templates <a
+href="https://pkgs.rstudio.com/flexdashboard/articles/examples.html">here</a>.</p>
+<hr />
+</div>
+<div id="a-note-on-shiny-dashboards" class="section level2">
+<h2>A note on shiny dashboards</h2>
+<p>To add Shiny components to a flexdashboard there are a few things
+that you need to remember.</p>
+<ol style="list-style-type: decimal">
+<li><p>you need to add <code>runtime: shiny</code> to the options
+declared at the top of the document (YAML front matter).</p></li>
+<li><p>Add the <code>{.sidebar}</code> attribute to the first column of
+the dashboard to make it a host for Shiny input controls (note this step
+isn’t strictly required, but many Shiny based dashboards will want to do
+this).</p></li>
+</ol>
+<p>Overall, however, the same rules apply:</p>
+<ul>
+<li>You should perform any expensive loading of data within the global
+chunk.</li>
+<li>Input elements will go into the <code>{.sidebar}</code> column.</li>
+<li>Outputs are represented within flexdashboard content panes</li>
+</ul>
+<p>This is how these pieces look in our example,
+<code>flexdashboard.Rmd</code>.</p>
+<p>The YAML header sets <code>runtime: shiny</code>,
+<code>vertical_layout: scroll</code> so the table fits below the plot,
+and a newer Bootstrap theme (<code>version: 5</code>) so it looks like
+the Shiny app:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Palmer penguins&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="at">  flexdashboard:</span><span class="fu">:flex_dashboard</span><span class="kw">:</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="at">    </span><span class="fu">orientation</span><span class="kw">:</span><span class="at"> columns</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="at">    </span><span class="fu">vertical_layout</span><span class="kw">:</span><span class="at"> scroll</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="at">    </span><span class="fu">theme</span><span class="kw">:</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="at">      </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="fu">runtime</span><span class="kw">:</span><span class="at"> shiny</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<p>The chunk named <code>global</code> loads the packages and prepares
+the data:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">library</span>(flexdashboard)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Drop rows with missing values</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>penguins_clean <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(penguins)</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>measurements <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>  <span class="st">&quot;Bill length (mm)&quot;</span> <span class="ot">=</span> <span class="st">&quot;bill_length_mm&quot;</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  <span class="st">&quot;Bill depth (mm)&quot;</span> <span class="ot">=</span> <span class="st">&quot;bill_depth_mm&quot;</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>  <span class="st">&quot;Flipper length (mm)&quot;</span> <span class="ot">=</span> <span class="st">&quot;flipper_length_mm&quot;</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>  <span class="st">&quot;Body mass (g)&quot;</span> <span class="ot">=</span> <span class="st">&quot;body_mass_g&quot;</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>)</span></code></pre></div>
+<p>The first column, <code>Column {.sidebar}</code>, holds a chunk with
+the <code>selectInput()</code> widget:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">selectInput</span>(<span class="st">&quot;measurement&quot;</span>, <span class="st">&quot;Measurement&quot;</span>, <span class="at">choices =</span> measurements)</span></code></pre></div>
+<p>The second column, <code>Column</code>, has two <code>###</code>
+panels, <code>### Distribution</code> and <code>### Data</code>. Each
+one holds a chunk that calls a single <code>render*()</code> function,
+with no <code>plotOutput()</code> or <code>DTOutput()</code> needed:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">renderPlot</span>({</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="co"># .data[[ ]] picks the column whose name is stored in input$measurement</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(penguins_clean, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>measurement]], <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">names</span>(measurements)[measurements <span class="sc">==</span> input<span class="sc">$</span>measurement],</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>      <span class="at">fill =</span> <span class="st">&quot;Species&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Table</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">renderDT</span>({</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">datatable</span>(penguins_clean, <span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+<div id="exercise" class="section level2">
+<h2>Exercise</h2>
+<div class="alert-info pad-box">
+<p>Change <code>flexdashboard.Rmd</code> so that the plot and the table
+are shown in separate tabs, like in the first exercise.</p>
+<ul>
+<li>Resources: <a
+href="https://pkgs.rstudio.com/flexdashboard/articles/using.html#tabsets">flexdashboard
+tabsets</a></li>
+</ul>
+</div>
+<hr />
+</div>
+</div>
+<div id="acknowledgements" class="section level1 unnumbered">
+<h1
+class="unnumbered"><b style="color:#2f1a61">Acknowledgements</b></h1>
+<p>The Shiny tutorial leans heavily on RStudio’s series of <a
+href="https://shiny.rstudio.com/tutorial/">Shiny tutorials</a> and
+Posit’s <a href="https://shiny.posit.co/r/getstarted/">Shiny
+tutorials</a>.</p>
+<p>This script was drafted by <a href="https://github.com/tom-arend">Tom
+Arendt</a> and <a href="https://lfoswald.github.io/">Lisa Oswald</a>,
+with contributions by <a href="https://smkerr.github.io/">Steve
+Kerr</a>, <a href="https://github.com/hiba-ahmad">Hiba Ahmad</a>, <a
+href="https://github.com/cgarroca">Carmen Garro</a>, <a
+href="https://seramirezruiz.github.io/">Sebastian Ramirez-Ruiz</a>, <a
+href="https://github.com/Killian-Conyngham">Killian Conyngham</a>, <a
+href="https://github.com/cbsobral">Carol Sobral</a>, <a
+href="https://linushagemann.de/">Linus Hagemann</a> and <a
+href="https://github.com/ldmnch">Laia Domenech Burin</a>.</p>
+</div>
+
+   
+   
+           </section>
+  </div>
+  </div>
+  </div>
+  </div>
+      
+      
+
+  <script>
+    $(document).ready(function () {
+
+		// add bootstrap table styles to pandoc tables
+	$('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+		
+ 		
+	    });
+  </script>
+
+
+
+    <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+	var script = document.createElement("script");
+	script.type = "text/javascript";
+	script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+	document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+  
+</body>
+</html>
