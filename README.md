@@ -15,7 +15,7 @@
 8. (Week 45) Modeling \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/08_modelling/8-modelling.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/08_modelling/8-modelling.Rmd)\]
 9. (Week 46) Visualizations \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/09_visualization/9-visualization.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/09_visualization/9-visualization.Rmd)\]
 10. (Week 47) Data Analysis Practice \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/10_data_analysis/10_data_analysis.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/10_data_analysis/10_data_analysis.Rmd)\]
-11. (Week 48) Dashboards with `Shiny` \[[**.html**]() | [**.Rmd**]()\]
+11. (Week 48) Dashboards with `Shiny` \[[**.html**](https://rawcdn.githack.com/intro-to-data-science-26/labs/main/11_shiny/11_shiny.html) | [**.Rmd**](https://github.com/intro-to-data-science-26/labs/blob/main/11_shiny/11_shiny.Rmd)\]
 12. (Week 49) Review \[[**.html**]() | [**.Rmd**]()\]
 
 ## Instructors
