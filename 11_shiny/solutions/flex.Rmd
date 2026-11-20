@@ -1,0 +1,68 @@
+---
+title: "Palmer penguins"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: scroll
+    theme:
+      version: 5
+runtime: shiny
+---
+
+```{r global, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(dplyr)
+library(ggplot2)
+library(DT)
+library(palmerpenguins)
+
+# Drop rows with missing values
+penguins_clean <- na.omit(penguins)
+
+measurements <- c(
+  "Bill length (mm)" = "bill_length_mm",
+  "Bill depth (mm)" = "bill_depth_mm",
+  "Flipper length (mm)" = "flipper_length_mm",
+  "Body mass (g)" = "body_mass_g"
+)
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+selectInput("measurement", "Measurement", choices = measurements)
+```
+
+<!-- Exercise: {.tabset} shows the panels as tabs -->
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Distribution
+
+```{r}
+# Plot
+renderPlot({
+  # .data[[ ]] picks the column whose name is stored in input$measurement
+  ggplot(penguins_clean, aes(x = .data[[input$measurement]], fill = species)) +
+    geom_density(alpha = 0.5, linewidth = 0.3) +
+    labs(
+      x = names(measurements)[measurements == input$measurement],
+      y = "Density",
+      fill = "Species"
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(legend.position = "bottom")
+})
+```
+
+### Data
+
+```{r}
+# Table
+renderDT({
+  datatable(penguins_clean, rownames = FALSE)
+})
+```
