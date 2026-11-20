@@ -2019,6 +2019,16 @@ the Shiny app:</p>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="at">      </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
 <span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="fu">runtime</span><span class="kw">:</span><span class="at"> shiny</span></span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<div class="alert pad-box">
+<p>💡 <strong>Static Dashboards do not require Shiny</strong></p>
+<p>If you want your flexdashboard to react to user input, you’ll need
+the Shiny runtime. If all you need is a dashboard depicting some static
+information, you can omit that. Then, you will also not need to worry
+about how to deploy/host the shiny server - instead, your flexdashboard
+will work everywhere where you can host any html website. If you want to
+try this, <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">Github
+Pages</a> is an accessible option.</p>
+</div>
 <p>The chunk named <code>global</code> loads the packages and prepares
 the data:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">library</span>(flexdashboard)</span>
@@ -2046,7 +2056,7 @@ one holds a chunk that calls a single <code>render*()</code> function,
 with no <code>plotOutput()</code> or <code>DTOutput()</code> needed:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Plot</span></span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">renderPlot</span>({</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="co"># .data[[ ]] picks the column whose name is stored in input$measurement</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="co"># .data[[input$measurement]] picks the column whose name is stored in</span></span>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(penguins_clean, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>measurement]], <span class="at">fill =</span> species)) <span class="sc">+</span></span>
 <span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    <span class="fu">labs</span>(</span>

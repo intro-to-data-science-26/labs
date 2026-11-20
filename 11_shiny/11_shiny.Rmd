@@ -366,6 +366,12 @@ runtime: shiny
 ---
 ```
 
+:::{.alert .pad-box}
+💡 **Static Dashboards do not require Shiny**
+
+If you want your flexdashboard to react to user input, you'll need the Shiny runtime. If all you need is a dashboard depicting some static information, you can omit that. Then, you will also not need to worry about how to deploy/host the shiny server - instead, your flexdashboard will work everywhere where you can host any html website. If you want to try this, [Github Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) is an accessible option.
+:::
+
 The chunk named `global` loads the packages and prepares the data:
 
 ```{r, eval = F}
@@ -398,7 +404,7 @@ The second column, `Column`, has two `###` panels, `### Distribution` and `### D
 ```{r, eval = F}
 # Plot
 renderPlot({
-  # .data[[ ]] picks the column whose name is stored in input$measurement
+  # .data[[input$measurement]] picks the column whose name is stored in
   ggplot(penguins_clean, aes(x = .data[[input$measurement]], fill = species)) +
     geom_density(alpha = 0.5, linewidth = 0.3) +
     labs(
