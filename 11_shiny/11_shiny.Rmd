@@ -1,7 +1,7 @@
 ---
 title: "Shiny Applications"
 subtitle: "Creating interactive Web applications with R"
-author: "Killian Conyngham & Carol Sobral"
+author: "Carol Sobral, Linus Hagemann and Laia Domenech Burin"
 date: "(Fall 2026) Introduction to Data Science"
 output: 
     rmdformats::robobook:
@@ -199,7 +199,7 @@ img(src = "my_image.png", height = 72, width = 72)
 # "src =" needs to be typed out since the html expects it. 
 ```
 
-To learn more about how you can customise your UI see [here](https://shiny.rstudio.com/articles/html-tags.html) and [here](https://shiny.rstudio.com/articles/tag-glossary.html).
+To learn more about how you can customize your UI see [here](https://shiny.rstudio.com/articles/html-tags.html) and [here](https://shiny.rstudio.com/articles/tag-glossary.html).
 
 ------------------------------------------------------------------------
 
@@ -384,7 +384,7 @@ Even then, there are a number of design guidelines that you should follow. Here 
 
 The goal of flexdashboard is to make it easy to create interactive dashboards for R, using R Markdown. A flexdashboard can either be static (a standard web page) or dynamic (a Shiny interactive document). A wide variety of components can be included in flexdashboard layouts, for a full list see [the documentation](https://pkgs.rstudio.com/flexdashboard/articles/flexdashboard.html).
 
-As with Shiny apps, we are going to be working with the example in the folder `/flexdash`. We will use a slightly adapted version of this flexdashboard created by [Philipp Ottolinger](https://testing-apps.shinyapps.io/flexdashboard-leaflet-waste/).
+As with Shiny apps, we are going to be working with an example in the folder `flexdash`. The dashboard `gapminder_dashboard.Rmd` maps life expectancy across African countries, using data from the `gapminder` package. A sidebar widget lets you pick the year.
 
 ------------------------------------------------------------------------
 
@@ -429,76 +429,11 @@ Overall, however, the same rules apply:
 
 Now you are more or less ready to go!
 
-------------------------------------------------------------------------
-
-# Display all your new skills? `r emo::ji("beaming_face_with_smiling_eyes")`
-
-Thinking a bit ahead (e.g. data science job market), one way to go would be to create a personalized website as a central source to everything you would like to show.
-
-What to include, of course, highly depends on your profile, your discipline, and the job market you are interested in.
-
-For an **academic webpage** that could for example be:
-
--   about statement
--   CV
--   list of publications/working papers
--   list of course materials for courses that you've taught
--   example of data science project / app / package you're proud of
--   contact + links to Github, Google Scholar, Twitter, etc.
-
-Here is a [recommendation](https://www.elsevier.com/connect/creating-a-simple-and-effective-academic-personal-website) by Elsevier on how to create effective academic personal website.
-
-------------------------------------------------------------------------
-
-For a **non-academic webpage** (e.g. focus on industry jobs) that could be:
-
--   about statement
--   CV (?)
--   EXAMPLES of data science projects
--   contact + links to Github, LinkedIn, etc.
-
-Usually, a good first step is to look at webpages of other people with similar profiles you find inspiring (e.g. people that already have the job you'd like to have). 👀
-
-------------------------------------------------------------------------
-
-## Tools to build personal webpages
-
-There is a plethora of possibilities to build your personal webpage, from very basic to very very complicated.
-
-Very simple point-and-click ways to create websites are Google Sites, WordPress, Wix, etc. However, the free versions often come with ads and other downsides.
-
-------------------------------------------------------------------------
-
-### GitHub Pages `r emo::ji("octopus")`
-
-One mid-range way that we can recommend (it requires some coding experience, but you have that!) is to use [GitHub Pages](https://pages.github.com/) because
-
--   it's free and free of ads
--   the page is directly hosted from your GitHub repository
--   you can choose from a huge variety of [Jekyll themes](https://jekyllthemes.io/github-pages-themes)
--   it compiles HTML from Markdown - something you've been doing all the time in this course
--   and there are even more [advantages](http://svmiller.com/blog/2015/08/create-your-website-in-jekyll/#advantages)
-
-For example [Rob Williams](https://jayrobwilliams.com/posts/2020/06/academic-website/) created a great tutorial on how to build an academic websites with Github; and the [academicpages](https://academicpages.github.io/) template is a ready-to-fork GitHub Pages template and is easily customizable. If you like, you can also configure [custom URLs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
-
-Here is a possibly even more accessible, multifaceted, and less complicated [Quick Start](https://docs.github.com/en/pages/quickstart) tutorial on GitHub Pages.
-
-------------------------------------------------------------------------
-
-### Blogdown
-
-[Blogdown](https://bookdown.org/yihui/blogdown/) is an R package based on Hugo, another static site generator.
-
--   it is free
--   you have great online support because you work with R and GitHub
--   and you can choose from a wide range of [Hugo themes](https://themes.gohugo.io/)
-
-Here is a tutorial by [Andrew Hetherington](https://www.andrewhetherington.com/) on how to build a [data-science personal website](https://www.andrewhetherington.com/page/make-a-personal-website/) in R using blogdown. His personal webpage is also created with blogdown. You can deploy and host your website on Github or [Netlify](https://www.netlify.com/).
 
 ------------------------------------------------------------------------
 
 # <b style="color:#2f1a61">Acknowledgements</b> {.unnumbered}
 
-The Shiny tutorial leans heavily on RStudio's series of [written shiny tutorials](https://shiny.rstudio.com/tutorial/). The running example of the shiny.app was adapted from: [Movies-Explorer Interactive App](https://github.com/rstudio/shiny-examples/tree/main/051-movie-explorer), while the running example of the flexdashboard was adapted from [Waste Lands - America's forgotten nuclear legacy](https://testing-apps.shinyapps.io/flexdashboard-leaflet-waste/).
+The Shiny tutorial leans heavily on RStudio's series of [written shiny tutorials](https://shiny.rstudio.com/tutorial/). The running example of the shiny.app was adapted from: [Movies-Explorer Interactive App](https://github.com/rstudio/shiny-examples/tree/main/051-movie-explorer).
 
-This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham) and [Carol Sobral](https://github.com/cbsobral).
+This script was drafted by [Tom Arendt](https://github.com/tom-arend) and [Lisa Oswald](https://lfoswald.github.io/), with contributions by [Steve Kerr](https://smkerr.github.io/), [Hiba Ahmad](https://github.com/hiba-ahmad), [Carmen Garro](https://github.com/cgarroca), [Sebastian Ramirez-Ruiz](https://seramirezruiz.github.io/), [Killian Conyngham](https://github.com/Killian-Conyngham), [Carol Sobral](https://github.com/cbsobral), [Linus Hagemann](https://linushagemann.de/) and [Laia Domenech Burin](https://github.com/ldmnch).
