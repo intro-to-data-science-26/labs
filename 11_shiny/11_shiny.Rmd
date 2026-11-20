@@ -6,6 +6,7 @@ date: "(Fall 2026) Introduction to Data Science"
 output:
   rmdformats::robobook:
     toc_depth: 3
+    self_contained: TRUE
 ---
 
 ```{=html}
