@@ -1629,13 +1629,26 @@ example, <code>newdir/</code>), so the app can be run with
 <ol style="list-style-type: decimal">
 <li><p><strong>A user interface object</strong>: The (UI) object
 controls the layout and appearance of your app.</p></li>
-<li><p><strong>A server function</strong>: The <code>server</code>
-function contains the instructions that your computer needs to build
-your app.</p></li>
+<li><p><strong>A server function</strong>: The server handles the actual
+calculations and data wrangling that feed into the user interface. All
+of that goes into the <code>server</code> function.</p></li>
 <li><p><strong>A call to the <code>shiny::shinyApp()</code>
 function</strong>: The <code>shiny::shinyApp()</code> function creates
 Shiny app objects from an explicit UI/server pair.</p></li>
 </ol>
+<div class="alert pad-box">
+<p>💡 <strong>Client-Server-Principle</strong></p>
+<p>Shiny applications follow the Client-Server-Principle, which is
+common in web-development. The idea is to have a central, possibly
+strong machine (the <strong>server</strong>) handle the bulk of the
+calculations, whereas the <strong>client</strong> shows the UI and only
+needs to transmit user inputs to the server and then wait for the
+servers response to show the appropriate outputs to the user. When you
+run a Shiny app locally, your computer takes over both roles, so you
+don’t need to worry about this too much. It becomes relevant when you
+want to share your application with others though - more on that
+below.</p>
+</div>
 <hr />
 </div>
 <div id="running-a-shiny-app" class="section level3">
@@ -1650,7 +1663,9 @@ following code:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">&quot;my_shiny_app&quot;</span>)</span></code></pre></div>
 <p>Our example is a single file called <code>shiny_app.R</code>. To run
 it, open the file in RStudio and click <strong>Run App</strong>, or run
-<code>shiny::runApp(&quot;shiny_app.R&quot;)</code>.</p>
+<code>shiny::runApp(&quot;shiny_app.R&quot;)</code>. Note that this assumes you
+working directory is set to this weeks lab folder - adapt the path if
+necessary.</p>
 <hr />
 </div>
 </div>
@@ -1688,7 +1703,8 @@ and a main area with two cards (containing the plot and the table).</p>
 <p>📝 <strong>Note</strong></p>
 <p>The ability to easily see hierarchy through indentation is one of the
 reasons it is a good idea to use a consistent style when building these
-apps.</p>
+apps. In RStudio, formatting your code properly is easily done via the
+Code &gt; Reformat… menu entries.</p>
 </div>
 <hr />
 <p>While <code>page_sidebar()</code> creates a basic layout for your
@@ -1804,7 +1820,7 @@ match the name of the reactive element that you created in the
 function we state:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  output<span class="sc">$</span>distribution <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="co"># .data[[ ]] picks the column whose name is stored in input$measurement</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="co"># .data[[input$measurement]] picks the column whose name is stored in input$measurement</span></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="fu">ggplot</span>(penguins_clean, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>measurement]], <span class="at">fill =</span> species)) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>      <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  })</span>
@@ -1885,7 +1901,8 @@ working directory of the Shiny app</li>
 before the <code>server</code> function, only once during the life of
 the app.</li>
 <li>Shiny will run code placed inside <code>server</code> function
-multiple times, which can slow down the app.</li>
+multiple times, as that’s where the application reacts to your inputs,
+which can slow down the app.</li>
 </ul>
 <p>In our example, this is used to load the data, drop rows with missing
 values and define the list of measurements. This only needs to be done

@@ -74,9 +74,16 @@ The file must have three core components:
 
 1.  **A user interface object**: The (UI) object controls the layout and appearance of your app.
 
-2.  **A server function**: The `server` function contains the instructions that your computer needs to build your app.
+2.  **A server function**: The server handles the actual calculations and data wrangling that feed into the user interface. All of that goes into the `server` function.
 
 3.  **A call to the `shiny::shinyApp()` function**: The `shiny::shinyApp()` function creates Shiny app objects from an explicit UI/server pair.
+
+
+:::{.alert .pad-box}
+💡 **Client-Server-Principle**
+
+Shiny applications follow the Client-Server-Principle, which is common in web-development. The idea is to have a central, possibly strong machine (the **server**) handle the bulk of the calculations, whereas the **client** shows the UI and only needs to transmit user inputs to the server and then wait for the servers response to show the appropriate outputs to the user. When you run a Shiny app locally, your computer takes over both roles, so you don't need to worry about this too much. It becomes relevant when you want to share your application with others though - more on that below. 
+:::
 
 
 ------------------------------------------------------------------------
@@ -91,7 +98,7 @@ You can run a Shiny app by giving the name of this directory to the function `sh
 shiny::runApp("my_shiny_app")
 ```
 
-Our example is a single file called `shiny_app.R`. To run it, open the file in RStudio and click **Run App**, or run `shiny::runApp("shiny_app.R")`.
+Our example is a single file called `shiny_app.R`. To run it, open the file in RStudio and click **Run App**, or run `shiny::runApp("shiny_app.R")`. Note that this assumes you working directory is set to this weeks lab folder - adapt the path if necessary.
 
 ------------------------------------------------------------------------
 
@@ -121,7 +128,7 @@ We can guess what is going on by reading the function names. This code will gene
 :::{.alert-info .pad-box}
 📝 **Note**
 
-The ability to easily see hierarchy through indentation is one of the reasons it is a good idea to use a consistent style when building these apps.
+The ability to easily see hierarchy through indentation is one of the reasons it is a good idea to use a consistent style when building these apps. In RStudio, formatting your code properly is easily done via the Code > Reformat... menu entries.
 :::
 
 ------------------------------------------------------------------------
@@ -216,7 +223,7 @@ To illustrate this, let's look at our example, where we used `plotOutput("distri
 ```{r, eval = F}
 server <- function(input, output) {
   output$distribution <- renderPlot({
-    # .data[[ ]] picks the column whose name is stored in input$measurement
+    # .data[[input$measurement]] picks the column whose name is stored in input$measurement
     ggplot(penguins_clean, aes(x = .data[[input$measurement]], fill = species)) +
       geom_density(alpha = 0.5, linewidth = 0.3)
   })
@@ -274,7 +281,7 @@ What you need to know is that:
 
 -   The directory that `app.R` appears in will become the working directory of the Shiny app
 -   Shiny will run code placed at the start of `app.R`, before the `server` function, only once during the life of the app.
--   Shiny will run code placed inside `server` function multiple times, which can slow down the app.
+-   Shiny will run code placed inside `server` function multiple times, as that's where the application reacts to your inputs, which can slow down the app.
 
 In our example, this is used to load the data, drop rows with missing values and define the list of measurements. This only needs to be done once. Within the `server` function we then build the plot for the selected measurement; obviously this needs to be repeated every time the input changes. This is why we placed that code within the `server` function.
 
